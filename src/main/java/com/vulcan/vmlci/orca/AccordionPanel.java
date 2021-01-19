@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci;
+package com.vulcan.vmlci.orca;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,6 +75,7 @@ public class AccordionPanel extends JPanel {
 
     /**
      * Gets the content_panels.
+     *
      * @return The current content panel
      */
     public JPanel getContent_panel() {
@@ -83,6 +84,7 @@ public class AccordionPanel extends JPanel {
 
     /**
      * Replaces the current content panel
+     *
      * @param content_panel - A replacement JPanel instance.
      */
     public void setContent_panel(JPanel content_panel) {

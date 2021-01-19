@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci;
+package com.vulcan.vmlci.orca;
 
 
 import javax.swing.*;
@@ -42,14 +42,13 @@ public class ControlWindow {
     private JFrame application_frame = null;
     private JPanel toplevel = null;
     private JPanel branding = null;
-    private JPanel metadata = null;
-    private JPanel input = null;
-    private JPanel length_measurements = null;
-    private JPanel body_profiles = null;
+    private final JPanel metadata = null;
+    private final JPanel input = null;
+    private final JPanel length_measurements = null;
+    private final JPanel body_profiles = null;
     private JPanel csv_controls = null;
 
 
-    @org.jetbrains.annotations.NotNull
     private JComponent build_accordion() {
         JPanel frame = new JPanel();
         JScrollPane scrollPane = new JScrollPane(frame);
@@ -145,7 +144,7 @@ public class ControlWindow {
 
         this.application_frame = new JFrame();
         this.application_frame.setTitle("Test Window");
-        this.application_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.application_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.application_frame.add(toplevel);
         this.application_frame.pack();
         this.application_frame.setVisible(true);

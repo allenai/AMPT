@@ -29,14 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci;
+package com.vulcan.vmlci.orca;
 
-/**
- * Simple test driver for exercising UI
- */
-public class TestDriver {
-    public static void main(String []args){
-      System.out.println("Hello, World!");
-      ControlWindow ctl_window = new ControlWindow();
-    }
+public class BaseCalculator {
+
 }
