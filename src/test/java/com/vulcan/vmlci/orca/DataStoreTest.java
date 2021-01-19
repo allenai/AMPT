@@ -34,38 +34,40 @@ package com.vulcan.vmlci.orca;
 import junit.framework.TestCase;
 
 public class DataStoreTest extends TestCase {
+    DataStore ds = null;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        this.ds = new DataStore();
+    }
+
     public void testINTEGER_UNITS() {
-        DataStore ds = new DataStore();
         assertEquals("Failure - set cardinality for INTEGER_UNITS incorrect",
                 1, ds.INTEGER_UNITS.size());
     }
 
     public void testTEXT_UNITS() {
-        DataStore ds = new DataStore();
         assertEquals("Failure - set cardinality for TEXT_UNITS incorrect",
                 4, ds.TEXT_UNITS.size());
     }
 
     public void testFLOAT_UNITS() {
-        DataStore ds = new DataStore();
         assertEquals("Failure - set cardinality for FLOAT_UNITS incorrect",
                 4, ds.FLOAT_UNITS.size());
     }
 
     public void testEDITABLE() {
-        DataStore ds = new DataStore();
         assertEquals("Failure - set cardinality for EDITABLE incorrect",
                 1, ds.EDITABLE.size());
     }
 
     public void testFETCHABLE_LENGTHS() {
-        DataStore ds = new DataStore();
         assertEquals("Failure - set cardinality for FETCHABLE_LENGTHS incorrect",
                 2, ds.FETCHABLE_LENGTHS.size());
     }
 
     public void testFETCHABLE_POINTS() {
-        DataStore ds = new DataStore();
         assertEquals("Failure - set cardinality for FETCHABLE_POINTS incorrect",
                 2, ds.FETCHABLE_POINTS.size());
     }
