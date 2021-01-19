@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <parent>
+        <groupId>org.scijava</groupId>
+        <artifactId>pom-scijava</artifactId>
+        <version>29.2.1</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>vulcan.fiji</groupId>
+    <artifactId>AMPT</artifactId>
+    <version>0.0.1</version>
+
+    <name>Aquatic Mammal Photogrammetry Tool</name>
+    <description>ImageJ plugin to perform photogrammetry on aquatic mammals.</description>
+    <url>https://github.com/VulcanMachineLearningCenterForImpact/AMPT</url>
+    <inceptionYear>2020</inceptionYear>
+
+    <organization>
+        <name>Vulcan</name>
+        <url>https://vulcan.com/</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>BSD 3-Clause "New" or "Revised" License</name>
+            <url>https://spdx.org/licenses/BSD-3-Clause.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>palbee</id>
+            <name>Paul Albee</name>
+            <url>https://github.com/palbee</url>
+            <roles>
+                <role>lead</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Paul Albee</name>
+            <email>palbee@vulcan.com</email>
+            <organization>Vulcan Inc.</organization>
+            <organizationUrl>https://vulcan.com/</organizationUrl>
+            <roles>
+                <role>developer</role>
+                <role>lead</role>
+            </roles>
+        </contributor>
+    </contributors>
+
+    <mailingLists>
+        <mailingList>
+            <name>ImageJ Forum</name>
+            <archive>http://forum.imagej.net/</archive>
+        </mailingList>
+    </mailingLists>
+
+    <scm>
+        <connection>scm:git:git@github.com:VulcanMachineLearningCenterForImpact/AMPT</connection>
+        <developerConnection>scm:git:git@github.com:VulcanMachineLearningCenterForImpact/AMPT</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/VulcanMachineLearningCenterForImpact/AMPT</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/VulcanMachineLearningCenterForImpact/AMPT/issues</url>
+    </issueManagement>
+    <ciManagement>
+        <system>None</system>
+    </ciManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <main-class>com.vulcan.vmlci.orca.AMPT_Main</main-class>
+        <package-name>com.vulcan.vmlci.orca</package-name>
+        <license.licenseName>BSD-3-Clause</license.licenseName>
+        <license.copyrightOwners>Vulcan Inc.</license.copyrightOwners>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>scijava.public</id>
+            <url>https://maven.scijava.org/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>imagej.public</id>
+            <url>https://maven.imagej.net/content/groups/public</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>imagej</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.miglayout</groupId>
+                    <artifactId>miglayout</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.imglib2</groupId>
+            <artifactId>imglib2-ij</artifactId>
+        </dependency>
+        <dependency>
+            <!-- NB: For ImageJ 1.x overlay visualization. -->
+            <groupId>net.imagej</groupId>
+            <artifactId>imagej-legacy</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.miglayout</groupId>
+                    <artifactId>miglayout</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.cedarsoftware</groupId>
+            <artifactId>json-io</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+    </dependencies>
+</project>
