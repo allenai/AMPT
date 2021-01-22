@@ -32,10 +32,9 @@
 package com.vulcan.vmlci.orca;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 
 public class DataStore extends AbstractTableModel {
@@ -54,13 +53,13 @@ public class DataStore extends AbstractTableModel {
     private HashMap<String, Integer> __row_map = null;
     private String[] __column_map = null;
     private final ArrayList<HashMap<String, Object>> data = new ArrayList<>();
-    private final boolean __dirty = false;
+    private boolean __dirty = false;
 
-    public DataStore() throws ConfigLoadException {
+    public DataStore() throws FileLoadException {
         this(null, null);
     }
 
-    public DataStore(String csv_path, String csv_filename) throws ConfigLoadException {
+    public DataStore(String csv_path, String csv_filename) throws FileLoadException {
 
         this.populate_reference_sets();
         this.csv_path = csv_path;
@@ -103,10 +102,8 @@ public class DataStore extends AbstractTableModel {
         int index = 0;
         for (final String filename : this.current_files()) {
             this.__row_map.put(filename, index);
+            index += 1;
         }
-    }
-
-    private void load_data(String csv_path, String csv_filename) {
     }
 
     private void populate_reference_sets() {
@@ -129,7 +126,7 @@ public class DataStore extends AbstractTableModel {
         Collections.addAll(FETCHABLE_POINTS, "point", "auto point");
     }
 
-    private void __load_column_defs() throws ConfigLoadException {
+    private void __load_column_defs() throws FileLoadException {
         ArrayList<HashMap<String, String>> column_config_file = ConfigurationLoader.get_csv_file("CSV-Columns.csv");
         this.__column_map = new String[column_config_file.size()];
         this.descriptors.clear();
@@ -242,100 +239,159 @@ public class DataStore extends AbstractTableModel {
         }
         return value.toString();
     }
-/*
-    # Private utilities
-    def __saving_mapper(self, key, value):
-        """Maps the value for column key appropriately if value is None"""
-        if value is None:
-            if self.descriptors[key].units in TEXT_UNITS:
-                return ''
-            return 'NA'
-        return value
 
-    def __loading_mapper(self, key, val):
-        """Map the value associated with key to the correct type."""
-        val = val.strip() # removes leading and trailing whitepace
-        if val in ('NA', ''):
-            return None
-
-        units = self.descriptors[key].units
-        if units in TEXT_UNITS:
-            return val
-        elif units in FLOAT_UNITS:
-            return float(val)
-        elif units in INTEGER_UNITS:
-            return int(val)
-        raise ValueError('Unknown unit specification "{}"'.format(units))
-
-    def load_data(self, csv_path=None, csv_file=None, error_on_unknown=False):
-        """Loads the CSV file specified by self.csv_path and self.csv_filename.
-           If error_on_unknown=False and a csv has extra columns not listed in
-           the CSV-Columns.csv config, those columns will be skipped when the
-           csv is loaded into the datastore. If error_on_unknown=True and a csv
-           has extra columns, an error will be thrown and the csv will not be
-           loaded.
-        """
-        self.csv_path = csv_path
-        self.csv_filename = csv_file
-        self.dirty = False
-        if self.data:
-            self.data = list()
-            self.__rebuild_row_map()
-        if self.csv_path is None or self.csv_filename is None:
-            return
-        self.data = list()
-        fullname = os.path.join(self.csv_path, self.csv_filename)
-        with open(fullname) as csv_file_handle:
-            reader = csv.DictReader(csv_file_handle)
-            for row in reader:
-                processed_row = {}
-                for key, val in row.items():
-                    if key in self.__column_map:
-                        processed_row.update({key: self.__loading_mapper(key, val)})
-                    elif error_on_unknown:
-                        raise ValueError('Unknown column specification "{}"'.format(key))
-                # lines 121-127 remove empty rows in csv files before loading
-                has_data = False
-                for key, val in processed_row.items():
-                    if processed_row[key] is not None:
-                        has_data = True
-                if has_data:
-                    self.data.append(processed_row)
-        self.__rebuild_row_map()
-        self.fireTableDataChanged()
+    private Object __loading_mapper(String key, String value) throws Exception {
+        if (value == null) {
+            return null;
+        }
+        String val = value.trim();
+        if (val.equals("NA") || val.equals("")) {
+            return null;
+        }
+        String units = this.descriptors.get(key).units;
+        if (TEXT_UNITS.contains(units)) {
+            return val;
+        }
+        if (FLOAT_UNITS.contains(units)) {
+            return new Float(val);
+        }
+        if (INTEGER_UNITS.contains(units)) {
+            return new Integer(val);
+        }
+        throw new Exception(String.format("Unknown unit specification \"%s\"", units));
+    }
 
 
+    /**
+     * Loads the CSV file specified by self.csv_path and self.csv_filename.
+     * If error_on_unknown=False and a csv has extra columns not listed in
+     * the CSV-Columns.csv config, those columns will be skipped when the
+     * csv is loaded into the datastore. If error_on_unknown=True and a csv
+     * has extra columns, an error will be thrown and the csv will not be
+     * loaded.
+     */
+    public void load_data(String csv_path, String csv_filename) throws FileLoadException {
+        this.csv_path = csv_path;
+        this.csv_filename = csv_filename;
+        this.__dirty = false;
+        this.data.clear();
+        this.__rebuild_row_map();
+        if (this.csv_path == null || this.csv_filename == null) {
+            return;
+        }
+        Path file_path = Paths.get(this.csv_path, this.csv_filename);
+
+        ArrayList<HashMap<String, String>> records = Utilities.loadCSVAsMap(file_path.toString());
+        Set<String> field_check = new HashSet<>();
+        Collections.addAll(field_check, this.__column_map);
+        for (final HashMap<String, String> record : records) {
+            HashMap<String, Object> processed_row = new HashMap<>();
+            for (String key : record.keySet()) {
+                if (field_check.contains(key)) {
+                    String val = record.get(key);
+                    try {
+                        processed_row.put(key, this.__loading_mapper(key, val));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.printf("%s not in set of expected column names\n", key);
+                }
+            }
+            // Eat blank rows
+            for (final Object value : processed_row.values()) {
+                if (value != null) {
+                    this.data.add(processed_row);
+                    break;
+                }
+            }
+        }
+        this.__rebuild_row_map();
+        this.fireTableDataChanged();
+    }
 
 
-    def getRowName(self, row):  # pylint: disable=invalid-name
-        """Returns the row name"""
-        if row >= len(self.data):
-            return None
-        return self.data[row]['Filename']
+    /**
+     * Returns <code>Object.class</code> regardless of <code>columnIndex</code>.
+     *
+     * @param columnIndex the column being queried
+     * @return the Object.class
+     */
+    public Class<?> getColumnClass(int columnIndex) {
+        final String units = this.descriptors.get(this.__column_map[columnIndex]).units;
+        if (FLOAT_UNITS.contains(units)) {
+            return Float.class;
+        }
+        if (INTEGER_UNITS.contains(units)) {
+            return Integer.class;
+        }
+        if (TEXT_UNITS.contains(units)) {
+            return String.class;
+        }
+        return super.getColumnClass(columnIndex);
+    }
 
-    # AbstractTableModel Methods
-    def getColumnName(self, column):  # pylint: disable=invalid-name
-        """Returns the column name"""
-        if column >= len(self.__column_map):
-            return None
-        return self.__column_map[column]
+    /**
+     * Retrieve the name of a row.
+     *
+     * @param row index of the row
+     * @return The name of the file associated with the row, null if the row index is out of bounds.
+     */
+    public String getRowName(int row) {
+        if (row >= this.data.size() || row < 0) {
+            return null;
+        }
+        return (String) this.data.get(row).get("Filename");
+    }
 
-    def findColumn(self, columnName):  # pylint: disable=invalid-name
-        """Retrieve the column name"""
-        if columnName in self.descriptors:
-            return self.descriptors[columnName].index
-        return -1
+    /**
+     * Returns the name for the column:
+     *
+     * @param column the column being queried
+     * @return a string containing the default name of <code>column</code>
+     */
+    @Override
+    public String getColumnName(int column) {
+        if (column < this.__column_map.length && column >= 0) {
+            return this.__column_map[column];
+        }
+        return "";
+    }
 
-    def getColumnClass(self, columnIndex):  # pylint: disable=invalid-name
-        """Returns the class of the column"""
-        units = self.descriptors[self.__column_map[columnIndex]].units
-        if units in TEXT_UNITS:
-            return str
-        elif units in FLOAT_UNITS:
-            return float
-        elif units in INTEGER_UNITS:
-            return int
-        return super(DataStore, self).getColumnClass(columnIndex)
+    /**
+     * Returns a column given its name.
+     * Implementation is naive so this should be overridden if
+     * this method is to be called often. This method is not
+     * in the <code>TableModel</code> interface and is not used by the
+     * <code>JTable</code>.
+     *
+     * @param columnName string containing name of column to be located
+     * @return the column with <code>columnName</code>, or -1 if not found
+     */
+    @Override
+    public int findColumn(String columnName) {
+        if (this.descriptors.containsKey(columnName)) {
+            return this.descriptors.get(columnName).index;
+        }
+        return -1;
+    }
+
+    /**
+     * Returns true if a a cell's unit is in EDITABLE.
+     *
+     * @param rowIndex    the row being queried
+     * @param columnIndex the column being queried
+     * @return false
+     */
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        if(columnIndex >= this.__column_map.length || columnIndex < 0) {
+            return false;
+        }
+        return this.EDITABLE.contains(this.descriptors.get(this.__column_map[columnIndex]).units);
+    }
+
+    /*
 
     def isCellEditable(self, rowIndex, columnIndex):  # pylint: disable=invalid-name,unused-argument
         """Returns True if a cell's type is in EDITABLE"""
@@ -384,21 +440,7 @@ public class DataStore extends AbstractTableModel {
             self.dirty = True
             self.fireTableRowsUpdated(row, row)
 
-    def __delitem__(self, v):
-        self.remove_row(v)
-
-    def __iter__(self):
-        return iter(self.data)
-
-    def __len__(self):
-        """Allows use of the len built-in"""
-        return len(self.data)
-
     # Public API
-
-
-
-
     def insert_value(self, image_filename, column, value):
         """Inserts a column value for image_filename into the data store."""
         if column not in self.descriptors.keys():
