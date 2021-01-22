@@ -1,0 +1,22 @@
+{
+  "Eye Refs": [
+    [
+      "SNDF_x_start", "SNDF_y_start", "SNDF_x_end", "SNDF_y_end",
+      "REPGuide_x_start", "REPGuide_y_start", "REPGuide_x_end", "REPGuide_y_end",
+      0.75
+    ], "compute_offset_reference_markers"
+  ],
+  "Body Profile": [
+    [
+      "SNDF_x_start", "SNDF_y_start", "SNDF_x_end", "SNDF_y_end",
+      0.05, 2.25, 0.05
+    ], "interval_reference_markers"
+  ],
+  "Head Width": [
+    [
+      "BHDF_x_start", "BHDF_y_start", "BHDF_x_end", "BHDF_y_end",
+      0.15, 0.15, 0.1
+    ],
+    "interval_reference_markers"
+  ]
+}
