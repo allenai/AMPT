@@ -34,7 +34,7 @@ package com.vulcan.vmlci.orca;
 /**
  * Wrapping exception for any exceptions raised during the loading of a configuration file.
  */
-public class ConfigLoadException extends Exception {
+public class FileLoadException extends Exception {
     /**
      * Constructs a new exception with the specified detail message and
      * cause.  <p>Note that the detail message associated with
@@ -49,7 +49,7 @@ public class ConfigLoadException extends Exception {
      *                unknown.)
      * @since 1.4
      */
-    public ConfigLoadException(String message, Throwable cause) {
+    public FileLoadException(String message, Throwable cause) {
         super(message, cause);
     }
 }
