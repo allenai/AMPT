@@ -33,10 +33,15 @@ package com.vulcan.vmlci.orca;
 
 import junit.framework.TestCase;
 
+import java.awt.geom.Point2D;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class DataStoreTest extends TestCase {
+    final String[] SAMPLE_SHORT_FILES = {"2018-09-03 21-40-22.jpg",
+            "2018-09-03 21-40-23.jpg",
+            "2018-09-03 21-40-38.jpg"
+    };
     DataStore ds = null;
     Path originalConfigPath = null;
 
@@ -92,77 +97,42 @@ public class DataStoreTest extends TestCase {
     public void testGetRowCount() {
         assertEquals(0, this.ds.getRowCount());
     }
+
     public void testGetColCount() {
         assertEquals(0, this.ds.getRowCount());
     }
 
     public void testFind_row() {
-        Path test_file = Paths.get(DataStoreTest.class.getResource("/test_blankrow.csv").getPath());
-        try {
-            this.ds.load_data(test_file.getParent().toString(), test_file.getFileName().toString());
-        } catch (FileLoadException e) {
-            e.printStackTrace();
-            fail();
-        }
+        final String test_csv = "/test_blankrow.csv";
+        load_test_data(test_csv);
         assertEquals(2, ds.getRowCount());
         assertEquals(0, ds.find_row("mammal1.jpg"));
         assertEquals(1, ds.find_row("mammal2.jpg"));
     }
 
-    public void testLoad_data_known_good() {
-//        Path test_file = Paths.get(DataStoreTest.class.getResource("/sample_full.csv").getPath());
-        Path test_file = Paths.get(DataStoreTest.class.getResource("/sample_full.csv").getPath());
+    private void load_test_data(String test_csv) {
+        Path test_file = Paths.get(DataStoreTest.class.getResource(test_csv).getPath());
         try {
             this.ds.load_data(test_file.getParent().toString(), test_file.getFileName().toString());
         } catch (FileLoadException e) {
             e.printStackTrace();
             fail();
         }
+    }
+
+    public void testLoad_data_known_good() {
+        load_test_data("/sample_full.csv");
         assertEquals(80, ds.getRowCount());
     }
 
     public void testLoad_data_blank_row() {
-        Path test_file = Paths.get(DataStoreTest.class.getResource("/test_blankrow.csv").getPath());
-        try {
-            this.ds.load_data(test_file.getParent().toString(), test_file.getFileName().toString());
-        } catch (FileLoadException e) {
-            e.printStackTrace();
-            fail();
-        }
+        load_test_data("/test_blankrow.csv");
         assertEquals(2, ds.getRowCount());
     }
 
     public void testGetColumnClass() {
         assertEquals(String.class, ds.getColumnClass(0));
-        assertEquals(Float.class, ds.getColumnClass(6));
-    }
-
-    public void testCurrent_files() {
-    }
-
-    public void testHas_row() {
-    }
-
-    public void testDirty() {
-    }
-
-    public void testGetColumnCount() {
-    }
-
-    public void testGetValueAt() {
-    }
-
-    public void testGet_value() {
-    }
-
-    public void testTestGet_value() {
-    }
-
-    public void testLoad_data() {
-    }
-
-    public void testGetRowName() {
-
+        assertEquals(Double.class, ds.getColumnClass(6));
     }
 
     public void testGetColumnName() {
@@ -178,7 +148,162 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testIsCellEditable() {
-        assertTrue(ds.isCellEditable(0,13));
-        assertFalse(ds.isCellEditable(0,0));
+        assertTrue(ds.isCellEditable(0, 13));
+        assertFalse(ds.isCellEditable(0, 0));
     }
+
+
+    public void test_insert_value_new() {
+        // Check that we can insert a value into a new row.
+        this.ds.insert_value("newrow", "Position", 42);
+        int retrieved_value = (Integer) this.ds.get_value("newrow", "Position");
+        assertEquals(42, retrieved_value);
+    }
+
+    /**
+     * Check that we can insert a value into an existing row.
+     */
+    public void test_insert_value_existing() {
+        this.load_test_data("/sample_short.csv");
+        String retrieved_value = (String) this.ds.get_value(SAMPLE_SHORT_FILES[0], "Position");
+        assertEquals("4TB", retrieved_value);
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "Position", "3LR");
+        retrieved_value = (String) this.ds.get_value(SAMPLE_SHORT_FILES[0], "Position");
+        assertEquals("3LR", retrieved_value);
+    }
+
+    /**
+     * Check that we can insert a value into an existing row.
+     */
+    public void test_insert_value_dirty_check_no_change() {
+        this.load_test_data("/sample_short.csv");
+        assertFalse(this.ds.dirty());
+        String retrieved_value = (String) this.ds.get_value(SAMPLE_SHORT_FILES[0], "Position");
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "Position", retrieved_value);
+        assertFalse(this.ds.dirty());
+    }
+
+    public void test_insert_value_dirty_check_change() {
+        this.load_test_data("/sample_short.csv");
+        assertFalse(this.ds.dirty());
+        String retrieved_value = (String) this.ds.get_value(SAMPLE_SHORT_FILES[0], "Position");
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "Position", String.format("BLAB%s", retrieved_value));
+        assertTrue(this.ds.dirty());
+    }
+
+    public void test_insert_value_dirty_check_new() {
+        assertFalse(this.ds.dirty());
+        this.ds.insert_value("newrow", "Position", 42);
+        this.ds.get_value("newrow", "Position");
+        assertTrue(this.ds.dirty());
+    }
+
+    public void testSetValueAt() {
+        this.load_test_data("/sample_short.csv");
+        this.ds.setValueAt("Foo", 0, 3);
+        String retrieved_value = (String) this.ds.get_value(SAMPLE_SHORT_FILES[0], "Position");
+        assertEquals("Foo", retrieved_value);
+    }
+
+    public void testRemove_row() {
+        this.load_test_data("/sample_short.csv");
+        assertTrue(this.ds.has_row(SAMPLE_SHORT_FILES[0]));
+        this.ds.remove_row(SAMPLE_SHORT_FILES[0]);
+        assertFalse(this.ds.has_row(SAMPLE_SHORT_FILES[0]));
+    }
+
+    public void testGet_point_not_present() {
+        this.load_test_data("/sample_short.csv");
+        Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull(result);
+    }
+
+    public void testGet_point_y_half_not_present() {
+        this.load_test_data("/sample_short.csv");
+        Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull("this.ds should not contain any points at this time", result);
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", 10.);
+        result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull(result);
+    }
+
+    public void testGet_point_x_half_not_present() {
+        this.load_test_data("/sample_short.csv");
+        Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull("this.ds should not contain any points at this time", result);
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10.);
+        result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull(result);
+    }
+
+    public void testGet_point() {
+        this.load_test_data("/sample_short.csv");
+        Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull("this.ds should not contain any points at this time", result);
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", -10.);
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10.);
+        result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNotNull(result);
+        Point2D ground_truth = new Point2D.Double(-10., 10.);
+        assertEquals(ground_truth, result);
+    }
+
+    public void testSet_point() {
+        this.load_test_data("/sample_short.csv");
+        Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull("this.ds should not contain any points at this time", result);
+        this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", new Point2D.Double(-10., 10.));
+        assertEquals(-10., this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_x"));
+        assertEquals(10., this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_y"));
+    }
+
+    public void testSet_point_null() {
+        this.load_test_data("/sample_short.csv");
+        Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull("this.ds should not contain any points at this time", result);
+        this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", null);
+        assertNull(this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_x"));
+        assertNull(this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_y"));
+    }
+
+    public void testClear_point() {
+        this.load_test_data("/sample_short.csv");
+        Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull("this.ds should not contain any points at this time", result);
+        this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", new Point2D.Double(-10., 10.));
+        assertEquals(-10., this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_x"));
+        assertEquals(10., this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_y"));
+        this.ds.clear_point(SAMPLE_SHORT_FILES[0], "SN");
+        result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
+        assertNull("this.ds should not contain any points at this time", result);
+
+    }
+
+    public void testGet_endpoints_not_present() {
+        this.load_test_data("/sample_short.csv");
+        Object result = this.ds.get_endpoints(SAMPLE_SHORT_FILES[0], "SNDF");
+        assertNull(result);
+    }
+
+    public void testGet_endpoints_partials() {
+        this.load_test_data("/sample_short.csv");
+        Point2D.Double[] result = this.ds.get_endpoints(SAMPLE_SHORT_FILES[0], "SNDF");
+        assertNull(result);
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1.);
+        result = this.ds.get_endpoints(SAMPLE_SHORT_FILES[0], "SNDF");
+        assertNull(result);
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_start", 2.);
+        result = this.ds.get_endpoints(SAMPLE_SHORT_FILES[0], "SNDF");
+        assertNull(result);
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_end", 3.);
+        result = this.ds.get_endpoints(SAMPLE_SHORT_FILES[0], "SNDF");
+        assertNull(result);
+        this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_end", 4.);
+        result = this.ds.get_endpoints(SAMPLE_SHORT_FILES[0], "SNDF");
+        assertNotNull(result);
+        assertEquals(new Point2D.Double(1., 2.), result[0]);
+        assertEquals(new Point2D.Double(3., 4.), result[1]);
+        assertEquals(2, result.length);
+    }
+
 }
