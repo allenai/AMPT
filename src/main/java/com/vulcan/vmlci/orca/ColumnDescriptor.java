@@ -32,6 +32,7 @@
 package com.vulcan.vmlci.orca;
 
 public class ColumnDescriptor {
+    public final String name;
     public final String description;
     public final String units;
     public final boolean export;
@@ -40,7 +41,8 @@ public class ColumnDescriptor {
     public final boolean is_metadata;
     public final int index;
 
-    public ColumnDescriptor(String description, String units, String export, String measurement_type, String editable, String is_metadata, int index) {
+    public ColumnDescriptor(String name, String description, String units, String export, String measurement_type, String editable, String is_metadata, int index) {
+        this.name = name;
         this.description = description;
         this.units = units;
         this.export = export.equalsIgnoreCase("true");
