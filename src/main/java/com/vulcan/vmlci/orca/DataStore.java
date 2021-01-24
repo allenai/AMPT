@@ -32,13 +32,24 @@
 package com.vulcan.vmlci.orca;
 
 import javax.swing.table.AbstractTableModel;
+import java.awt.geom.Point2D;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static java.util.Collections.addAll;
+
 
 public class DataStore extends AbstractTableModel {
 
+    public static final String X_COL = "%s_x";
+    public static final String Y_COL = "%s_y";
+    public static final String X_START_LENGTH = "%s_x_start";
+    public static final String Y_START_LENGTH = "%s_y_start";
+    public static final String X_END_LENGTH = "%s_x_end";
+    public static final String Y_END_LENGTH = "%s_y_end";
+    private final HashMap<String, ColumnDescriptor> descriptors = new HashMap<>();
+    private final ArrayList<HashMap<String, Object>> data = new ArrayList<>();
     // Helper sets.
     public HashSet<String> INTEGER_UNITS;
     public HashSet<String> TEXT_UNITS;
@@ -46,13 +57,10 @@ public class DataStore extends AbstractTableModel {
     public HashSet<String> EDITABLE;
     public HashSet<String> FETCHABLE_LENGTHS;
     public HashSet<String> FETCHABLE_POINTS;
-
     private String csv_path = null;
     private String csv_filename = null;
-    private final HashMap<String, ColumnDescriptor> descriptors = new HashMap<>();
     private HashMap<String, Integer> __row_map = null;
     private String[] __column_map = null;
-    private final ArrayList<HashMap<String, Object>> data = new ArrayList<>();
     private boolean __dirty = false;
 
     public DataStore() throws FileLoadException {
@@ -108,22 +116,22 @@ public class DataStore extends AbstractTableModel {
 
     private void populate_reference_sets() {
         this.INTEGER_UNITS = new HashSet<>();
-        Collections.addAll(INTEGER_UNITS, "pixels");
+        addAll(INTEGER_UNITS, "pixels");
 
         TEXT_UNITS = new HashSet<>();
-        Collections.addAll(TEXT_UNITS, "text", "timestamp", "fractional degrees", "editable text");
+        addAll(TEXT_UNITS, "text", "timestamp", "fractional degrees", "editable text");
 
         FLOAT_UNITS = new HashSet<>();
-        Collections.addAll(FLOAT_UNITS, "meters", "millimeters", "unitless percentage", "fractional pixels");
+        addAll(FLOAT_UNITS, "meters", "millimeters", "unitless percentage", "fractional pixels");
 
         EDITABLE = new HashSet<>();
-        Collections.addAll(EDITABLE, "editable text");
+        addAll(EDITABLE, "editable text");
 
         FETCHABLE_LENGTHS = new HashSet<>();
-        Collections.addAll(FETCHABLE_LENGTHS, "length", "auto length");
+        addAll(FETCHABLE_LENGTHS, "length", "auto length");
 
         FETCHABLE_POINTS = new HashSet<>();
-        Collections.addAll(FETCHABLE_POINTS, "point", "auto point");
+        addAll(FETCHABLE_POINTS, "point", "auto point");
     }
 
     private void __load_column_defs() throws FileLoadException {
@@ -134,7 +142,7 @@ public class DataStore extends AbstractTableModel {
             HashMap<String, String> row = column_config_file.get(i);
             final String column_name = row.get("column_name");
             this.descriptors.put(column_name,
-                    new ColumnDescriptor(row.get("description"), row.get("units"), row.get("export"), row.get("measurement_type"),
+                    new ColumnDescriptor(column_name, row.get("description"), row.get("units"), row.get("export"), row.get("measurement_type"),
                             row.get("editable"), row.get("is_metadata"), i));
             this.__column_map[i] = column_name;
         }
@@ -181,14 +189,6 @@ public class DataStore extends AbstractTableModel {
      */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        /*
-            def getValueAt(self, row, column):  # pylint: disable=invalid-name
-        """Access the element at row, column"""
-        filename = self.data[row]['Filename']
-        column_name = self.__column_map[column]
-        return self.get_value(filename, column_name)
-
-         */
         final String filename = (String) this.data.get(rowIndex).get("Filename");
         final String column_name = this.__column_map[columnIndex];
         return this.get_value(filename, column_name);
@@ -253,7 +253,7 @@ public class DataStore extends AbstractTableModel {
             return val;
         }
         if (FLOAT_UNITS.contains(units)) {
-            return new Float(val);
+            return new Double(val);
         }
         if (INTEGER_UNITS.contains(units)) {
             return new Integer(val);
@@ -283,7 +283,7 @@ public class DataStore extends AbstractTableModel {
 
         ArrayList<HashMap<String, String>> records = Utilities.loadCSVAsMap(file_path.toString());
         Set<String> field_check = new HashSet<>();
-        Collections.addAll(field_check, this.__column_map);
+        addAll(field_check, this.__column_map);
         for (final HashMap<String, String> record : records) {
             HashMap<String, Object> processed_row = new HashMap<>();
             for (String key : record.keySet()) {
@@ -320,7 +320,7 @@ public class DataStore extends AbstractTableModel {
     public Class<?> getColumnClass(int columnIndex) {
         final String units = this.descriptors.get(this.__column_map[columnIndex]).units;
         if (FLOAT_UNITS.contains(units)) {
-            return Float.class;
+            return Double.class;
         }
         if (INTEGER_UNITS.contains(units)) {
             return Integer.class;
@@ -385,116 +385,205 @@ public class DataStore extends AbstractTableModel {
      */
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if(columnIndex >= this.__column_map.length || columnIndex < 0) {
+        if (columnIndex >= this.__column_map.length || columnIndex < 0) {
             return false;
         }
         return this.EDITABLE.contains(this.descriptors.get(this.__column_map[columnIndex]).units);
     }
 
-    /*
+    /**
+     * Wraps a call to insert_value.
+     *
+     * @param aValue      value to assign to cell
+     * @param rowIndex    row of cell
+     * @param columnIndex column of cell
+     */
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        String filename = (String) this.data.get(rowIndex).get("Filename");
+        String column_name = this.__column_map[columnIndex];
+        this.insert_value(filename, column_name, aValue);
+    }
 
-    def isCellEditable(self, rowIndex, columnIndex):  # pylint: disable=invalid-name,unused-argument
-        """Returns True if a cell's type is in EDITABLE"""
-        if columnIndex >= len(self.__column_map):
-            return False
-        return self.descriptors[self.__column_map[columnIndex]].units in EDITABLE
 
-    def setValueAt(self, aValue, rowIndex, columnIndex):  # pylint: disable=invalid-name
-        """Setting the value of a cell"""
-        filename = self.data[rowIndex]['Filename']
-        column_name = self.__column_map[columnIndex]
-        self.insert_value(filename, column_name, aValue)
+    public void insert_value(final String image_filename, final String column, Object value) throws NoSuchElementException {
+        if (!this.descriptors.containsKey(column)) {
+            throw new NoSuchElementException(String.format("%s is not a legal column name", column));
+        }
+        int row = this.find_row(image_filename);
+        if (row == -1) { // New record created
+            HashMap<String, Object> record = new HashMap<>();
+            record.put("Filename", image_filename);
+            record.put(column, value);
+            this.data.add(record);
+            this.__rebuild_row_map();
+            row = this.__row_map.get(image_filename);
+            this.__dirty = true;
+            this.fireTableRowsInserted(row, row);
+            this.fireTableCellUpdated(row, this.descriptors.get("Filename").index);
+            this.fireTableCellUpdated(row, this.descriptors.get(column).index);
+        } else { // Update existing record
+            if (!this.data.get(row).containsKey(column) || !this.data.get(row).get(column).equals(value)) {
+                this.data.get(row).put(column, value);
+                this.__dirty = true;
+                this.fireTableCellUpdated(row, this.descriptors.get(column).index);
+            }
+        }
+    }
+
+    /**
+     * Delete a row from the data store.
+     *
+     * @param image_filename The row to be deleted.
+     */
+    public void remove_row(String image_filename) {
+        final int row = this.find_row(image_filename);
+        if (row != -1) {
+            this.data.remove(row);
+            this.__rebuild_row_map();
+            this.__dirty = true;
+            this.fireTableRowsDeleted(row, row);
+        }
+    }
+
+    /**
+     * Writes a CSV file to the file specified via export_path.
+     * All columns are written.
+     *
+     * @param export_path The location to export to.
+     */
+    public void save_as_csv(String export_path) {
+        save_as_csv(export_path, false);
+    }
+
+    /**
+     * Writes a CSV file to the file specified via export_path.
+     * <p>
+     * If export is True strip out any column where the export entry in the CSV-Columns config
+     * file is false.
+     *
+     * @param export_path The location to export to.
+     * @param export      If true only exports columns marked for export in the CSV-Columns config.
+     */
+    public void save_as_csv(String export_path, boolean export) {
+        ArrayList<String> headers = new ArrayList<>();
+        if (export) {
+            for (final String header : this.__column_map) {
+                if (this.descriptors.get(header).export) {
+                    headers.add(header);
+                }
+            }
+        } else {
+            addAll(headers, this.__column_map);
+        }
+    }
 
 
-    # descriptors
-    def __getitem__(self, item):
-        """Retrieves a row from the """
-        row = self.find_row(item)
-        if row == -1:
-            raise KeyError(item)
-        return self.data[row]
+    /**
+     * Retrieve a
+     *
+     * @param filename     the image name.
+     * @param point_column the point base name.
+     * @return The points for point_column. If the value is not stored return null, else return the point. If the
+     * point_column's measurement_type isn't it FETCHABLE_POINTS, return null.
+     */
+    public Point2D.Double get_point(String filename, String point_column) {
+        final String x_col = String.format(X_COL, point_column);
+        final String y_col = String.format(Y_COL, point_column);
+        if (!FETCHABLE_POINTS.contains(this.descriptors.get(x_col).measurement_type)) {
+            return null;
+        }
+        Object x_value = this.get_value(filename, x_col);
+        Object y_value = this.get_value(filename, y_col);
 
-    def __setitem__(self, key, value):
-        """Places a dictionary into data, assuming it has an appropriate Filename and
-        all all keys are allowed by the CSV-Columns configuration file."""
-        if not isinstance(value, dict):
-            raise TypeError("Please use the insert_value method to insert a single value")
-        if key != value.get('Filename', None):
-            raise ValueError(
-                'RHS must be a dictionary where the "Filename" entry must match the key')
-        allowed_keys = set(self.descriptors.keys())
-        proposed_keys = set(value.keys())
-        illegal_keys = proposed_keys - allowed_keys
-        if illegal_keys:
-            raise ValueError(
-                '({}) not valid column names'.format(", ".join(list(illegal_keys))))
-        row = self.find_row(key)
-        if row == -1:
-            self.data.append(value)
-            self.__rebuild_row_map()
-            row = self.__row_map[key]
-            self.dirty = True
-            self.fireTableRowsInserted(row, row)
-        else:
-            self.data[row] = value
-            self.dirty = True
-            self.fireTableRowsUpdated(row, row)
+        if (x_value != null && y_value != null) {
+            return new Point2D.Double((Double) x_value, (Double) y_value);
+        }
+        return null;
+    }
+
+    /**
+     * @param filename the image name.
+     * @param point_column
+     * @param point
+     */
+    public void set_point(String filename, String point_column, Point2D.Double point) {
+        final String x_col = String.format(X_COL, point_column);
+        final String y_col = String.format(Y_COL, point_column);
+        if (!this.descriptors.containsKey(x_col)) {
+            throw new NoSuchElementException(String.format("%s is not a legal point name", point_column));
+        }
+        if (!this.descriptors.get(x_col).measurement_type.equals("point") || point == null) {
+            return;
+        }
+        this.insert_value(filename, x_col, point.getX());
+        this.insert_value(filename, y_col, point.getY());
+    }
+
+    /**
+     * @param filename the image name.
+     * @param point_column
+     */
+    public void clear_point(String filename, String point_column) {
+        final String x_col = String.format(X_COL, point_column);
+        final String y_col = String.format(Y_COL, point_column);
+        if (!this.descriptors.containsKey(x_col)) {
+            throw new NoSuchElementException(String.format("%s is not a legal point name", point_column));
+        }
+        if (!this.descriptors.get(x_col).measurement_type.equals("point")) {
+            return;
+        }
+        this.insert_value(filename, x_col, null);
+        this.insert_value(filename, y_col, null);
+
+
+    }
+
+    /**
+     * @param filename
+     * @param length_column
+     * @return
+     */
+    public Point2D.Double[] get_endpoints(String filename, String length_column) {
+        if (!FETCHABLE_LENGTHS.contains(this.descriptors.get(length_column).measurement_type)) {
+            return null;
+        }
+
+        final String x_col_start = String.format(X_START_LENGTH, length_column);
+        final String y_col_start = String.format(Y_START_LENGTH, length_column);
+        final String x_col_end = String.format(X_END_LENGTH, length_column);
+        final String y_col_end = String.format(Y_END_LENGTH, length_column);
+
+        Double x_start = (Double) this.get_value(filename, x_col_start);
+        Double y_start = (Double) this.get_value(filename, y_col_start);
+        Double x_end = (Double) this.get_value(filename, x_col_end);
+        Double y_end = (Double) this.get_value(filename, y_col_end);
+
+        if (x_start == null || y_start == null || x_end == null || y_end == null) {
+            return null;
+        }
+
+        Point2D.Double[] results = new Point2D.Double[2];
+        results[0] = new Point2D.Double(x_start, y_start);
+        results[1] = new Point2D.Double(x_end, y_end);
+        return results;
+    }
+
+/*
+    def set_endpoints(self, filename, length_column, endpoints):
+        """Stores the endpoints for a length measurement,
+        """
+        if self.descriptors[length_column].measurement_type != 'length':
+            return
+        if endpoints is None:
+            endpoints = (None, None, None, None)
+        for label_augment, value in zip(["{}_x_start", "{}_y_start", "{}_x_end", "{}_y_end"],
+                                        endpoints):
+            target_col = label_augment.format(length_column)
+            self.insert_value(filename, target_col, value)
+        return
 
     # Public API
-    def insert_value(self, image_filename, column, value):
-        """Inserts a column value for image_filename into the data store."""
-        if column not in self.descriptors.keys():
-            raise IndexError('{} is not a legal column name'.format(column))
-        row = self.find_row(image_filename)
-        if row == -1:
-            self.data.append({'Filename': image_filename, column: value})
-            self.__rebuild_row_map()
-            row = self.__row_map[image_filename]
-            self.dirty = True
-            self.fireTableRowsInserted(row, row)
-            self.fireTableCellUpdated(row, self.descriptors['Filename'].index)
-            self.fireTableCellUpdated(row, self.descriptors[column].index)
-        else:
-            if column not in self.data[row] or self.data[row][column] != value:
-                self.data[row][column] = value
-                self.dirty = True
-                self.fireTableCellUpdated(row, self.descriptors[column].index)
-
-    def get_value(self, image_filename, column, missing=None, cast_to=None):
-        """Retrieves a value specified by column for image_filename from the data store.
-        If the value can't be retrieve return the missing value
-
-        @param image_filename: The name of the file being annotated.
-        @param column:  The name of the column being annotated
-        @param missing: What to return if the value is missing.
-        @param cast_to: How to cast the return value. Shold by a type or callable.
-        @return: The value from the table
-        """
-        row = self.find_row(image_filename)
-        if row == -1:
-            return missing
-        value = self.data[row].get(column, None)
-        if value is None:
-            return missing
-        elif cast_to:
-            value = cast_to(value)
-        return value
-
-    def get_double_value(self, image_filename, column, missing=float('nan')):
-        """Retrieves a double value specified by column for image_filename from the data store.
-        If the value can't be retrieve return the missing value
-        """
-        warnings.warn("get_double_value will be removed in the future, please use get_value",
-                      DeprecationWarning, stacklevel=2)
-        return float(self.get_value(image_filename, column, missing=missing))
-
-    def get_string_value(self, image_filename, column, missing=''):
-        """Retrieves a string value specified by column for image_filename from the data store.
-        If the value can't be retrieve return the missing value
-        """
-        warnings.warn("get_string_value will be removed in the future, please use get_value",
-                      DeprecationWarning, stacklevel=2)
-        return str(self.get_value(image_filename, column, missing=missing))
 
     def save_as_csv(self, export_path, export=False):
         """Writes a CSV file to the file specified via export_path.
@@ -515,71 +604,7 @@ public class DataStore extends AbstractTableModel {
         self.dirty = False
         self.fireTableDataChanged()
 
-    def remove_row(self, image_filename):
-        """Delete a row from the data store."""
-        row = self.find_row(image_filename)
-        if row != -1:
-            del self.data[row]
-            self.__rebuild_row_map()
-            self.dirty = True
-            self.fireTableRowsDeleted(row, row)
 
-    def get_endpoints(self, filename, length_column):
-        """Returns the endpoints for a length measurement as tuple,
-         if they are defined. If the endpoints have not been saved, the tuple contains Nones.
-
-        If the endpoints are not defined, return None
-        """
-        if self.descriptors[length_column].measurement_type not in FETCHABLE_LENGTHS:
-            return None
-
-        endpoints = list()
-        for label_augment in ["{}_x_start", "{}_y_start", "{}_x_end", "{}_y_end"]:
-            target_col = label_augment.format(length_column)
-            endpoints.append(self.get_value(filename, target_col, missing=None, cast_to=int))
-        return tuple(endpoints)
-
-    def set_endpoints(self, filename, length_column, endpoints):
-        """Stores the endpoints for a length measurement,
-        """
-        if self.descriptors[length_column].measurement_type != 'length':
-            return
-        if endpoints is None:
-            endpoints = (None, None, None, None)
-        for label_augment, value in zip(["{}_x_start", "{}_y_start", "{}_x_end", "{}_y_end"],
-                                        endpoints):
-            target_col = label_augment.format(length_column)
-            self.insert_value(filename, target_col, value)
-        return
-
-    def get_point(self, filename, point_column):
-        """Returns the point
-         if they are defined. If the endpoints have not been saved, the tuple contains Nones.
-
-        If the endpoints are not defined, return None
-        """
-        x_col = "{}_x".format(point_column)
-        y_col = "{}_y".format(point_column)
-        if self.descriptors[x_col].measurement_type not in FETCHABLE_POINTS:
-            return None
-        x_value, y_value = (self.get_value(filename, x_col, missing=None, cast_to=int),
-                            self.get_value(filename, y_col, missing=None, cast_to=int))
-        if x_value and y_value:
-            return x_value, y_value
-        return None
-
-    def set_point(self, filename, point_column, point):
-        """Stores the endpoints for a length measurement,
-        """
-        x_col = "{}_x".format(point_column)
-        y_col = "{}_y".format(point_column)
-        if self.descriptors[x_col].measurement_type != 'point':
-            return
-        if point is None:
-            point = (None, None)
-        for column, value in zip([x_col, y_col], point):
-            self.insert_value(filename, column, value)
-        return
 
  */
 }
