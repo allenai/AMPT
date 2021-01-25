@@ -31,7 +31,6 @@
 
 package com.vulcan.vmlci.orca;
 
-
 import com.cedarsoftware.util.io.JsonReader;
 import com.opencsv.CSVReader;
 import ij.Prefs;
@@ -44,99 +43,104 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Helpers for loading configuration files from os-dependent preference location.
- */
+/** Helpers for loading configuration files from os-dependent preference location. */
 public class ConfigurationLoader {
-    static private Path CONFIG_DIRECTORY = Paths.get("measurement-tool-config");
+  private static Path CONFIG_DIRECTORY = Paths.get("measurement-tool-config");
 
-    /**
-     * Get the configuration directory for our tool.
-     *
-     * @return The current CONFIG_DIRECTORY
-     */
-    public static Path getConfigDirectory() {
-        return CONFIG_DIRECTORY;
+  /**
+   * Get the configuration directory for our tool.
+   *
+   * @return The current CONFIG_DIRECTORY
+   */
+  public static Path getConfigDirectory() {
+    return CONFIG_DIRECTORY;
+  }
+
+  /**
+   * Set the configuration directory for our tool.
+   *
+   * @param configDirectory The new configuration directory.
+   */
+  public static void setConfigDirectory(String configDirectory) {
+    CONFIG_DIRECTORY = Paths.get(configDirectory);
+  }
+
+  /**
+   * Set the configuration directory for our tool.
+   *
+   * @param configDirectory The new configuration directory.
+   */
+  public static void setConfigDirectory(Path configDirectory) {
+    CONFIG_DIRECTORY = configDirectory;
+  }
+
+  public static void main(String[] args) throws ConfigurationFileLoadException {
+    System.out.println(getFullConfigPath("foo"));
+    System.out.println(get_csv_file("CSV-Columns.csv"));
+    System.out.println(get_json_file("TestCueConfig.json"));
+  }
+
+  /**
+   * Return the os dependent path to a configuration file.
+   *
+   * <p>If ConfigurationLoader.CONFIG_DIRECTORY is absolute simply return that value, otherwise
+   * return ConfigurationLoader.CONFIG_DIRECTORY inside the os dependent configuration location.
+   *
+   * @param filename The name of the configuration file.
+   */
+  public static String getFullConfigPath(String filename) {
+    if (ConfigurationLoader.CONFIG_DIRECTORY.isAbsolute()) {
+      return Paths.get(ConfigurationLoader.CONFIG_DIRECTORY.toString(), filename).toString();
     }
+    String config_location = Prefs.getPrefsDir();
+    Path file_path =
+        Paths.get(config_location, ConfigurationLoader.CONFIG_DIRECTORY.toString(), filename);
+    return file_path.toString();
+  }
 
-    /**
-     * Set the configuration directory for our tool.
-     *
-     * @param configDirectory The new configuration directory.
-     */
-    public static void setConfigDirectory(String configDirectory) {
-        CONFIG_DIRECTORY = Paths.get(configDirectory);
+  /**
+   * Load a CSV configuration file. The CSV file <b>must</b> have a header and be comma separated.
+   *
+   * @param filename The name of a JSON configuration file in the preferences directory.
+   * @return A list of HashMaps containing the rows keyed by column name.
+   * @throws ConfigurationFileLoadException If there are issues opening or reading the configuration
+   *     file.
+   */
+  public static ArrayList<HashMap<String, String>> get_csv_file(String filename)
+      throws ConfigurationFileLoadException {
+    String config_file = getFullConfigPath(filename);
+    CSVReader csv_reader = null;
+    java.util.ArrayList<java.util.HashMap<String, String>> result;
+    try {
+      result = com.vulcan.vmlci.orca.Utilities.loadCSVAsMap(config_file);
+    } catch (com.vulcan.vmlci.orca.CSVFileLoadException e) {
+      throw new ConfigurationFileLoadException(String.format("Couldn't load %s", filename), e);
     }
+    return result;
+  }
 
-    /**
-     * Set the configuration directory for our tool.
-     *
-     * @param configDirectory The new configuration directory.
-     */
-    public static void setConfigDirectory(Path configDirectory) {
-        CONFIG_DIRECTORY = configDirectory;
+  /**
+   * Load a JSON configuration file.
+   *
+   * @param filename - The name of a JSON configuration file in the preferences directory.
+   * @return A map of objects representation of a JSON file.
+   * @throws ConfigurationFileLoadException If there are issues opening or reading the configuration
+   *     file.
+   */
+  public static HashMap<String, Object> get_json_file(String filename)
+      throws ConfigurationFileLoadException {
+    String config_file = getFullConfigPath(filename);
+    byte[] encoded;
+    try {
+      encoded = Files.readAllBytes(Paths.get(config_file));
+    } catch (IOException e) {
+      throw new ConfigurationFileLoadException(
+          String.format("IO problem encountered loading '%s'", config_file), e);
     }
-
-
-
-    /**
-     * Return the os dependent path to a configuration file.
-     *
-     * If ConfigurationLoader.CONFIG_DIRECTORY is absolute simply return that value,
-     * otherwise return ConfigurationLoader.CONFIG_DIRECTORY inside the os dependent
-     * configuration location.
-     *
-     * @param filename The name of the configuration file.
-     */
-    public static String getFullConfigPath(String filename) {
-        if (ConfigurationLoader.CONFIG_DIRECTORY.isAbsolute()){
-            return Paths.get(ConfigurationLoader.CONFIG_DIRECTORY.toString(), filename).toString();
-        }
-        String config_location = Prefs.getPrefsDir();
-        Path file_path = Paths.get(config_location, ConfigurationLoader.CONFIG_DIRECTORY.toString(), filename);
-        return file_path.toString();
-    }
-
-    /**
-     * Load a CSV configuration file.
-     * The CSV file <b>must</b> have a header and be comma separated.
-     *
-     * @param filename The name of a JSON configuration file in the preferences directory.
-     * @return A list of HashMaps containing the rows keyed by column name.
-     * @throws FileLoadException If there are issues opening or reading the configuration file.
-     */
-    public static ArrayList<HashMap<String, String>> get_csv_file(String filename) throws FileLoadException {
-        String config_file = getFullConfigPath(filename);
-        CSVReader csv_reader = null;
-        ArrayList<HashMap<String, String>> result = Utilities.loadCSVAsMap(config_file);
-        return result;
-    }
-
-    /**
-     * Load a JSON configuration file.
-     *
-     * @param filename - The name of a JSON configuration file in the preferences directory.
-     * @return A map of objects representation of a JSON file.
-     * @throws FileLoadException If there are issues opening or reading the configuration file.
-     */
-    public static HashMap<String, Object> get_json_file(String filename) throws FileLoadException {
-        String config_file = getFullConfigPath(filename);
-        byte[] encoded = new byte[0];
-        try {
-            encoded = Files.readAllBytes(Paths.get(config_file));
-        } catch (IOException e) {
-            throw new FileLoadException(String.format("IO problem encountered loading '%s'", config_file), e);
-        }
-        String json = new String(encoded, StandardCharsets.UTF_8);
-        HashMap<String, Object> params = new HashMap<>();
-        params.put(JsonReader.USE_MAPS, true);
-        Object obj = JsonReader.jsonToJava(json, params);
-        return (HashMap<String, Object>) obj;
-    }
-
-    public static void main(String[] args) throws FileLoadException {
-        System.out.println(getFullConfigPath("foo"));
-        System.out.println(get_csv_file("CSV-Columns.csv"));
-        System.out.println(get_json_file("TestCueConfig.json"));
-    }
+    String json = new String(encoded, StandardCharsets.UTF_8);
+    HashMap<String, Object> params = new HashMap<>();
+    params.put(JsonReader.USE_MAPS, true);
+    Object obj = JsonReader.jsonToJava(json, params);
+    return (HashMap<String, Object>) obj;
+  }
 }
