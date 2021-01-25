@@ -31,8 +31,13 @@
 
 package com.vulcan.vmlci.orca;
 
+import com.opencsv.CSVWriter;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.table.AbstractTableModel;
 import java.awt.geom.Point2D;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -42,21 +47,41 @@ import static java.util.Collections.addAll;
 
 public class DataStore extends AbstractTableModel {
 
-    public static final String X_COL = "%s_x";
-    public static final String Y_COL = "%s_y";
-    public static final String X_START_LENGTH = "%s_x_start";
-    public static final String Y_START_LENGTH = "%s_y_start";
-    public static final String X_END_LENGTH = "%s_x_end";
-    public static final String Y_END_LENGTH = "%s_y_end";
+    private static final String X_COL = "%s_x";
+    private static final String Y_COL = "%s_y";
+    private static final String X_START_LENGTH = "%s_x_start";
+    private static final String Y_START_LENGTH = "%s_y_start";
+    private static final String X_END_LENGTH = "%s_x_end";
+    private static final String Y_END_LENGTH = "%s_y_end";
     private final HashMap<String, ColumnDescriptor> descriptors = new HashMap<>();
     private final ArrayList<HashMap<String, Object>> data = new ArrayList<>();
     // Helper sets.
+    /**
+     * Integer measurement units.
+     */
     public HashSet<String> INTEGER_UNITS;
+    /**
+     * Text measurement units.
+     */
     public HashSet<String> TEXT_UNITS;
+    /**
+     * Real valued measurement units.
+     */
     public HashSet<String> FLOAT_UNITS;
+    /**
+     * Measurement units that can be edited.
+     */
     public HashSet<String> EDITABLE;
+
+    /**
+     * Measurement units that correspond to lengths
+     */
     public HashSet<String> FETCHABLE_LENGTHS;
+    /**
+     * Measurement unites that correspond to points
+     */
     public HashSet<String> FETCHABLE_POINTS;
+
     private String csv_path = null;
     private String csv_filename = null;
     private HashMap<String, Integer> __row_map = null;
@@ -402,7 +427,10 @@ public class DataStore extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         String filename = (String) this.data.get(rowIndex).get("Filename");
         String column_name = this.__column_map[columnIndex];
-        this.insert_value(filename, column_name, aValue);
+        Object old_value = this.get_value(filename, column_name);
+        if (old_value != aValue) {
+            this.insert_value(filename, column_name, aValue);
+        }
     }
 
 
@@ -426,6 +454,9 @@ public class DataStore extends AbstractTableModel {
             if (!this.data.get(row).containsKey(column) || !this.data.get(row).get(column).equals(value)) {
                 this.data.get(row).put(column, value);
                 this.__dirty = true;
+                if (column.equals("Filename")) {
+                    this.__rebuild_row_map();
+                }
                 this.fireTableCellUpdated(row, this.descriptors.get(column).index);
             }
         }
@@ -443,38 +474,6 @@ public class DataStore extends AbstractTableModel {
             this.__rebuild_row_map();
             this.__dirty = true;
             this.fireTableRowsDeleted(row, row);
-        }
-    }
-
-    /**
-     * Writes a CSV file to the file specified via export_path.
-     * All columns are written.
-     *
-     * @param export_path The location to export to.
-     */
-    public void save_as_csv(String export_path) {
-        save_as_csv(export_path, false);
-    }
-
-    /**
-     * Writes a CSV file to the file specified via export_path.
-     * <p>
-     * If export is True strip out any column where the export entry in the CSV-Columns config
-     * file is false.
-     *
-     * @param export_path The location to export to.
-     * @param export      If true only exports columns marked for export in the CSV-Columns config.
-     */
-    public void save_as_csv(String export_path, boolean export) {
-        ArrayList<String> headers = new ArrayList<>();
-        if (export) {
-            for (final String header : this.__column_map) {
-                if (this.descriptors.get(header).export) {
-                    headers.add(header);
-                }
-            }
-        } else {
-            addAll(headers, this.__column_map);
         }
     }
 
@@ -503,7 +502,7 @@ public class DataStore extends AbstractTableModel {
     }
 
     /**
-     * @param filename the image name.
+     * @param filename     the image name.
      * @param point_column
      * @param point
      */
@@ -521,7 +520,7 @@ public class DataStore extends AbstractTableModel {
     }
 
     /**
-     * @param filename the image name.
+     * @param filename     the image name.
      * @param point_column
      */
     public void clear_point(String filename, String point_column) {
@@ -569,20 +568,121 @@ public class DataStore extends AbstractTableModel {
         return results;
     }
 
-/*
-    def set_endpoints(self, filename, length_column, endpoints):
-        """Stores the endpoints for a length measurement,
-        """
-        if self.descriptors[length_column].measurement_type != 'length':
-            return
-        if endpoints is None:
-            endpoints = (None, None, None, None)
-        for label_augment, value in zip(["{}_x_start", "{}_y_start", "{}_x_end", "{}_y_end"],
-                                        endpoints):
-            target_col = label_augment.format(length_column)
-            self.insert_value(filename, target_col, value)
-        return
+    public void set_endpoints(String filename, String length_column, @NotNull double[] endpoints) {
+        if (endpoints.length != 4) {
+            throw new RuntimeException("4 values required for endpoints.");
+        }
+        this.set_endpoints(filename, length_column, new Point2D.Double(endpoints[0], endpoints[1]),
+                new Point2D.Double(endpoints[2], endpoints[3]));
+    }
 
+    public void set_endpoints(String filename, String length_column, Point2D.Double start, Point2D.Double end) {
+        if (!FETCHABLE_LENGTHS.contains(this.descriptors.get(length_column).measurement_type)) {
+            return;
+        }
+
+        final String x_col_start = String.format(X_START_LENGTH, length_column);
+        final String y_col_start = String.format(Y_START_LENGTH, length_column);
+        final String x_col_end = String.format(X_END_LENGTH, length_column);
+        final String y_col_end = String.format(Y_END_LENGTH, length_column);
+
+        this.insert_value(filename, x_col_start, start.getX());
+        this.insert_value(filename, y_col_start, start.getY());
+        this.insert_value(filename, x_col_end, end.getX());
+        this.insert_value(filename, y_col_end, end.getY());
+    }
+
+    /**
+     * @param filename
+     * @param length_column
+     */
+    public void clear_endpoints(String filename, String length_column) {
+        if (!FETCHABLE_LENGTHS.contains(this.descriptors.get(length_column).measurement_type)) {
+            return;
+        }
+
+        final String x_col_start = String.format(X_START_LENGTH, length_column);
+        final String y_col_start = String.format(Y_START_LENGTH, length_column);
+        final String x_col_end = String.format(X_END_LENGTH, length_column);
+        final String y_col_end = String.format(Y_END_LENGTH, length_column);
+
+        this.insert_value(filename, x_col_start, null);
+        this.insert_value(filename, y_col_start, null);
+        this.insert_value(filename, x_col_end, null);
+        this.insert_value(filename, y_col_end, null);
+    }
+
+    /**
+     * Writes a CSV file to the file specified via export_path.
+     * All columns are written.
+     *
+     * @param export_path The location to export to.
+     */
+    public void save_as_csv(String export_path) throws IOException {
+        save_as_csv(export_path, false);
+    }
+
+    /**
+     * Writes a CSV file to the file specified via export_path.
+     * <p>
+     * If export is True strip out any column where the export entry in the CSV-Columns config
+     * file is false.
+     *
+     * @param export_path The location to export to.
+     * @param export      If true only exports columns marked for export in the CSV-Columns config.
+     */
+    public void save_as_csv(String export_path, boolean export) throws IOException {
+        ArrayList<String> headers = new ArrayList<>();
+        if (export) {
+            for (final String header : this.__column_map) {
+                if (this.descriptors.get(header).export) {
+                    headers.add(header);
+                }
+            }
+        } else {
+            addAll(headers, this.__column_map);
+        }
+
+        FileWriter output = new FileWriter(export_path);
+        CSVWriter csv_writer = new CSVWriter(output);
+
+        String[] output_headers = new String[headers.size()];
+        for (int i = 0; i < headers.size(); i++) {
+            output_headers[i] = headers.get(i);
+        }
+        csv_writer.writeNext(output_headers);
+
+        for (HashMap<String, Object> datum : this.data) {
+            csv_writer.writeNext(prepare_row(datum, headers));
+        }
+        csv_writer.flush();
+        csv_writer.close();
+        output.close();
+
+        Path save_path = Paths.get(export_path);
+        this.csv_path = save_path.getParent().toString();
+        this.csv_filename = save_path.getFileName().toString();
+        this.__dirty = false;
+        this.fireTableDataChanged();
+
+    }
+
+    /**
+     * Prepares a row for writing to a CSV file.
+     *
+     * @param row
+     * @param headers
+     * @return
+     */
+    private String[] prepare_row(HashMap<String, Object> row, ArrayList<String> headers) {
+        String[] result = new String[headers.size()];
+        for (int i = 0; i < result.length; i++) {
+            String column_name = headers.get(i);
+            result[i] = __saving_mapper(column_name, row.get(column_name));
+        }
+        return result;
+    }
+    /*
     # Public API
 
     def save_as_csv(self, export_path, export=False):
