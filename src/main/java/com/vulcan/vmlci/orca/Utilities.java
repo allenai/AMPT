@@ -42,41 +42,53 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/** Helper functions. */
 public class Utilities {
 
-    public static ArrayList<HashMap<String, String>> loadCSVAsMap(String targetFile) throws FileLoadException {
-        CSVReader csv_reader;
-        ArrayList<HashMap<String, String>> result = new ArrayList<>();
-        try {
-            csv_reader = new CSVReader(new FileReader(targetFile));
-        } catch (FileNotFoundException e) {
-            throw new FileLoadException(String.format("IO problem encountered loading '%s'", targetFile), e);
-        }
-        String[] headers = new String[0];
-        try {
-            headers = csv_reader.readNext();
-        } catch (IOException e) {
-            throw new FileLoadException(String.format("IO problem encountered loading '%s'", targetFile), e);
-        } catch (CsvValidationException e) {
-            throw new FileLoadException(String.format("Malformed CSV header in '%s'", targetFile), e);
-        }
-        List<String[]> values = null;
-        try {
-            values = csv_reader.readAll();
-        } catch (IOException e) {
-            throw new FileLoadException(String.format("IO problem encountered loading '%s'", targetFile), e);
-        } catch (CsvException e) {
-            throw new FileLoadException(String.format("Malformed CSV row in '%s'", targetFile), e);
-        }
-
-        final int n_cols = headers.length;
-        for (final String[] nextLine : values) {
-            HashMap<String, String> record = new HashMap<>();
-            for (int i = 0; i < n_cols; i++) {
-                record.put(headers[i], nextLine[i]);
-            }
-            result.add(record);
-        }
-        return result;
+  /**
+   * Loads a CSV file into an ArrayList of Maps.
+   *
+   * @param targetFile The full path to the file.
+   * @return The contents of the file.
+   * @throws CSVFileLoadException if there are any issues loading the file.
+   */
+  public static ArrayList<HashMap<String, String>> loadCSVAsMap(String targetFile)
+      throws CSVFileLoadException {
+    CSVReader csv_reader;
+    ArrayList<HashMap<String, String>> result = new ArrayList<>();
+    try {
+      csv_reader = new CSVReader(new FileReader(targetFile));
+    } catch (FileNotFoundException e) {
+      throw new CSVFileLoadException(
+          String.format("IO problem encountered " + "loading '%s'", targetFile), e);
     }
+    String[] headers;
+    try {
+      headers = csv_reader.readNext();
+    } catch (IOException e) {
+      throw new CSVFileLoadException(
+          String.format("IO problem encountered loading '%s'", targetFile), e);
+    } catch (CsvValidationException e) {
+      throw new CSVFileLoadException(String.format("Malformed CSV header in '%s'", targetFile), e);
+    }
+    List<String[]> values;
+    try {
+      values = csv_reader.readAll();
+    } catch (IOException e) {
+      throw new CSVFileLoadException(
+          String.format("IO problem encountered loading '%s'", targetFile), e);
+    } catch (CsvException e) {
+      throw new CSVFileLoadException(String.format("Malformed CSV row in '%s'", targetFile), e);
+    }
+
+    final int n_cols = headers.length;
+    for (final String[] nextLine : values) {
+      HashMap<String, String> record = new HashMap<>();
+      for (int i = 0; i < n_cols; i++) {
+        record.put(headers[i], nextLine[i]);
+      }
+      result.add(record);
+    }
+    return result;
+  }
 }
