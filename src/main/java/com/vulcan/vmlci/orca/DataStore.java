@@ -38,7 +38,11 @@ import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static com.vulcan.vmlci.orca.Utilities.loadCSVAsMap;
 import static java.util.Collections.addAll;
@@ -398,6 +402,7 @@ public class DataStore extends AbstractTableModel {
    * @param columnIndex the column being queried
    * @return the Object.class
    */
+  @Override
   public Class<?> getColumnClass(int columnIndex) {
     final String units = descriptors.get(columnMap[columnIndex]).units;
     if (FLOAT_UNITS.contains(units)) {
@@ -444,6 +449,12 @@ public class DataStore extends AbstractTableModel {
     }
   }
 
+  /**
+   * @param image_filename the image being annotated
+   * @param column the column of interest
+   * @param value the value to store
+   * @throws NoSuchElementException
+   */
   public void insert_value(final String image_filename, final String column, Object value)
       throws NoSuchElementException {
     if (!descriptors.containsKey(column)) {
@@ -462,8 +473,7 @@ public class DataStore extends AbstractTableModel {
       fireTableCellUpdated(row, descriptors.get("Filename").index);
       fireTableCellUpdated(row, descriptors.get(column).index);
     } else { // Update existing record
-      if (!data.get(row).containsKey(column)
-          || !data.get(row).get(column).equals(value)) {
+      if (!data.get(row).containsKey(column) || !data.get(row).get(column).equals(value)) {
         data.get(row).put(column, value);
         dataDirty = true;
         if (column.equals("Filename")) {
