@@ -34,8 +34,11 @@ package com.vulcan.vmlci.orca;
 import junit.framework.TestCase;
 
 import java.awt.geom.Point2D;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 
 public class DataStoreTest extends TestCase {
     final String[] SAMPLE_SHORT_FILES = {"2018-09-03 21-40-22.jpg",
@@ -103,7 +106,7 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testFind_row() {
-        final String test_csv = "/test_blankrow.csv";
+        final String test_csv = "/data/test_blankrow.csv";
         load_test_data(test_csv);
         assertEquals(2, ds.getRowCount());
         assertEquals(0, ds.find_row("mammal1.jpg"));
@@ -121,12 +124,12 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testLoad_data_known_good() {
-        load_test_data("/sample_full.csv");
+        load_test_data("/data/sample_full.csv");
         assertEquals(80, ds.getRowCount());
     }
 
     public void testLoad_data_blank_row() {
-        load_test_data("/test_blankrow.csv");
+        load_test_data("/data/test_blankrow.csv");
         assertEquals(2, ds.getRowCount());
     }
 
@@ -164,7 +167,7 @@ public class DataStoreTest extends TestCase {
      * Check that we can insert a value into an existing row.
      */
     public void test_insert_value_existing() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         String retrieved_value = (String) this.ds.get_value(SAMPLE_SHORT_FILES[0], "Position");
         assertEquals("4TB", retrieved_value);
         this.ds.insert_value(SAMPLE_SHORT_FILES[0], "Position", "3LR");
@@ -176,7 +179,7 @@ public class DataStoreTest extends TestCase {
      * Check that we can insert a value into an existing row.
      */
     public void test_insert_value_dirty_check_no_change() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         assertFalse(this.ds.dirty());
         String retrieved_value = (String) this.ds.get_value(SAMPLE_SHORT_FILES[0], "Position");
         this.ds.insert_value(SAMPLE_SHORT_FILES[0], "Position", retrieved_value);
@@ -184,7 +187,7 @@ public class DataStoreTest extends TestCase {
     }
 
     public void test_insert_value_dirty_check_change() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         assertFalse(this.ds.dirty());
         String retrieved_value = (String) this.ds.get_value(SAMPLE_SHORT_FILES[0], "Position");
         this.ds.insert_value(SAMPLE_SHORT_FILES[0], "Position", String.format("BLAB%s", retrieved_value));
@@ -199,27 +202,27 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testSetValueAt() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         this.ds.setValueAt("Foo", 0, 3);
         String retrieved_value = (String) this.ds.get_value(SAMPLE_SHORT_FILES[0], "Position");
         assertEquals("Foo", retrieved_value);
     }
 
     public void testRemove_row() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         assertTrue(this.ds.has_row(SAMPLE_SHORT_FILES[0]));
         this.ds.remove_row(SAMPLE_SHORT_FILES[0]);
         assertFalse(this.ds.has_row(SAMPLE_SHORT_FILES[0]));
     }
 
     public void testGet_point_not_present() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
         assertNull(result);
     }
 
     public void testGet_point_y_half_not_present() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
         assertNull("this.ds should not contain any points at this time", result);
         this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", 10.);
@@ -228,7 +231,7 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testGet_point_x_half_not_present() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
         assertNull("this.ds should not contain any points at this time", result);
         this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10.);
@@ -237,7 +240,7 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testGet_point() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
         assertNull("this.ds should not contain any points at this time", result);
         this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", -10.);
@@ -249,7 +252,7 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testSet_point() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
         assertNull("this.ds should not contain any points at this time", result);
         this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", new Point2D.Double(-10., 10.));
@@ -258,7 +261,7 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testSet_point_null() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
         assertNull("this.ds should not contain any points at this time", result);
         this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", null);
@@ -267,7 +270,7 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testClear_point() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
         assertNull("this.ds should not contain any points at this time", result);
         this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", new Point2D.Double(-10., 10.));
@@ -280,13 +283,13 @@ public class DataStoreTest extends TestCase {
     }
 
     public void testGet_endpoints_not_present() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         Object result = this.ds.get_endpoints(SAMPLE_SHORT_FILES[0], "SNDF");
         assertNull(result);
     }
 
     public void testGet_endpoints_partials() {
-        this.load_test_data("/sample_short.csv");
+        this.load_test_data("/data/sample_short.csv");
         Point2D.Double[] result = this.ds.get_endpoints(SAMPLE_SHORT_FILES[0], "SNDF");
         assertNull(result);
         this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1.);
@@ -306,4 +309,36 @@ public class DataStoreTest extends TestCase {
         assertEquals(2, result.length);
     }
 
+    public void testSave_as_csv() {
+        Date when = new Date();
+        File scratch_file = new File(String.format("/tmp/test_dump_%d.csv",when.getTime()));
+        this.load_test_data("/data/sample_full.csv");
+        try {
+            this.ds.save_as_csv(scratch_file.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+        DataStore reloaded = null;
+        try {
+            reloaded = new DataStore(scratch_file.getParent(), scratch_file.getName());
+        } catch (FileLoadException e) {
+            e.printStackTrace();
+            fail();
+        }
+        assertNotNull(reloaded);
+        int orig_rows = this.ds.getRowCount();
+        int orig_cols = this.ds.getColumnCount();
+
+        assertEquals(orig_rows, reloaded.getRowCount());
+        assertEquals(orig_cols, reloaded.getColumnCount());
+        for (int row = 0; row < orig_rows; row++) {
+            for (int col = 0; col < orig_cols; col++) {
+                final Object orig = this.ds.getValueAt(row, col);
+                final Object reload = reloaded.getValueAt(row, col);
+                assertEquals(orig, reload);
+            }
+        }
+        scratch_file.deleteOnExit();
+    }
 }
