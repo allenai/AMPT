@@ -340,10 +340,7 @@ public class DataStore extends AbstractTableModel {
             e.printStackTrace();
           }
         } else {
-          //          log.debug();
-          if (System.getProperty("RaiseOnUnknown", "false").equals("true")) {
-            System.err.printf("%s not in set of expected column name%n", key);
-          }
+          //            log.debug(String.format("%s not in set of expected column name%n", key));
         }
       }
       // Eat blank rows
