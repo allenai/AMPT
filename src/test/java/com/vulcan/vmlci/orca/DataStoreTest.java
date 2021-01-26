@@ -323,4 +323,14 @@ public class DataStoreTest extends TestCase {
     }
     scratch_file.deleteOnExit();
   }
+
+  public void testLoadDataMalformed() {
+    File test_file = new File(DataStoreTest.class.getResource("/data/not_a_csv.txt").getPath());
+    try {
+      this.ds.loadData(test_file);
+      fail();
+    } catch (com.vulcan.vmlci.orca.DataFileLoadException e) {
+      assertTrue(true);
+    }
+  }
 }
