@@ -308,11 +308,11 @@ public class DataStore extends AbstractTableModel {
    * columns, an error will be thrown and the csv will not be loaded.
    */
   public void loadData(File dataFile) throws DataFileLoadException {
-    csvFile = dataFile;
-    dataDirty = false;
-    data.clear();
-    rebuildRowMap();
-    if (csvFile == null) {
+    if (dataFile == null) {
+      csvFile = null;
+      dataDirty = false;
+      data.clear();
+      rebuildRowMap();
       return;
     }
 
@@ -320,8 +320,13 @@ public class DataStore extends AbstractTableModel {
     try {
       records = loadCSVAsMap(dataFile.toString());
     } catch (com.vulcan.vmlci.orca.CSVFileLoadException e) {
-      throw new DataFileLoadException(String.format("Couldn't load %s", csvFile), e);
+      throw new DataFileLoadException(String.format("Couldn't load %s", dataFile), e);
     }
+
+    csvFile = dataFile;
+    dataDirty = false;
+    data.clear();
+
     Set<String> field_check = new HashSet<>();
     addAll(field_check, columnMap);
     for (final HashMap<String, String> record : records) {
