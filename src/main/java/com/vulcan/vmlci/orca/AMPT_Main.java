@@ -31,32 +31,22 @@
 
 package com.vulcan.vmlci.orca;
 
-import javax.swing.SwingUtilities;
-
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.type.numeric.real.FloatType;
-
-import org.scijava.Context;
-import org.scijava.ItemIO;
 import org.scijava.command.Command;
+import org.scijava.log.Logger;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import net.imagej.ImageJ;
-import com.vulcan.vmlci.orca.ControlWindow;
+import javax.swing.SwingUtilities;
 
-/**
- * Simple test driver for exercising UI
- */
-@Plugin(type = Command.class, headless = true,
-        menuPath = "AMPT>AMPT")
-
+/** Simple test driver for exercising UI */
+@Plugin(type = Command.class, headless = true, menuPath = "Plugins>AMPT")
 public class AMPT_Main implements Command {
 
-    @Override
-    public void run() {
-        SwingUtilities.invokeLater(() -> {
-            new ControlWindow();
-        });
-    }
+  @Parameter Logger logger;
+
+  @Override
+  public void run() {
+    logger.info("Starting AMPT");
+    SwingUtilities.invokeLater(ControlWindow::new);
+  }
 }
