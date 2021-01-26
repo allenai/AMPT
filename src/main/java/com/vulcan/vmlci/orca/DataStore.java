@@ -48,6 +48,7 @@ import static com.vulcan.vmlci.orca.Utilities.loadCSVAsMap;
 import static java.util.Collections.addAll;
 
 public class DataStore extends AbstractTableModel {
+
   // Formatting constants.
   private static final String X_COL = "%s_x";
   private static final String Y_COL = "%s_y";
@@ -455,7 +456,7 @@ public class DataStore extends AbstractTableModel {
    * @param image_filename the image being annotated
    * @param column the column of interest
    * @param value the value to store
-   * @throws NoSuchElementException
+   * @throws NoSuchElementException when an illegal column is specified
    */
   public void insert_value(final String image_filename, final String column, Object value)
       throws NoSuchElementException {
@@ -723,5 +724,21 @@ public class DataStore extends AbstractTableModel {
       }
     }
     return value.toString();
+  }
+
+  /**
+   * Get the display name for the current csv file.
+   *
+   * @return the name component of csvFile if valid.
+   */
+  public String getCsvFileName() {
+    if (csvFile == null) {
+      return "No File";
+    }
+    return csvFile.getName();
+  }
+
+  public File getCsvFile() {
+    return csvFile;
   }
 }
