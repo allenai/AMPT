@@ -47,7 +47,7 @@ import java.beans.PropertyChangeListener;
  * ImagePlus window changes.
  * */
 public class LastActiveImage implements PropertyChangeListener {
-  private static final String NO_OPEN_IMAGE = "No Open Image";
+  public static final String NO_OPEN_IMAGE = "No Open Image";
   private static LastActiveImage instance;
   private final EventListenerList listenerList = new EventListenerList();
   private String most_recent_image;
