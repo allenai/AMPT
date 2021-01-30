@@ -340,8 +340,6 @@ public class DataStore extends AbstractTableModel {
           } catch (Exception e) {
             e.printStackTrace();
           }
-        } else {
-          //            log.debug(String.format("%s not in set of expected column name%n", key));
         }
       }
       // Eat blank rows
