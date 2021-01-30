@@ -58,7 +58,7 @@ public class DataStore extends AbstractTableModel {
   private static final String Y_END_LENGTH = "%s_y_end";
 
   /** Metadata about each column. */
-  private final HashMap<String, ColumnDescriptor> descriptors = new java.util.HashMap<>();
+  final HashMap<String, ColumnDescriptor> descriptors = new java.util.HashMap<>();
 
   /**
    * The actual data store. Currently this a list of hashmaps, but may benefit from being converted
