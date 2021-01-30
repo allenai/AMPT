@@ -31,6 +31,9 @@
 
 package com.vulcan.vmlci.orca;
 
+import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
+import com.vulcan.vmlci.orca.event.ActiveImageListener;
+
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -44,7 +47,7 @@ import java.awt.GridBagLayout;
 /**
  * The <code>ControlWindow</code> class is the main UI for the Aquatic Mammal Photogrammetry Tool.
  */
-public class ControlWindow {
+public class ControlWindow implements ActiveImageListener {
   private final JPanel metadata = null;
   private final JPanel input = null;
   private final JPanel length_measurements = null;
@@ -54,6 +57,7 @@ public class ControlWindow {
   private JPanel branding = null;
   private JPanel csv_controls = null;
   private DataStore ds;
+  private MetadataDisplay metadataDisplay;
 
   public ControlWindow() {
     try {
@@ -62,16 +66,12 @@ public class ControlWindow {
       e.printStackTrace();
     }
 
-    SwingUtilities.invokeLater(
-        new Runnable() {
-          @Override
-          public void run() {
-            build_ui();
-          }
-        });
+    SwingUtilities.invokeLater(this::build_ui);
   }
 
   private void build_ui() {
+    LastActiveImage.getInstance();
+    metadataDisplay = new MetadataDisplay(ds);
     GridBagConstraints c = new GridBagConstraints();
     this.toplevel = new JPanel();
     this.toplevel.setLayout(new GridBagLayout());
@@ -118,6 +118,8 @@ public class ControlWindow {
     this.application_frame.add(toplevel);
     this.application_frame.pack();
     this.application_frame.setVisible(true);
+
+    LastActiveImage.getInstance().addActiveImageListener(this);
   }
 
   private JComponent build_accordion() {
@@ -132,9 +134,9 @@ public class ControlWindow {
     gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 0;
-    AccordionPanel demo1 = new AccordionPanel("Metadata", true);
-    demo1.getContent_panel().add(new JLabel("Lorem Ipsum"));
-    frame.add(demo1, gbc);
+    AccordionPanel metadata = new AccordionPanel("Metadata", true);
+    metadata.getContent_panel().add(metadataDisplay.getContent_panel());
+    frame.add(metadata, gbc);
 
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0;
@@ -168,5 +170,11 @@ public class ControlWindow {
     frame.add(spacer, gbc);
     frame.setBackground(Color.CYAN);
     return scrollPane;
+  }
+
+
+  @Override
+  public void activeImageChanged(ActiveImageChangeEvent evt) {
+    application_frame.setTitle(String.format("Measuring: %s", evt.getNewImage()));
   }
 }
