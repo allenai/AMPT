@@ -80,7 +80,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
 
   /** Loads the list of known animal ids. */
   private void loadAnimalIds() {
-    ArrayList<HashMap<String, String>> animal_id_config = null;
+    ArrayList<HashMap<String, String>> animal_id_config;
     try {
       animal_id_config = get_csv_file("csv-whaleid.csv");
     } catch (ConfigurationFileLoadException e) {
@@ -127,7 +127,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
         add_to_panel(label, component, grid_bag_layout, grid_constraints, panel);
         grid_constraints.gridy += 1;
         this.ui_components.put(col_name, component);
-      } else if (measurement_type.equals("manual") && editable) {
+      } else if (measurement_type.equals("manual")) {
         JLabel label = new JLabel(col_name);
         JTextField component = new JTextField("", 10);
         component.setEditable(true);
@@ -139,7 +139,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
         this.ui_components.put(col_name, component);
       } else if (measurement_type.equals("selection")) {
         JLabel label = new JLabel(col_name);
-        JComboBox<String> component = new JComboBox<String>();
+        JComboBox<String> component = new JComboBox<>();
         for (String element : animal_ids) {
           component.addItem(element);
         }
@@ -205,6 +205,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
     update_ui();
   }
 
+  @SuppressWarnings("rawtypes")
   private void update_ui() {
     for (String key : ui_components.keySet()) {
       JComponent component = ui_components.get(key);
@@ -213,7 +214,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
         ((JTextField) component).setText(ds_value);
       } else if (component instanceof JComboBox) {
         if (active_file_name.equals(LastActiveImage.NO_OPEN_IMAGE)) {
-          ((JComboBox) component).setSelectedItem(null);
+          ((JComboBox) component).setSelectedItem(0);
         } else {
           ((JComboBox) component).setSelectedItem(ds_value);
         }
@@ -224,8 +225,9 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
   /**
    * Invoked when an action occurs.
    *
-   * @param e
+   * @param e a control was activated
    */
+  @SuppressWarnings("rawtypes")
   @Override
   public void actionPerformed(ActionEvent e) {
     JComponent event_source = (JComponent) e.getSource();
@@ -253,16 +255,15 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
   /**
    * Invoked when a component gains the keyboard focus.
    *
-   * @param e
+   * @param e event for object gaining focus.
    */
   @Override
-  public void focusGained(FocusEvent e) {
-  }
+  public void focusGained(FocusEvent e) {}
 
   /**
    * Invoked when a component loses the keyboard focus.
    *
-   * @param e
+   * @param e event for object losing focus.
    */
   @Override
   public void focusLost(FocusEvent e) {
@@ -271,7 +272,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
       return;
     }
 
-    String value = ((JTextField) event_source).getText();
+    String value = event_source.getText();
     ds.insert_value(active_file_name, event_source.getName(), value);
   }
 }
