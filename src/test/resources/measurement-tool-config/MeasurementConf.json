@@ -231,15 +231,5 @@
       "GIRTH_y_end"
     ],
     "function": "copy"
-  },
-  {
-    "target": "BAD_FUNC",
-    "parameters": [
-      "SNDF_x_start",
-      "SNDF_y_start",
-      "SNDF_x_end",
-      "SNDF_y_end"
-    ],
-    "function": "BAD_FUNC"
   }
 ]
