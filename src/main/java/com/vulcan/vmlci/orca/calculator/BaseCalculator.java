@@ -55,6 +55,7 @@ public abstract class BaseCalculator {
 
   protected final DataStore dataStore;
   public HashMap<String, MethodHandle> measurement_funcs;
+  @Parameter Logger logger;
   private CalculatorConfig measurement_dependencies;
   private HashMap<String, ArrayList<String>> possible_measurements;
 
