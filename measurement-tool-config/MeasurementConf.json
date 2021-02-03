@@ -1,5 +1,5 @@
 [
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "SNDF",
     "parameters": [
       "SNDF_x_start",
@@ -9,35 +9,35 @@
     ],
     "function": "length"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "SNDF_x_start",
     "parameters": [
       "SN_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "SNDF_y_start",
     "parameters": [
       "SN_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "SNDF_x_end",
     "parameters": [
       "DF_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "SNDF_y_end",
     "parameters": [
       "DF_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "BHDF",
     "parameters": [
       "BHDF_x_start",
@@ -47,35 +47,35 @@
     ],
     "function": "length"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "BHDF_x_start",
     "parameters": [
       "BH_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "BHDF_y_start",
     "parameters": [
       "BH_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "BHDF_x_end",
     "parameters": [
       "DF_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "BHDF_y_end",
     "parameters": [
       "DF_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "DFFL",
     "parameters": [
       "DFFL_x_start",
@@ -85,35 +85,35 @@
     ],
     "function": "length"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "DFFL_x_start",
     "parameters": [
       "DF_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "DFFL_y_start",
     "parameters": [
       "DF_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "DFFL_x_end",
     "parameters": [
       "FL_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "DFFL_y_end",
     "parameters": [
       "FL_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "LENGTH",
     "parameters": [
       "LENGTH_x_start",
@@ -123,63 +123,63 @@
     ],
     "function": "length"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "LENGTH_x_start",
     "parameters": [
       "SN_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "LENGTH_y_start",
     "parameters": [
       "SN_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "LENGTH_x_end",
     "parameters": [
       "FL_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "LENGTH_y_end",
     "parameters": [
       "FL_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "REPGuide_x_start",
     "parameters": [
       "RIGHT EYEPATCH TOP_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "REPGuide_y_start",
     "parameters": [
       "RIGHT EYEPATCH TOP_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "REPGuide_x_end",
     "parameters": [
       "RIGHT EYEPATCH BOTTOM_x"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "REPGuide_y_end",
     "parameters": [
       "RIGHT EYEPATCH BOTTOM_y"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "EP BOTTOM REFERENCE_x",
     "parameters": [
       "REPGuide_x_start",
@@ -188,7 +188,7 @@
     ],
     "function": "parametric_point"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "EP BOTTOM REFERENCE_y",
     "parameters": [
       "REPGuide_y_start",
@@ -197,35 +197,35 @@
     ],
     "function": "parametric_point"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "100%",
     "parameters": [
       "GIRTH"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "100%_x_start",
     "parameters": [
       "GIRTH_x_start"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "100%_y_start",
     "parameters": [
       "GIRTH_y_start"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "100%_x_end",
     "parameters": [
       "GIRTH_x_end"
     ],
     "function": "copy"
   },
-  {"@type":"com.vulcan.vmlci.orca.calculator.MeasurementConfigItem",
+  {
     "target": "100%_y_end",
     "parameters": [
       "GIRTH_y_end"
