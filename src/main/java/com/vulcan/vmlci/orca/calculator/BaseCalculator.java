@@ -45,7 +45,13 @@ import java.util.HashMap;
 
 import static java.lang.Math.sqrt;
 
+import org.scijava.log.Logger;
+import org.scijava.log.StderrLogService;
+import org.scijava.plugin.Parameter;
+
 public abstract class BaseCalculator {
+  @Parameter
+  Logger logger;
 
   protected final DataStore dataStore;
   public HashMap<String, MethodHandle> measurement_funcs;
@@ -57,6 +63,9 @@ public abstract class BaseCalculator {
   }
 
   public BaseCalculator(DataStore ds) throws FileNotFoundException {
+    if(logger == null){
+      logger = new StderrLogService();
+    }
     dataStore = ds;
     loadMethods();
     loadConfiguration();
