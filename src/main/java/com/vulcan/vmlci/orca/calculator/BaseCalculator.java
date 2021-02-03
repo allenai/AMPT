@@ -31,8 +31,10 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
+import com.vulcan.vmlci.orca.ConfigurationLoader;
 import com.vulcan.vmlci.orca.DataStore;
 
+import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -44,17 +46,18 @@ import java.util.HashMap;
 import static java.lang.Math.sqrt;
 
 public abstract class BaseCalculator {
-  protected static String configuration_file = null;
+
   protected final DataStore dataStore;
   public HashMap<String, MethodHandle> measurement_funcs;
   private CalculatorConfig measurement_dependencies;
   private HashMap<String, ArrayList<String>> possible_measurements;
 
-  public BaseCalculator(DataStore ds) {
+  public BaseCalculator(DataStore ds) throws FileNotFoundException {
     dataStore = ds;
     loadMethods();
     loadConfiguration();
   }
+  abstract protected String getConfigurationFile();
 
   private void loadMethods() {
     MethodHandles.Lookup lookup = MethodHandles.publicLookup();
@@ -74,8 +77,31 @@ public abstract class BaseCalculator {
     }
   }
 
-  private void loadConfiguration() {
-    measurement_dependencies = null;
+  /**
+   * Build the lookup tables that make the measurement manager work.
+   *
+   * <p>Responsible for triggering the load of the configuration.
+   *
+   * <p>The possible_measurements table is used to map a parameter back to the measurements that it
+   * contributes to.
+   */
+  private void loadConfiguration() throws FileNotFoundException {
+
+    measurement_dependencies =
+            new CalculatorConfig(ConfigurationLoader.getFullConfigPath(getConfigurationFile()));
+    possible_measurements = new HashMap<>();
+    for (CalculatorConfigItem item : measurement_dependencies.values()) {
+      for (Object raw_parameter : item.parameters) {
+        if (!(raw_parameter instanceof String)) {
+          continue;
+        }
+        String parameter = (String) raw_parameter;
+        if (!possible_measurements.containsKey(parameter)) {
+          possible_measurements.put(parameter, new ArrayList<>());
+        }
+        possible_measurements.get(parameter).add(item.target);
+      }
+    }
   }
 
   /**
@@ -154,25 +180,45 @@ public abstract class BaseCalculator {
     }
     return value;
   }
+
+  /**
+   * Verifies that all non-literal parameters for a measure are defined in the data store.
+   *
+   * @param measure The measure being checked
+   * @param title The image whose values are being checked.
+   * @return true iff all non-literal parameters have a non-null value.
+   */
+  public boolean preflight_measurement(String measure, String title) {
+    for (Object parameter : measurement_dependencies.get(measure).parameters) {
+      if (!(parameter instanceof String)) {
+        continue;
+      }
+      if (dataStore.get_value(title, (String) parameter) == null) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public Double do_measurement(String measure, String title) {
+    Object[] parameters = measurement_dependencies.get(measure).parameters;
+    MethodHandle mh = measurement_funcs.get("length");
+
+    int n_args = parameters.length;
+    Object[] arguments = new Object[n_args];
+
+    for(int i = 0; i < n_args; i++) {
+      arguments[i] = retrieve_scalar_argument(title,parameters[i]);
+    }
+    Double measurement_result = null;
+    try {
+      measurement_result = (Double) mh.invokeWithArguments(arguments);
+    } catch (Throwable throwable) {
+      throwable.printStackTrace();
+    }
+    return measurement_result;
+  }
   /*
-
-
-   def __load_configuration(self):
-       """Build the lookup tables that make the measurement manager work."""
-       self.measurement_dependencies = configuration_loader.get_file(self.config_file)
-       self.possible_measurements = defaultdict(list)
-       for measurement, (parameters, _) in self.measurement_dependencies.items():
-           for parameter in parameters:
-               self.possible_measurements[parameter].append(measurement)
-
-   def parameters_defined(self, measure, title):
-       """Returns True"""
-       valid_dict = dict()
-       parameters, _ = self.measurement_dependencies[measure]
-       for param in parameters:
-           if isinstance(param, basestring):
-               valid_dict[param] = self.retrieve_scalar_argument(title, param) is not None
-       return valid_dict
 
    def do_measurement(self, measure, title):
        """Perform the measurement for image title"""
