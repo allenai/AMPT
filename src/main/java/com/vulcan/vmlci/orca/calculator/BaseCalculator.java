@@ -67,6 +67,10 @@ public abstract class BaseCalculator {
         "BaseCalculator and it's subclasses require a DataStore.");
   }
 
+  /**
+   * @param ds the <code>DataStore</code> that the Calculator will operate on.
+   * @throws FileNotFoundException
+   */
   public BaseCalculator(DataStore ds) throws FileNotFoundException {
     if (logger == null) {
       logger = new StderrLogService();
