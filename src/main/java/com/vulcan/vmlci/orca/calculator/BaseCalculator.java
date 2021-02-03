@@ -52,6 +52,10 @@ public abstract class BaseCalculator {
   private CalculatorConfig measurement_dependencies;
   private HashMap<String, ArrayList<String>> possible_measurements;
 
+  public BaseCalculator() {
+    throw new UnsupportedOperationException("BaseCalculator and it's subclasses require a DataStore.");
+  }
+
   public BaseCalculator(DataStore ds) throws FileNotFoundException {
     dataStore = ds;
     loadMethods();
