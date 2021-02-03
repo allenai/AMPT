@@ -38,8 +38,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 
+/**
+ * Manage the configuration for BaseCalculators.
+ *
+ * @see HashMap
+ */
 public class CalculatorConfig extends HashMap<String, CalculatorConfigItem> {
 
+  /**
+   * Construct a populated calculator configuration.
+   *
+   * @param config_path the name of configuration file.
+   * @throws FileNotFoundException if the figuration file can't be found.
+   */
   public CalculatorConfig(String config_path) throws FileNotFoundException {
     FileInputStream reader = new FileInputStream(config_path);
     HashMap<String, Object> args = new HashMap<>();
@@ -47,16 +58,26 @@ public class CalculatorConfig extends HashMap<String, CalculatorConfigItem> {
     Object[] loaded_items = (Object[]) JsonReader.jsonToJava(reader, args);
 
     // Process the loaded configuration.
+    process_configuration(loaded_items);
+  }
+
+  /**
+   * Convert the JSON representation to a collection of <code>CalculatorConfigItem</code>s.
+   *
+   * @param loaded_items the loaded configuration in hash of hashs form.
+   */
+  private void process_configuration(Object[] loaded_items) {
     for (Object raw_item : loaded_items) {
       final JsonObject<String, Object> json_item = (JsonObject<String, Object>) raw_item;
-      final String target = (String) json_item.get("target");
-      Object[] parameters = new Object[((Object[]) json_item.get("parameters")).length];
-      for (int i = ((Object[]) json_item.get("parameters")).length - 1; i >= 0; i--) {
+      int nParameters = ((Object[]) json_item.get("parameters")).length;
+      Object[] parameters = new Object[nParameters];
+      for (int i = 0; i < nParameters; i++) {
         final Object temp = ((Object[]) json_item.get("parameters"))[i];
         parameters[i] = temp.getClass().cast(temp);
       }
-      final String function = (String) json_item.get("function");
-      final CalculatorConfigItem item = new CalculatorConfigItem(target, parameters, function);
+      final CalculatorConfigItem item =
+          new CalculatorConfigItem(
+              (String) json_item.get("target"), parameters, (String) json_item.get("function"));
       this.put(((CalculatorConfigItem) item).target, (CalculatorConfigItem) item);
     }
   }
