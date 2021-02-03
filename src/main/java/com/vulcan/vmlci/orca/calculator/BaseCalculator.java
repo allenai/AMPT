@@ -33,6 +33,9 @@ package com.vulcan.vmlci.orca.calculator;
 
 import com.vulcan.vmlci.orca.ConfigurationLoader;
 import com.vulcan.vmlci.orca.DataStore;
+import org.scijava.log.Logger;
+import org.scijava.log.StderrLogService;
+import org.scijava.plugin.Parameter;
 
 import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandle;
@@ -45,34 +48,50 @@ import java.util.HashMap;
 
 import static java.lang.Math.sqrt;
 
-import org.scijava.log.Logger;
-import org.scijava.log.StderrLogService;
-import org.scijava.plugin.Parameter;
-
 public abstract class BaseCalculator {
-  @Parameter
-  Logger logger;
-
   protected final DataStore dataStore;
   public HashMap<String, MethodHandle> measurement_funcs;
   @Parameter Logger logger;
   private CalculatorConfig measurement_dependencies;
   private HashMap<String, ArrayList<String>> possible_measurements;
 
+  /**
+   * Default constructor.
+   *
+   * <p>This constructor should not be invoked.
+   *
+   * @throws UnsupportedOperationException when invoked
+   */
   public BaseCalculator() {
-    throw new UnsupportedOperationException("BaseCalculator and it's subclasses require a DataStore.");
+    throw new UnsupportedOperationException(
+        "BaseCalculator and it's subclasses require a DataStore.");
   }
 
   public BaseCalculator(DataStore ds) throws FileNotFoundException {
-    if(logger == null){
+    if (logger == null) {
       logger = new StderrLogService();
     }
     dataStore = ds;
     loadMethods();
     loadConfiguration();
   }
-  abstract protected String getConfigurationFile();
 
+  /**
+   * Prepare the measurement functions for execution.
+   *
+   * <p>Identify all static methods in the invoking class and build a MethodHandle for later
+   * execution.
+   *
+   * <p>Process:
+   *
+   * <ol>
+   *   <li>Extract all public static methods.
+   *   <li>For each static method resolve the name, defining class, return type, and parameter
+   *       types. (The signature)
+   *   <li>Via <code>MethodHandles.Lookup</code> instance find a method matching the signature and
+   *       save it in a hashmap.
+   * </ol>
+   */
   private void loadMethods() {
     MethodHandles.Lookup lookup = MethodHandles.publicLookup();
     measurement_funcs = new HashMap<>();
@@ -98,11 +117,13 @@ public abstract class BaseCalculator {
    *
    * <p>The possible_measurements table is used to map a parameter back to the measurements that it
    * contributes to.
+   *
+   * @throws FileNotFoundException when the configuration file can't be found.
    */
   private void loadConfiguration() throws FileNotFoundException {
 
     measurement_dependencies =
-            new CalculatorConfig(ConfigurationLoader.getFullConfigPath(getConfigurationFile()));
+        new CalculatorConfig(ConfigurationLoader.getFullConfigPath(getConfigurationFile()));
     possible_measurements = new HashMap<>();
     for (CalculatorConfigItem item : measurement_dependencies.values()) {
       for (Object raw_parameter : item.parameters) {
@@ -128,7 +149,7 @@ public abstract class BaseCalculator {
    * @param y_start the y coordinate for the start of the line
    * @param x_end the x coordinate for the end of the line
    * @param y_end the y coordinate for the end of the line
-   * @return the Euclidean distance from start -> end if all of the arguments are != null, null
+   * @return the Euclidean distance from start -&lt; end if all of the arguments are != null, null
    *     otherwise.
    */
   public static Double length(Double x_start, Double y_start, Double x_end, Double y_end) {
@@ -179,23 +200,6 @@ public abstract class BaseCalculator {
       return start + (end - start) * distance;
     }
     return null;
-  }
-
-  /**
-   * Retrieves a scalar value from table
-   *
-   * @param title The name of the image.
-   * @param param The parameter being retrieved.
-   * @return The value of the parameter.
-   */
-  Object retrieve_scalar_argument(String title, Object param) {
-    Object value;
-    if (param instanceof String) {
-      value = dataStore.get_value(title, (String) param);
-    } else {
-      value = param;
-    }
-    return value;
   }
 
   /**
@@ -252,19 +256,21 @@ public abstract class BaseCalculator {
     }
     return measurement_result;
   }
-  /*
 
-   def do_measurement(self, measure, title):
-       """Perform the measurement for image title"""
-       arguments = []
-       parameters, measurement_function = self.measurement_dependencies[measure]
-       for param in parameters:
-           arguments.append(self.retrieve_scalar_argument(title, param))
-       try:
-           measurement_result = self.measurement_funcs[measurement_function](*arguments)
-       except KeyError:
-           raise KeyError("%s is not a known measurement" % measurement_function)
-       return measurement_result
-
-  */
+  /**
+   * Retrieves a scalar value from table
+   *
+   * @param title The name of the image.
+   * @param param The parameter being retrieved.
+   * @return The value of the parameter.
+   */
+  Object retrieve_scalar_argument(String title, Object param) {
+    Object value;
+    if (param instanceof String) {
+      value = dataStore.get_value(title, (String) param);
+    } else {
+      value = param;
+    }
+    return value;
+  }
 }
