@@ -41,6 +41,8 @@ public class AccordionPanel extends JPanel {
 
     /**
      * Creates a new <code>AccordionPanel</code>
+     * @param title the value used to label the <code>AccordionPanel</code>.
+     * @param start_open the initial display state.
      */
     public AccordionPanel(String title, boolean start_open) {
         this.build_ui(title, start_open);

@@ -40,9 +40,11 @@ public class ActiveImageChangeEvent extends EventObject {
   private final String newImage;
 
   /**
-   * Constructs a prototypical Event.
+   * Constructs an ActiveImageChange event.
    *
    * @param source The object on which the Event initially occurred.
+   * @param oldImage The previously active image.
+   * @param newImage The newly active image.
    * @throws IllegalArgumentException if source is null.
    */
   public ActiveImageChangeEvent(LastActiveImage source, String oldImage, String newImage) {
