@@ -479,7 +479,7 @@ public class DataStore extends AbstractTableModel {
       fireTableCellUpdated(row, descriptors.get("Filename").index);
       fireTableCellUpdated(row, descriptors.get(column).index);
     } else { // Update existing record
-      if (!data.get(row).containsKey(column) || !data.get(row).get(column).equals(value)) {
+      if (!data.get(row).containsKey(column) || !(data.get(row).get(column) == value)) {
         data.get(row).put(column, value);
         dataDirty = true;
         if (column.equals("Filename")) {
