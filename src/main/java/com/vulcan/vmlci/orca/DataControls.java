@@ -56,7 +56,11 @@ public class DataControls extends JPanel {
   private final DataStore ds;
   JButton[] controls = {null, null, null, null};
   MeasurementTable measurement_table;
-  /** Creates a new <code>DataControls</code>. */
+  /**
+   * Creates a new <code>DataControls</code>.
+   *
+   * @param ds the <code>DataStore</code> that will be used for calculations.
+   */
   public DataControls(DataStore ds) {
     this.ds = ds;
     build_ui();
@@ -139,7 +143,8 @@ public class DataControls extends JPanel {
             try {
               ds.loadData(new File(load_directory, load_filename));
             } catch (DataFileLoadException f) {
-              MessageDialog errDialog = new MessageDialog(null, "Error Loading CSV", f.getMessage());
+              MessageDialog errDialog =
+                  new MessageDialog(null, "Error Loading CSV", f.getMessage());
               errDialog.escapePressed();
             }
           }
