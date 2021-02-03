@@ -217,20 +217,37 @@ public abstract class BaseCalculator {
   }
 
   public Double do_measurement(String measure, String title) {
-    Object[] parameters = measurement_dependencies.get(measure).parameters;
-    MethodHandle mh = measurement_funcs.get("length");
+    if (!measurement_dependencies.containsKey(measure)) {
+      final String message = String.format("'%s' is not a known measurement", measure);
+      IllegalArgumentException err = new IllegalArgumentException(message);
+      logger.error(err);
+      throw err;
+    }
+    CalculatorConfigItem measurement_def = measurement_dependencies.get(measure);
+    final String function = measurement_def.function;
 
+    if (!measurement_funcs.containsKey(function)) {
+      String message = String.format("'%s' is not a known function", function);
+      IllegalArgumentException err = new IllegalArgumentException(message);
+      logger.error(err);
+      throw err;
+    }
+
+    // Unmarshalling
+    Object[] parameters = measurement_def.parameters;
+    MethodHandle mh = measurement_funcs.get(function);
     int n_args = parameters.length;
     Object[] arguments = new Object[n_args];
-
-    for(int i = 0; i < n_args; i++) {
-      arguments[i] = retrieve_scalar_argument(title,parameters[i]);
+    for (int i = 0; i < n_args; i++) {
+      arguments[i] = retrieve_scalar_argument(title, parameters[i]);
     }
+
+    // Execution
     Double measurement_result = null;
     try {
       measurement_result = (Double) mh.invokeWithArguments(arguments);
     } catch (Throwable throwable) {
-      throwable.printStackTrace();
+      logger.error(throwable);
     }
     return measurement_result;
   }
