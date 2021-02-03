@@ -87,6 +87,8 @@ public class ConfigurationLoader {
    * return ConfigurationLoader.CONFIG_DIRECTORY inside the os dependent configuration location.
    *
    * @param filename The name of the configuration file.
+   * @return a string representation of the fill path to the config file named <code>filename</code>
+   *     .
    */
   public static String getFullConfigPath(String filename) {
     if (ConfigurationLoader.CONFIG_DIRECTORY.isAbsolute()) {
