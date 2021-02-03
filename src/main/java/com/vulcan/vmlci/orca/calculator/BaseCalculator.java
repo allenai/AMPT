@@ -117,6 +117,9 @@ public abstract class BaseCalculator {
     }
   }
 
+  /** @return The name of the configuration file required for this calculator. */
+  protected abstract String getConfigurationFile();
+
   /**
    * Compute the length from (x_start,y_start) to (x_end,y_end)
    *
