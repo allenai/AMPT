@@ -69,7 +69,7 @@ public class MeasurementTable extends WindowAdapter implements TableModelListene
    * This fine grain notification tells listeners the exact range of cells, rows, or columns that
    * changed.
    *
-   * @param e
+   * @param e event from table model
    */
   @Override
   public void tableChanged(TableModelEvent e) {
