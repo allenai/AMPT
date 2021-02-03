@@ -40,7 +40,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 
-public class MeasurementManagerTest extends TestCase {
+public class BaseCalculatorTest extends TestCase {
   DataStore ds = null;
   Path originalConfigPath = null;
 
@@ -54,11 +54,21 @@ public class MeasurementManagerTest extends TestCase {
     this.ds = new DataStore();
   }
 
+  /**
+   * Load a known good csv file and verify the length.
+   *
+   * <p>This test is present just to make sure we're loading data correctly.
+   */
   public void testLoad_data_known_good() {
     load_test_data("/data/sample_full.csv");
     assertEquals(80, ds.getRowCount());
   }
 
+  /**
+   * Load a CSV file into the <code>DataStore</code>
+   *
+   * @param test_csv the test case CSV file.
+   */
   private void load_test_data(String test_csv) {
     File test_file = new File(DataStoreTest.class.getResource(test_csv).getPath());
     try {
@@ -68,35 +78,66 @@ public class MeasurementManagerTest extends TestCase {
       fail();
     }
   }
-  /*
-     def test_length(self):
-       """Verify that automatic length computations occur."""
-       self.assertEqual(MeasurementManager.length(0, 0, 0, 0), 0.0,
-                        "Got a non-zero length from zero length vector")
-       self.data_store.insert_value('foo', "BH_x", 0)
-       self.data_store.insert_value('foo', "BH_y", 3)
-       self.data_store.insert_value('foo', "DF_x", 4)
-       self.data_store.insert_value('foo', "DF_y", 0)
-       updated = int(self.data_store.get_value("foo", "BHDF", missing=None))
-       self.assertEqual(updated, 5, "BHDF didn't get computed")
-
-  */
 
   public void test_length() {
-    MeasurementManager mm = null;
+    BaseCalculator calculator = null;
     try {
-     mm = new MeasurementManager(ds);
+      calculator = new BaseCalculatorTestingAdapter(ds);
     } catch (FileNotFoundException e) {
       fail(e.getMessage());
     }
     assertEquals(
         "Got a non-zero length from zero length vector",
         0.,
-        MeasurementManager.length(0., 0., 0., 0.));
+        BaseCalculatorTestingAdapter.length(0., 0., 0., 0.));
     ds.insert_value("foo", "SNDF_x_start", 0.);
     ds.insert_value("foo", "SNDF_y_start", 3.);
     ds.insert_value("foo", "SNDF_x_end", 4.);
     ds.insert_value("foo", "SNDF_y_end", 0.);
-    assertEquals(5., mm.do_measurement("SNDF", "foo"));
+    assertEquals(5., calculator.do_measurement("SNDF", "foo"));
+  }
+
+  public void test_bad_measurement() {
+    BaseCalculator mm = null;
+    try {
+      mm = new BaseCalculatorTestingAdapter(ds);
+    } catch (FileNotFoundException e) {
+      fail(e.getMessage());
+    }
+    ds.insert_value("foo", "SNDF_x_start", 0.);
+    try {
+      mm.do_measurement("BOGUS", "foo");
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("BOGUS"));
+    }
+  }
+
+  public void test_bad_function() {
+    BaseCalculator mm = null;
+    try {
+      mm = new BaseCalculatorTestingAdapter(ds);
+    } catch (FileNotFoundException e) {
+      fail(e.getMessage());
+    }
+    ds.insert_value("foo", "SNDF_x_start", 0.);
+    try {
+      mm.do_measurement("BAD_FUNC", "foo");
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("BAD_FUNC"));
+    }
+  }
+
+  private static class BaseCalculatorTestingAdapter extends BaseCalculator {
+
+    public BaseCalculatorTestingAdapter(DataStore ds) throws FileNotFoundException {
+      super(ds);
+    }
+
+    @Override
+    protected String getConfigurationFile() {
+      return "MeasurementConf.json";
+    }
   }
 }
