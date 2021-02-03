@@ -37,40 +37,27 @@ import com.cedarsoftware.util.io.JsonReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.Map;
 
 public class CalculatorConfig extends HashMap<String, CalculatorConfigItem> {
-  private final String config_path;
 
   public CalculatorConfig(String config_path) throws FileNotFoundException {
-    this.config_path = config_path;
     FileInputStream reader = new FileInputStream(config_path);
-    Map args = new HashMap<>();
+    HashMap<String, Object> args = new HashMap<>();
     args.put(JsonReader.USE_MAPS, true);
     Object[] loaded_items = (Object[]) JsonReader.jsonToJava(reader, args);
+
+    // Process the loaded configuration.
     for (Object raw_item : loaded_items) {
       final JsonObject<String, Object> json_item = (JsonObject<String, Object>) raw_item;
       final String target = (String) json_item.get("target");
       Object[] parameters = new Object[((Object[]) json_item.get("parameters")).length];
       for (int i = ((Object[]) json_item.get("parameters")).length - 1; i >= 0; i--) {
-        final Object temp =((Object[]) json_item.get("parameters"))[i];
+        final Object temp = ((Object[]) json_item.get("parameters"))[i];
         parameters[i] = temp.getClass().cast(temp);
       }
       final String function = (String) json_item.get("function");
       final CalculatorConfigItem item = new CalculatorConfigItem(target, parameters, function);
       this.put(((CalculatorConfigItem) item).target, (CalculatorConfigItem) item);
-    }
-    System.out.println(loaded_items);
-  }
-
-  public static void main(String[] args) {
-    final String config_path =
-        "/Users/palbee/Development/AMPT/measurement-tool-config/MeasurementConf.json";
-    try {
-      CalculatorConfig instance = new CalculatorConfig(config_path);
-      System.out.println(instance);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     }
   }
 }
