@@ -100,6 +100,7 @@ public class DataStore extends AbstractTableModel {
    * Constructs an empty DataStore instance.
    *
    * @throws ConfigurationFileLoadException This will never be thrown as a file won't be loaded.
+   * @throws DataFileLoadException This will never be thrown as a file won't be loaded.
    */
   public DataStore() throws ConfigurationFileLoadException, DataFileLoadException {
     this(null);
@@ -267,6 +268,7 @@ public class DataStore extends AbstractTableModel {
   /**
    * Get the row index for a filename.
    *
+   * @param image_filename the image name to look for in the data store.
    * @return Index of row containing image name if found, -1 otherwise.
    */
   public int find_row(String image_filename) {
@@ -307,6 +309,9 @@ public class DataStore extends AbstractTableModel {
    * and a csv has extra columns not listed in the CSV-Columns.csv config, those columns will be
    * skipped when the csv is loaded into the datastore. If error_on_unknown=True and a csv has extra
    * columns, an error will be thrown and the csv will not be loaded.
+   *
+   * @param dataFile <code>File</code> referring to a CSV file holding the measurements.
+   * @throws DataFileLoadException raised if the there any issues opening dataFile.
    */
   public void loadData(File dataFile) throws DataFileLoadException {
     if (dataFile == null) {
@@ -643,6 +648,7 @@ public class DataStore extends AbstractTableModel {
    * Writes a CSV file to the file specified via dataFile. All columns are written.
    *
    * @param dataFile The location to export to.
+   * @throws IOException when the data can't be saved to <code>dataFile</code>.
    */
   public void save_as_csv(File dataFile) throws IOException {
     save_as_csv(dataFile, false);
@@ -656,6 +662,7 @@ public class DataStore extends AbstractTableModel {
    *
    * @param dataFile The location to export to.
    * @param export If true only exports columns marked for export in the CSV-Columns config.
+   * @throws IOException when the data can't be saved to <code>dataFile</code>.
    */
   public void save_as_csv(File dataFile, boolean export) throws IOException {
     ArrayList<String> headers = new ArrayList<>();
