@@ -137,7 +137,7 @@ public class BaseCalculatorTest extends TestCase {
 
     @Override
     protected String getConfigurationFile() {
-      return "MeasurementConf.json";
+      return "BadMeasurementConf.json";
     }
   }
 }
