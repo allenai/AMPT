@@ -225,6 +225,12 @@ public abstract class BaseCalculator {
     return true;
   }
 
+  /** Perform measurement <code>measure</code> on <code>title</code>
+   * @param measure the name of the measurement.
+   * @param title the image to measure.
+   * @return the measurement. May be null if all parameters are not present.
+   * @throws IllegalArgumentException if a measure or measurement function is not available.
+   */
   public Double do_measurement(String measure, String title) {
     if (!measurement_dependencies.containsKey(measure)) {
       final String message = String.format("'%s' is not a known measurement", measure);
