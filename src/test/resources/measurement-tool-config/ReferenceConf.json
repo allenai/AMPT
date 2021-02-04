@@ -10,7 +10,7 @@
       "REPGuide_y_start",
       "REPGuide_x_end",
       "REPGuide_y_end",
-      0.75
+      75
     ],
     "function": "compute_offset_reference_markers"
   },
@@ -21,11 +21,42 @@
       "SNDF_y_start",
       "SNDF_x_end",
       "SNDF_y_end",
-      0.05,
-      2.25,
-      0.05
+      5,
+      100,
+      5
     ],
     "function": "interval_reference_markers"
+  },
+  {
+    "target": "Full Body Profile",
+    "parameters": [
+      "LENGTH_x_start",
+      "LENGTH_y_start",
+      "LENGTH_x_end",
+      "LENGTH_y_end",
+      5,
+      100,
+      5
+    ],
+    "function": "interval_reference_markers"
+  },
+  {
+    "target": "Body Profile 225",
+    "parameters": [
+      "DFFL_x_start",
+      "DFFL_y_start",
+      "DFFL_x_end",
+      "DFFL_y_end",
+      "SNDF_x_start",
+      "SNDF_y_start",
+      "SNDF_x_end",
+      "SNDF_y_end",
+      5,
+      125,
+      5,
+      100
+    ],
+    "function": "interval_reference_markers_with_base_length"
   },
   {
     "target": "Head Width",
@@ -34,9 +65,9 @@
       "BHDF_y_start",
       "BHDF_x_end",
       "BHDF_y_end",
-      0.15,
-      0.15,
-      0.1
+      15,
+      15,
+      10
     ],
     "function": "interval_reference_markers"
   }
