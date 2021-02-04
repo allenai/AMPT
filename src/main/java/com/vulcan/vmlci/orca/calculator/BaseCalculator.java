@@ -51,9 +51,9 @@ import static java.lang.Math.sqrt;
 public abstract class BaseCalculator {
   protected final DataStore dataStore;
   public HashMap<String, MethodHandle> measurement_funcs;
-  @Parameter Logger logger;
   protected CalculatorConfig measurement_dependencies;
   protected HashMap<String, ArrayList<String>> possible_measurements;
+  @Parameter Logger logger;
 
   /**
    * Default constructor.
@@ -69,7 +69,7 @@ public abstract class BaseCalculator {
 
   /**
    * @param ds the <code>DataStore</code> that the Calculator will operate on.
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException when the configuration file is not present.
    */
   public BaseCalculator(DataStore ds) throws FileNotFoundException {
     if (logger == null) {
