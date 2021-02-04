@@ -225,13 +225,15 @@ public abstract class BaseCalculator {
     return true;
   }
 
-  /** Perform measurement <code>measure</code> on <code>title</code>
+  /**
+   * Perform measurement <code>measure</code> on <code>title</code>
+   *
    * @param measure the name of the measurement.
    * @param title the image to measure.
    * @return the measurement. May be null if all parameters are not present.
    * @throws IllegalArgumentException if a measure or measurement function is not available.
    */
-  public Double do_measurement(String measure, String title) {
+  public Object do_measurement(String measure, String title) {
     if (!measurement_dependencies.containsKey(measure)) {
       final String message = String.format("'%s' is not a known measurement", measure);
       IllegalArgumentException err = new IllegalArgumentException(message);
@@ -249,22 +251,34 @@ public abstract class BaseCalculator {
     }
 
     // Unmarshalling
-    Object[] parameters = measurement_def.parameters;
-    MethodHandle mh = measurement_funcs.get(function);
-    int n_args = parameters.length;
-    Object[] arguments = new Object[n_args];
-    for (int i = 0; i < n_args; i++) {
-      arguments[i] = retrieve_scalar_argument(title, parameters[i]);
-    }
+    Object[] arguments = gatherArguments(title, measurement_def);
 
     // Execution
-    Double measurement_result = null;
+    MethodHandle mh = measurement_funcs.get(function);
+    Object measurement_result = null;
     try {
-      measurement_result = (Double) mh.invokeWithArguments(arguments);
+      measurement_result = mh.invokeWithArguments(arguments);
     } catch (Throwable throwable) {
       logger.error(throwable);
     }
     return measurement_result;
+  }
+
+  /**
+   * Collect the arguments for measurement from the datastore.
+   *
+   * @param title of the image being measured
+   * @param measurement_def the
+   * @return an array of arguments
+   */
+  private Object[] gatherArguments(String title, CalculatorConfigItem measurement_def) {
+    Object[] parameters = measurement_def.parameters;
+    int nArgs = parameters.length;
+    Object[] arguments = new Object[nArgs];
+    for (int i = 0; i < nArgs; i++) {
+      arguments[i] = retrieve_scalar_argument(title, parameters[i]);
+    }
+    return arguments;
   }
 
   /**
