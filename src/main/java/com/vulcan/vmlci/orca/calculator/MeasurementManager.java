@@ -43,7 +43,7 @@ import java.util.LinkedList;
 public class MeasurementManager extends BaseCalculator implements TableModelListener {
   /**
    * @param ds the <code>DataStore</code> that the Calculator will operate on.
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException when the configuration file is not present.
    */
   public MeasurementManager(DataStore ds) throws FileNotFoundException {
     super(ds);
@@ -63,7 +63,7 @@ public class MeasurementManager extends BaseCalculator implements TableModelList
    * one column has been updated, this is indicative of a file load and consequently we don't need
    * ot do any updates.
    *
-   * @param event
+   * @param event received when something has changed in the table.
    */
   @Override
   public void tableChanged(TableModelEvent event) {
