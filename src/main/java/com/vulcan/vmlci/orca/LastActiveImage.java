@@ -33,6 +33,8 @@ package com.vulcan.vmlci.orca;
 
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import ij.ImageListener;
+import ij.ImagePlus;
 import ij.WindowManager;
 import ij.gui.ImageWindow;
 
@@ -41,12 +43,12 @@ import java.awt.KeyboardFocusManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-/** Class to manage tracking of the image currently being measured.
+/**
+ * Class to manage tracking of the image currently being measured.
  *
- * This class emits {@link ActiveImageChangeEvent}s when the front-most
- * ImagePlus window changes.
- * */
-public class LastActiveImage implements PropertyChangeListener {
+ * <p>This class emits {@link ActiveImageChangeEvent}s when the front-most ImagePlus window changes.
+ */
+public class LastActiveImage implements PropertyChangeListener, ImageListener {
   public static final String NO_OPEN_IMAGE = "No Open Image";
   private static LastActiveImage instance;
   private final EventListenerList listenerList = new EventListenerList();
@@ -58,6 +60,7 @@ public class LastActiveImage implements PropertyChangeListener {
     KeyboardFocusManager keyboardFocusManager =
         KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener("focusedWindow", this);
+    ImagePlus.addImageListener(this);
   }
 
   /**
@@ -139,4 +142,27 @@ public class LastActiveImage implements PropertyChangeListener {
       }
     }
   }
+
+  @Override
+  public void imageOpened(ImagePlus imp) {}
+
+  /**
+   * Fires an ActiveImageChangeEvent whenever an ImagePlus is closed. Most useful when there isn't
+   * another ImagePlus that immediately takes focus.
+   *
+   * @param imp the ImagePlus that is closing
+   */
+  @Override
+  public void imageClosed(ImagePlus imp) {
+    String closedImage = imp.getTitle();
+    if (WindowManager.getImageCount() == 0) {
+      most_recent_image = NO_OPEN_IMAGE;
+      this.fireImageChange(closedImage, most_recent_image);
+    } else {
+      fireImageChange(closedImage, WindowManager.getCurrentImage().getTitle());
+    }
+  }
+
+  @Override
+  public void imageUpdated(ImagePlus imp) {}
 }
