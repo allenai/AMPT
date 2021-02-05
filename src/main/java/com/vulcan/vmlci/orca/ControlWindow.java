@@ -57,7 +57,7 @@ public class ControlWindow implements ActiveImageListener {
   private JPanel branding = null;
   private JPanel csv_controls = null;
   private DataStore ds;
-  private MetadataDisplay metadataDisplay;
+  private MetadataControl metadataControl;
 
   public ControlWindow() {
     try {
@@ -71,7 +71,7 @@ public class ControlWindow implements ActiveImageListener {
 
   private void build_ui() {
     LastActiveImage.getInstance();
-    metadataDisplay = new MetadataDisplay(ds);
+    metadataControl = new MetadataControl(ds);
     GridBagConstraints c = new GridBagConstraints();
     this.toplevel = new JPanel();
     this.toplevel.setLayout(new GridBagLayout());
@@ -135,8 +135,13 @@ public class ControlWindow implements ActiveImageListener {
     gbc.gridx = 0;
     gbc.gridy = 0;
     AccordionPanel metadata = new AccordionPanel("Metadata", true);
-    metadata.getContent_panel().add(metadataDisplay.getContent_panel());
     frame.add(metadata, gbc);
+
+    gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weightx = 1;
+    gbc.weighty = 1;
+    metadata.getContent_panel().add(metadataControl.displayPanel);
 
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0;
