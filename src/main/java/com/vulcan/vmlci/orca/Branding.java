@@ -31,6 +31,8 @@
 
 package com.vulcan.vmlci.orca;
 
+import com.vulcan.vmlci.orca.ui.AccordionPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
