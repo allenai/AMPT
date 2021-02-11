@@ -78,7 +78,7 @@ public class CalculatorConfig extends HashMap<String, CalculatorConfigItem> {
       final CalculatorConfigItem item =
           new CalculatorConfigItem(
               (String) json_item.get("target"), parameters, (String) json_item.get("function"));
-      this.put(((CalculatorConfigItem) item).target, (CalculatorConfigItem) item);
+      this.put(item.target, item);
     }
   }
 }
