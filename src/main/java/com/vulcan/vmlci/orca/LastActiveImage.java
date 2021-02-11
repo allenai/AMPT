@@ -56,11 +56,15 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
 
   /** Constructs a LastActiveImage instance. */
   private LastActiveImage() {
-    most_recent_image = null;
     KeyboardFocusManager keyboardFocusManager =
         KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener("focusedWindow", this);
     ImagePlus.addImageListener(this);
+    if(WindowManager.getImageCount() == 0){
+      most_recent_image = NO_OPEN_IMAGE;
+    } else {
+      most_recent_image = WindowManager.getCurrentImage().getTitle();
+    }
   }
 
   /**
@@ -76,7 +80,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
   }
 
   /**
-   * Get the current ImagePluse
+   * Get the current ImagePlus
    *
    * @return the last focused ImagePlus name.
    */
