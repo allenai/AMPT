@@ -72,9 +72,7 @@ public abstract class BaseCalculator {
    * @throws FileNotFoundException when the configuration file is not present.
    */
   public BaseCalculator(DataStore ds) throws FileNotFoundException {
-    if (logger == null) {
-      logger = new StderrLogService();
-    }
+    logger = new StderrLogService();
     dataStore = ds;
     loadMethods();
     loadConfiguration();
