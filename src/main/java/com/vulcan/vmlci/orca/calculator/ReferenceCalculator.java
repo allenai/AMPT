@@ -153,7 +153,7 @@ public class ReferenceCalculator extends BaseCalculator {
         final Double offset = percentage * reference_length / 100.;
         final Double marker_x = axis_x_start + axis_x_delta * offset;
         final Double marker_y = axis_y_start + axis_y_delta * offset;
-        final String label = String.format("marker:%d%%", percentage + label_offset);
+        final String label = String.format("marker:%f%%", percentage + label_offset);
         result.put(
             label,
             new Point2D.Double[] {
