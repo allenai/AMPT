@@ -33,6 +33,7 @@ package com.vulcan.vmlci.orca;
 
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import com.vulcan.vmlci.orca.ui.AccordionPanel;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -40,6 +41,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -47,17 +50,16 @@ import java.awt.GridBagLayout;
 /**
  * The <code>ControlWindow</code> class is the main UI for the Aquatic Mammal Photogrammetry Tool.
  */
-public class ControlWindow implements ActiveImageListener {
+public class ControlWindow implements ActiveImageListener, TableModelListener {
   private final JPanel metadata = null;
   private final JPanel input = null;
   private final JPanel length_measurements = null;
   private final JPanel body_profiles = null;
   private JFrame application_frame = null;
-  private JPanel toplevel = null;
-  private JPanel branding = null;
-  private JPanel csv_controls = null;
   private DataStore ds;
   private MetadataControl metadataControl;
+  private InputControls inputControls;
+  private String active_image;
 
   public ControlWindow() {
     try {
@@ -70,11 +72,12 @@ public class ControlWindow implements ActiveImageListener {
   }
 
   private void build_ui() {
-    LastActiveImage.getInstance();
+    LastActiveImage lastActiveImage = LastActiveImage.getInstance();
     metadataControl = new MetadataControl(ds);
+    inputControls = new InputControls(ds);
     GridBagConstraints c = new GridBagConstraints();
-    this.toplevel = new JPanel();
-    this.toplevel.setLayout(new GridBagLayout());
+    JPanel toplevel = new JPanel();
+    toplevel.setLayout(new GridBagLayout());
 
     GridBagConstraints gbc;
 
@@ -88,8 +91,8 @@ public class ControlWindow implements ActiveImageListener {
     gbc.fill = GridBagConstraints.HORIZONTAL;
 
     // Branding
-    this.branding = new Branding();
-    this.toplevel.add(branding, gbc);
+    JPanel branding = new Branding();
+    toplevel.add(branding, gbc);
 
     // Center Space
     gbc = new GridBagConstraints();
@@ -99,10 +102,10 @@ public class ControlWindow implements ActiveImageListener {
     gbc.gridheight = 1;
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
-    this.toplevel.add(build_accordion(), gbc);
+    toplevel.add(build_accordion(), gbc);
 
     // Data Controls
-    this.csv_controls = new DataControls(ds);
+    JPanel csv_controls = new DataControls(ds);
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 2;
@@ -110,7 +113,7 @@ public class ControlWindow implements ActiveImageListener {
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.SOUTH;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.toplevel.add(csv_controls, gbc);
+    toplevel.add(csv_controls, gbc);
 
     this.application_frame = new JFrame();
     this.application_frame.setTitle("Test Window");
@@ -119,10 +122,13 @@ public class ControlWindow implements ActiveImageListener {
     this.application_frame.pack();
     this.application_frame.setVisible(true);
 
-    LastActiveImage.getInstance().addActiveImageListener(this);
+    this.active_image = lastActiveImage.getMost_recent_image();
+    lastActiveImage.addActiveImageListener(this);
+    this.setTitle();
   }
 
   private JComponent build_accordion() {
+
     JPanel frame = new JPanel();
     JScrollPane scrollPane = new JScrollPane(frame);
     GridBagConstraints gbc = new GridBagConstraints();
@@ -141,23 +147,22 @@ public class ControlWindow implements ActiveImageListener {
     gbc.fill = GridBagConstraints.BOTH;
     gbc.weightx = 1;
     gbc.weighty = 1;
-    metadata.getContent_panel().add(metadataControl.displayPanel);
-
+    metadata.setContent_panel(metadataControl.displayPanel);
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 1;
     AccordionPanel demo2 = new AccordionPanel("Input", true);
-    demo2.getContent_panel().add(new JLabel("Lorem Ipsum"));
+    demo2.setContent_panel(inputControls.inputPanel);
     frame.add(demo2, gbc);
 
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 2;
-    AccordionPanel demo3 = new AccordionPanel("Length Measurements", true);
-    demo3.getContent_panel().add(new JLabel("Lorem Ipsum"));
-    frame.add(demo3, gbc);
+    AccordionPanel measurements = new AccordionPanel("Length Measurements", true);
+    measurements.getContent_panel().add(new JLabel("Lorem Ipsum"));
+    frame.add(measurements, gbc);
 
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0;
@@ -177,9 +182,30 @@ public class ControlWindow implements ActiveImageListener {
     return scrollPane;
   }
 
+  void setTitle() {
+    String saved_state;
+    if (ds.dirty()) {
+      saved_state = "CSV Unsaved";
+    } else {
+      saved_state = "CSV Saved";
+    }
+    application_frame.setTitle(String.format("Measuring: %s  - %s", active_image, saved_state));
+  }
 
   @Override
   public void activeImageChanged(ActiveImageChangeEvent evt) {
-    application_frame.setTitle(String.format("Measuring: %s", evt.getNewImage()));
+    active_image = evt.getNewImage();
+    setTitle();
+  }
+
+  /**
+   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
+   * changed.
+   *
+   * @param e
+   */
+  @Override
+  public void tableChanged(TableModelEvent e) {
+    setTitle();
   }
 }
