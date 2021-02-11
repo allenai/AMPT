@@ -48,7 +48,7 @@ import static com.vulcan.vmlci.orca.Utilities.loadCSVAsMap;
 import static java.util.Collections.addAll;
 
 public class DataStore extends AbstractTableModel {
-
+  private static DataStore datastore_instance = null;
   // Formatting constants.
   private static final String X_COL = "%s_x";
   private static final String Y_COL = "%s_y";
@@ -102,7 +102,7 @@ public class DataStore extends AbstractTableModel {
    * @throws ConfigurationFileLoadException This will never be thrown as a file won't be loaded.
    * @throws DataFileLoadException This will never be thrown as a file won't be loaded.
    */
-  public DataStore() throws ConfigurationFileLoadException, DataFileLoadException {
+  private DataStore() throws ConfigurationFileLoadException, DataFileLoadException {
     this(null);
   }
 
@@ -113,11 +113,22 @@ public class DataStore extends AbstractTableModel {
    * @throws ConfigurationFileLoadException A configuration file could not be loaded.
    * @throws DataFileLoadException A csv file could not be loaded.
    */
-  public DataStore(File dataFile) throws ConfigurationFileLoadException, DataFileLoadException {
+  private DataStore(File dataFile) throws ConfigurationFileLoadException, DataFileLoadException {
     populateReferenceSets();
     loadColumnDefs();
     loadData(dataFile);
     rebuildRowMap();
+  }
+
+  public static DataStore createDataStore() throws ConfigurationFileLoadException, DataFileLoadException {
+    return createDataStore(null);
+  }
+
+  public static DataStore createDataStore(File dataFile) throws ConfigurationFileLoadException, DataFileLoadException {
+    if(DataStore.datastore_instance == null){
+      DataStore.datastore_instance = new DataStore(dataFile);
+    }
+    return DataStore.datastore_instance;
   }
 
   /**
