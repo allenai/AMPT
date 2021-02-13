@@ -52,8 +52,9 @@ import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-public class PointInputPanel extends JPanel implements ActiveImageListener {
-  DataStore dataStore;
+public class PointInputPanel extends InputPanel implements RoiListener, ItemListener {
+
+  // UI Elements
   private JComboBox<String> measurementSelector;
   private JTextField currentPointX;
   private JTextField currentPointY;
@@ -67,10 +68,8 @@ public class PointInputPanel extends JPanel implements ActiveImageListener {
 
 
   public PointInputPanel(DataStore dataStore) {
-    this.dataStore = dataStore;
-    controls = new ArrayList<>();
-    buildUI();
-    LastActiveImage.getInstance().addActiveImageListener(this);
+    super(dataStore);
+    PointRoi.addRoiListener(this);
   }
 
   private void buildUI() {
