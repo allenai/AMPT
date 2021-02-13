@@ -60,14 +60,14 @@ public class MetadataControl implements ActiveImageListener {
   private JTextField whaleIDField;
   private JTextField positionField;
   private HashMap<String, JRadioButton> underwater;
-  private DataStore dataStore;
+  final private DataStore dataStore;
 
   public MetadataControl(DataStore dataStore) {
     this.dataStore = dataStore;
     build_ui();
     wire_ui();
     LastActiveImage.getInstance().addActiveImageListener(this);
-    activeImage = LastActiveImage.getInstance().getMost_recent_image();
+    activeImage = LastActiveImage.getInstance().getMostRecentImageName();
   }
 
   private void build_ui() {
@@ -109,7 +109,6 @@ public class MetadataControl implements ActiveImageListener {
     displayPanel.add(filenameField, gbc);
 
     // Labels
-    gbc = new GridBagConstraints();
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 2;
