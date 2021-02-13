@@ -67,8 +67,8 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     } catch (ConfigurationFileLoadException | DataFileLoadException e) {
       e.printStackTrace();
     }
-
     SwingUtilities.invokeLater(this::build_ui);
+    ds.addTableModelListener(this);
   }
 
   private void build_ui() {
@@ -122,7 +122,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     this.application_frame.pack();
     this.application_frame.setVisible(true);
 
-    this.active_image = lastActiveImage.getMost_recent_image();
+    this.active_image = lastActiveImage.getMostRecentImageName();
     lastActiveImage.addActiveImageListener(this);
     this.setTitle();
   }
