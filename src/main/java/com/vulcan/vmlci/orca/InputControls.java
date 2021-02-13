@@ -33,15 +33,14 @@ package com.vulcan.vmlci.orca;
 
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import com.vulcan.vmlci.orca.ui.CommentInputPanel;
 import com.vulcan.vmlci.orca.ui.LengthInputPanel;
 import com.vulcan.vmlci.orca.ui.PointInputPanel;
 import ij.IJ;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 
@@ -51,15 +50,13 @@ public class InputControls implements ActiveImageListener {
   JPanel inputPanel;
   ArrayList<JComponent> controls;
 
-  private JTextArea commentField;
-  private JButton saveComments;
 
   public InputControls(DataStore dataStore) {
     this.dataStore = dataStore;
     buildUI();
     wireUI();
     LastActiveImage lastActiveImage = LastActiveImage.getInstance();
-    this.activeImage = lastActiveImage.getMost_recent_image();
+    this.activeImage = lastActiveImage.getMostRecentImageName();
     lastActiveImage.addActiveImageListener(this);
   }
 
@@ -70,7 +67,7 @@ public class InputControls implements ActiveImageListener {
     JTabbedPane tabbedPane = new JTabbedPane();
     inputPanel.add(tabbedPane, BorderLayout.CENTER);
 
-    tabbedPane.addTab("Comments", buildCommentPanel());
+    tabbedPane.addTab("Comments",new CommentInputPanel(dataStore));
     tabbedPane.addTab("Points", new PointInputPanel(dataStore));
     tabbedPane.addTab("Lengths", new LengthInputPanel(dataStore));
 
@@ -88,19 +85,6 @@ public class InputControls implements ActiveImageListener {
   }
 
   private void wireUI() {}
-
-  private JPanel buildCommentPanel() {
-    JPanel commentPanel = new JPanel();
-    commentPanel.setLayout(new BorderLayout(0, 0));
-    commentField = new JTextArea();
-    commentPanel.add(commentField, BorderLayout.CENTER);
-    controls.add(commentField);
-    saveComments = new JButton();
-    saveComments.setText("Save Comments");
-    controls.add(saveComments);
-    commentPanel.add(saveComments, BorderLayout.SOUTH);
-    return commentPanel;
-  }
 
   /**
    * Gives notification that an ImagePlus has taken focus.
