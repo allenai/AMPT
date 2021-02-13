@@ -31,16 +31,13 @@
 
 package com.vulcan.vmlci.orca.ui;
 
-import com.vulcan.vmlci.orca.ColumnDescriptor;
 import com.vulcan.vmlci.orca.DataStore;
 import com.vulcan.vmlci.orca.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
-import com.vulcan.vmlci.orca.event.ActiveImageListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -48,41 +45,32 @@ import javax.swing.SwingConstants;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-public class LengthInputPanel extends JPanel implements ActiveImageListener {
-  DataStore dataStore;
-  LastActiveImage lastActiveImage;
+public class LengthInputPanel extends InputPanel {
   private JCheckBox enableOverlays;
-  private JComboBox<String> measurementSelector;
+  private JComboBox measurementSelector;
   private JTextField currentLength;
   private JTextField savedLength;
   private JButton save;
   private JButton revert;
   private JButton clear;
-  private ArrayList<JComponent> controls;
   private Point2D.Double[] saved_endpoints = null;
 
   public LengthInputPanel(DataStore dataStore) {
-    this.dataStore = dataStore;
-    controls = new ArrayList<>();
-    buildUI();
-    wireUI();
-    lastActiveImage = LastActiveImage.getInstance();
-    lastActiveImage.addActiveImageListener(this);
+    super(dataStore);
   }
 
-  private void buildUI() {
-    List<ColumnDescriptor> descriptors =
-        dataStore.descriptors.values().stream()
-            .filter(s -> s.measurement_type.equals("length"))
-            .collect(Collectors.toList());
-    descriptors.sort((o1, o2) -> Integer.compare(o1.index, o2.index));
-    Vector<String> measurments = new Vector<>();
-    descriptors.forEach(e -> measurments.add(e.name));
+  protected void buildUI() {
+    Vector<String> measurements =
+        dataStore.descriptors.values().stream() // Grab a stream of descriptors
+            .filter(s -> s.measurement_type.equals("length")) // Grab the length descriptors.
+            .sorted(Comparator.comparingInt(o -> o.index)) // Sort them by descriptor index
+            .map(s -> s.name) // Extract the names
+            .collect(Collectors.toCollection(Vector::new)); // Make a vector for JComboBox
+
     GridBagConstraints gbc;
     this.setLayout(new GridBagLayout());
     enableOverlays = new JCheckBox();
@@ -93,7 +81,7 @@ public class LengthInputPanel extends JPanel implements ActiveImageListener {
     gbc.gridy = 0;
     gbc.gridwidth = 7;
     this.add(enableOverlays, gbc);
-    measurementSelector = new JComboBox<>(measurments);
+    measurementSelector = new JComboBox<>(measurements);
     controls.add(measurementSelector);
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
@@ -207,7 +195,7 @@ public class LengthInputPanel extends JPanel implements ActiveImageListener {
     this.add(label7, gbc);
   }
 
-  private void wireUI() {
+  protected void wireUI() {
     save.addActionListener(
         e -> {
           String measurement = measurementSelector.getActionCommand();
@@ -221,16 +209,16 @@ public class LengthInputPanel extends JPanel implements ActiveImageListener {
    */
   @Override
   public void activeImageChanged(ActiveImageChangeEvent evt) {
+    super.activeImageChanged(evt);
     boolean measuring = !evt.getNewImage().equals(LastActiveImage.NO_OPEN_IMAGE);
-
-    controls.forEach(component -> component.setEnabled(measuring));
     if (measuring) {
       String currentMeasurement = (String) measurementSelector.getSelectedItem();
       saved_endpoints =
-          dataStore.getEndpoints(lastActiveImage.getMost_recent_image(), currentMeasurement);
-      Double saved_length = (Double) dataStore.get_value(lastActiveImage.getMost_recent_image(), currentMeasurement);
+          dataStore.getEndpoints(lastActiveImage.getMostRecentImageName(), currentMeasurement);
+      Double saved_length =
+          (Double) dataStore.get_value(lastActiveImage.getMostRecentImageName(), currentMeasurement);
 
-      if(saved_length != null){
+      if (saved_length != null) {
         savedLength.setText(saved_length.toString());
       } else {
         savedLength.setText("");
