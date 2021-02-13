@@ -80,12 +80,21 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
   }
 
   /**
+   * Get the current ImagePlus name
+   *
+   * @return the last focused ImagePlus name.
+   */
+  public String getMostRecentImageName() {
+    return most_recent_image;
+  }
+
+  /**
    * Get the current ImagePlus
    *
    * @return the last focused ImagePlus name.
    */
-  public String getMost_recent_image() {
-    return most_recent_image;
+  public ImagePlus getMostRecentImageWindow() {
+    return WindowManager.getImage(most_recent_image);
   }
 
   /**
