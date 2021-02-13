@@ -40,23 +40,23 @@ import java.awt.Color;
 import java.awt.event.WindowAdapter;
 
 public class MeasurementTable extends WindowAdapter implements TableModelListener {
-  private DataStore ds;
+  final private DataStore dataStore;
   private JFrame frame;
 
-  public MeasurementTable(DataStore ds) {
-    this.ds = ds;
+  public MeasurementTable(DataStore dataStore) {
+    this.dataStore = dataStore;
     build_ui();
-    this.ds.addTableModelListener(this);
+    this.dataStore.addTableModelListener(this);
   }
 
   private void build_ui() {
-    JTable table = new JTable(ds);
+    JTable table = new JTable(dataStore);
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     table.setShowGrid(true);
     table.setGridColor(Color.BLACK);
     table.doLayout();
     JScrollPane scrollPane = new JScrollPane(table);
-    frame = new JFrame(ds.getCsvFileName());
+    frame = new JFrame(dataStore.getCsvFileName());
     frame.add(scrollPane);
     frame.pack();
   }
@@ -73,10 +73,10 @@ public class MeasurementTable extends WindowAdapter implements TableModelListene
    */
   @Override
   public void tableChanged(TableModelEvent e) {
-    if (ds.dirty()) {
-      frame.setTitle(String.format("%s - Unsaved Changes", ds.getCsvFileName()));
+    if (dataStore.dirty()) {
+      frame.setTitle(String.format("%s - Unsaved Changes", dataStore.getCsvFileName()));
     } else {
-      frame.setTitle(ds.getCsvFileName());
+      frame.setTitle(dataStore.getCsvFileName());
     }
   }
 }
