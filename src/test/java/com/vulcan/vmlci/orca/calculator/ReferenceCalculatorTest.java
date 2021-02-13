@@ -42,6 +42,7 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.HashMap;
 
+@SuppressWarnings("UnusedAssignment")
 public class ReferenceCalculatorTest extends TestCase {
   DataStore ds = null;
   Path originalConfigPath = null;
@@ -54,7 +55,7 @@ public class ReferenceCalculatorTest extends TestCase {
     String testingConfigPath =
         DataStoreTest.class.getResource("/measurement-tool-config/").getPath();
     ConfigurationLoader.setConfigDirectory(testingConfigPath);
-    ds = new DataStore();
+    ds = DataStore.createDataStore();
     new MeasurementManager(ds);
     referenceCalculator = new ReferenceCalculator(ds);
   }

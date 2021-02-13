@@ -53,7 +53,7 @@ public class DataStoreTest extends TestCase {
     String testingConfigPath =
         DataStoreTest.class.getResource("/measurement-tool-config/").getPath();
     ConfigurationLoader.setConfigDirectory(testingConfigPath);
-    this.ds = new DataStore();
+    this.ds = DataStore.createDataStore();
   }
 
   /**
@@ -94,15 +94,7 @@ public class DataStoreTest extends TestCase {
     assertEquals(
         "Failure - set cardinality for FETCHABLE_POINTS incorrect", 2, ds.FETCHABLE_POINTS.size());
   }
-
-  public void testGetRowCount() {
-    assertEquals(0, this.ds.getRowCount());
-  }
-
-  public void testGetColCount() {
-    assertEquals(0, this.ds.getRowCount());
-  }
-
+  
   public void testFind_row() {
     final String test_csv = "/data/test_blankrow.csv";
     load_test_data(test_csv);
@@ -300,14 +292,18 @@ public class DataStoreTest extends TestCase {
       e.printStackTrace();
       fail();
     }
-    DataStore reloaded = null;
+    DataStore reloaded = this.ds;
     try {
-      reloaded = new DataStore(scratch_file);
-    } catch (com.vulcan.vmlci.orca.ConfigurationFileLoadException
-        | com.vulcan.vmlci.orca.DataFileLoadException e) {
+      reloaded.loadData(scratch_file);
+    } catch (DataFileLoadException e) {
       e.printStackTrace();
       fail();
     }
+//    } catch (com.vulcan.vmlci.orca.ConfigurationFileLoadException
+//        | com.vulcan.vmlci.orca.DataFileLoadException e) {
+//      e.printStackTrace();
+//      fail();
+//    }
     assertNotNull(reloaded);
     int orig_rows = this.ds.getRowCount();
     int orig_cols = this.ds.getColumnCount();

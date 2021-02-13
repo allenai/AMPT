@@ -63,7 +63,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
 
   public ControlWindow() {
     try {
-      ds = new DataStore();
+      ds = DataStore.createDataStore();
     } catch (ConfigurationFileLoadException | DataFileLoadException e) {
       e.printStackTrace();
     }
