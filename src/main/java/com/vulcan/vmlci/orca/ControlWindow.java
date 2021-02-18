@@ -31,6 +31,7 @@
 
 package com.vulcan.vmlci.orca;
 
+import com.vulcan.vmlci.orca.calculator.MeasurementManager;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
 import com.vulcan.vmlci.orca.ui.AccordionPanel;
@@ -46,6 +47,7 @@ import javax.swing.event.TableModelListener;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.FileNotFoundException;
 
 /**
  * The <code>ControlWindow</code> class is the main UI for the Aquatic Mammal Photogrammetry Tool.
@@ -69,6 +71,11 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     }
     SwingUtilities.invokeLater(this::build_ui);
     ds.addTableModelListener(this);
+    try {
+      MeasurementManager measurementManager = new MeasurementManager(ds);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   private void build_ui() {
@@ -147,7 +154,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     gbc.fill = GridBagConstraints.BOTH;
     gbc.weightx = 1;
     gbc.weighty = 1;
-    metadata.setContent_panel(metadataControl.displayPanel);
+    metadata.setContent_panel(metadataControl);
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0;
     gbc.gridx = 0;
