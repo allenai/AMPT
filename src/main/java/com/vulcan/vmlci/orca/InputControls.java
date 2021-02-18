@@ -34,9 +34,11 @@ package com.vulcan.vmlci.orca;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
 import com.vulcan.vmlci.orca.ui.CommentInputPanel;
+import com.vulcan.vmlci.orca.ui.InputPanel;
 import com.vulcan.vmlci.orca.ui.LengthInputPanel;
 import com.vulcan.vmlci.orca.ui.PointInputPanel;
 import ij.IJ;
+import ij.ImagePlus;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -50,7 +52,6 @@ public class InputControls implements ActiveImageListener {
   JPanel inputPanel;
   ArrayList<JComponent> controls;
 
-
   public InputControls(DataStore dataStore) {
     this.dataStore = dataStore;
     buildUI();
@@ -58,6 +59,8 @@ public class InputControls implements ActiveImageListener {
     LastActiveImage lastActiveImage = LastActiveImage.getInstance();
     this.activeImage = lastActiveImage.getMostRecentImageName();
     lastActiveImage.addActiveImageListener(this);
+    lastActiveImage.fireImageChange(
+        lastActiveImage.getMostRecentImageName(), lastActiveImage.getMostRecentImageName());
   }
 
   private void buildUI() {
@@ -67,13 +70,21 @@ public class InputControls implements ActiveImageListener {
     JTabbedPane tabbedPane = new JTabbedPane();
     inputPanel.add(tabbedPane, BorderLayout.CENTER);
 
-    tabbedPane.addTab("Comments",new CommentInputPanel(dataStore));
+    tabbedPane.addTab("Comments", new CommentInputPanel(dataStore));
     tabbedPane.addTab("Points", new PointInputPanel(dataStore));
     tabbedPane.addTab("Lengths", new LengthInputPanel(dataStore));
 
     tabbedPane.addChangeListener(
         e -> {
+          ImagePlus img = LastActiveImage.getInstance().getMostRecentImageWindow();
+          if (img != null) {
+            img.deleteRoi();
+          }
+          InputPanel active_control =
+              ((InputPanel) tabbedPane.getComponentAt(tabbedPane.getSelectedIndex()));
           switch (tabbedPane.getSelectedIndex()) {
+            case 0:
+              break;
             case 1:
               IJ.setTool("point");
               break;
@@ -81,7 +92,13 @@ public class InputControls implements ActiveImageListener {
               IJ.setTool("line");
               break;
           }
+          if (img != null) {
+            active_control.reload_fields();
+          }
         });
+
+    //    ((InputPanel)tabbedPane.getComponentAt(tabbedPane.getSelectedIndex())).updateInterface();
+
   }
 
   private void wireUI() {}
