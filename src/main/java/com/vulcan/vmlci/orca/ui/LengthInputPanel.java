@@ -34,6 +34,10 @@ package com.vulcan.vmlci.orca.ui;
 import com.vulcan.vmlci.orca.DataStore;
 import com.vulcan.vmlci.orca.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
+import ij.ImagePlus;
+import ij.gui.Line;
+import ij.gui.Roi;
+import ij.gui.RoiListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -42,14 +46,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.TableModelEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.geom.Point2D;
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-public class LengthInputPanel extends InputPanel {
+public class LengthInputPanel extends InputPanel implements ItemListener, RoiListener {
+
+  // UI Elements
   private JCheckBox enableOverlays;
   private JComboBox measurementSelector;
   private JTextField currentLength;
@@ -57,10 +68,51 @@ public class LengthInputPanel extends InputPanel {
   private JButton save;
   private JButton revert;
   private JButton clear;
-  private Point2D.Double[] saved_endpoints = null;
+
+  // State Elements
+  private Point2D.Double[] currentLine = null;
+  private Double currentMagnitude = null;
+  private Point2D.Double[] savedLine = null;
+  private Double savedMagnitude = null;
 
   public LengthInputPanel(DataStore dataStore) {
     super(dataStore);
+    Line.addRoiListener(this);
+  }
+
+  /**
+   * Invoked when an item has been selected or deselected by the user. The code written for this
+   * method performs the operations that need to occur when an item is selected (or deselected).
+   *
+   * @param e
+   */
+  @Override
+  public void itemStateChanged(ItemEvent e) {
+    if (e.getStateChange() == ItemEvent.SELECTED) {
+      lastActiveImage.getMostRecentImageWindow().deleteRoi();
+      reload_fields();
+    }
+  }
+
+  @Override
+  public void reload_fields() {
+    savedMagnitude =
+        (Double)
+            dataStore.get_value(
+                lastActiveImage.getMostRecentImageName(),
+                (String) measurementSelector.getSelectedItem());
+    savedLine =
+        dataStore.getEndpoints(
+            lastActiveImage.getMostRecentImageName(),
+            (String) measurementSelector.getSelectedItem());
+    if (savedMagnitude != null) {
+      currentMagnitude = savedMagnitude;
+      currentLine = savedLine.clone();
+    } else {
+      currentMagnitude = null;
+      currentLine = null;
+    }
+    updateInterface();
   }
 
   protected void buildUI() {
@@ -196,10 +248,80 @@ public class LengthInputPanel extends InputPanel {
   }
 
   protected void wireUI() {
-    save.addActionListener(
-        e -> {
-          String measurement = measurementSelector.getActionCommand();
-        });
+    save.addActionListener(this::save);
+    revert.addActionListener(this::revert);
+    clear.addActionListener(this::clear);
+    measurementSelector.addItemListener(this);
+  }
+
+  @Override
+  protected void save(ActionEvent e) {
+    if (currentLine != null) {
+      dataStore.set_endpoints(
+          lastActiveImage.getMostRecentImageName(),
+          (String) measurementSelector.getSelectedItem(),
+          currentLine[0],
+          currentLine[1]);
+      savedLine = currentLine.clone();
+    } else {
+      dataStore.set_endpoints(
+          lastActiveImage.getMostRecentImageName(),
+          (String) measurementSelector.getSelectedItem(),
+          null,
+          null);
+      savedLine = null;
+    }
+    dataStore.insert_value(
+        lastActiveImage.getMostRecentImageName(),
+        (String) measurementSelector.getSelectedItem(),
+        currentMagnitude);
+
+    savedMagnitude =
+        (Double)
+            dataStore.get_value(
+                lastActiveImage.getMostRecentImageName(),
+                (String) measurementSelector.getSelectedItem());
+    updateInterface();
+  }
+
+  @Override
+  protected void revert(ActionEvent e) {
+    if (savedMagnitude != null) {
+      lastActiveImage.getMostRecentImageWindow().deleteRoi();
+      currentLine = savedLine.clone();
+      currentMagnitude = savedMagnitude;
+    } else {
+      currentMagnitude = null;
+      currentLine = null;
+    }
+    updateInterface();
+  }
+
+  @Override
+  protected void clear(ActionEvent e) {
+    lastActiveImage.getMostRecentImageWindow().deleteRoi();
+  }
+
+  @Override
+  public void updateInterface() {
+    if (savedMagnitude != null) {
+      savedLength.setText(String.format("%.3f", savedMagnitude));
+    } else {
+      savedLength.setText("");
+    }
+
+    if (currentMagnitude != null) {
+      currentLength.setText(String.format("%.3f", currentMagnitude));
+    } else {
+      currentLength.setText("");
+    }
+
+    ImagePlus img = lastActiveImage.getMostRecentImageWindow();
+    Roi active_roi = img.getRoi();
+    if (active_roi == null && currentLine != null) {
+      img.setRoi(new Line(currentLine[0].x, currentLine[0].y, currentLine[1].x, currentLine[1].y));
+      //      img.setRoi(new PointRoi(currentPosition.x, currentPosition.y));
+    }
   }
 
   /**
@@ -213,16 +335,52 @@ public class LengthInputPanel extends InputPanel {
     boolean measuring = !evt.getNewImage().equals(LastActiveImage.NO_OPEN_IMAGE);
     if (measuring) {
       String currentMeasurement = (String) measurementSelector.getSelectedItem();
-      saved_endpoints =
+      savedLine =
           dataStore.getEndpoints(lastActiveImage.getMostRecentImageName(), currentMeasurement);
       Double saved_length =
-          (Double) dataStore.get_value(lastActiveImage.getMostRecentImageName(), currentMeasurement);
-
-      if (saved_length != null) {
-        savedLength.setText(saved_length.toString());
-      } else {
-        savedLength.setText("");
-      }
+          (Double)
+              dataStore.get_value(lastActiveImage.getMostRecentImageName(), currentMeasurement);
     }
+    updateUI();
+  }
+
+  /**
+   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
+   * changed.
+   *
+   * @param e
+   */
+  @Override
+  public void tableChanged(TableModelEvent e) {
+    super.tableChanged(e);
+  }
+
+  @Override
+  public void roiModified(ImagePlus imp, int id) {
+    if (imp == null || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
+      return;
+    }
+
+    if (id == RoiListener.DELETED) {
+      currentLine = null;
+      currentMagnitude = null;
+    } else {
+      Roi raw_roi = imp.getRoi();
+      if (!(raw_roi instanceof Line)) {
+        return;
+      }
+      Line roi = (Line) raw_roi;
+
+      Rectangle bounds = roi.getBounds();
+      if (currentLine == null) {
+        currentLine = new Point2D.Double[2];
+        currentLine[0] = new Point2D.Double();
+        currentLine[1] = new Point2D.Double();
+      }
+      currentLine[0].setLocation(roi.x1, roi.y1);
+      currentLine[1].setLocation(roi.x2, roi.y2);
+      currentMagnitude = roi.getLength();
+    }
+    updateInterface();
   }
 }
