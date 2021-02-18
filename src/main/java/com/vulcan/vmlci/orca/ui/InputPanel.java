@@ -36,21 +36,19 @@ import com.vulcan.vmlci.orca.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-public abstract class InputPanel  extends JPanel implements ActiveImageListener, TableModelListener {
+public abstract class InputPanel extends JPanel implements ActiveImageListener, TableModelListener {
   protected LastActiveImage lastActiveImage;
   protected DataStore dataStore;
   protected ArrayList<JComponent> controls;
 
-  public InputPanel(DataStore dataStore){
+  public InputPanel(DataStore dataStore) {
     this.dataStore = dataStore;
     this.lastActiveImage = LastActiveImage.getInstance();
     this.controls = new ArrayList<>();
@@ -60,8 +58,19 @@ public abstract class InputPanel  extends JPanel implements ActiveImageListener,
     wireUI();
   }
 
-  abstract protected void buildUI();
-  abstract protected void wireUI();
+  public void reload_fields(){};
+
+  protected abstract void buildUI();
+
+  protected abstract void wireUI();
+
+  protected void save(ActionEvent e){};
+
+  protected void revert(ActionEvent e){};
+
+  protected void clear(ActionEvent e){};
+
+  public void updateInterface(){};
 
   /**
    * Gives notification that an ImagePlus has taken focus.
@@ -75,13 +84,11 @@ public abstract class InputPanel  extends JPanel implements ActiveImageListener,
   }
 
   /**
-   * This fine grain notification tells listeners the exact range
-   * of cells, rows, or columns that changed.
+   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
+   * changed.
    *
    * @param e
    */
   @Override
-  public void tableChanged(TableModelEvent e) {
-
-  }
+  public void tableChanged(TableModelEvent e) {}
 }
