@@ -32,14 +32,20 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.DataStore;
+import com.vulcan.vmlci.orca.LastActiveImage;
+import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class CommentInputPanel extends InputPanel {
   private JTextArea commentField;
   private JButton saveComments;
+  private boolean comments_dirty = false;
 
   public CommentInputPanel(DataStore dataStore) {
     super(dataStore);
@@ -56,5 +62,63 @@ public class CommentInputPanel extends InputPanel {
     this.add(saveComments, BorderLayout.SOUTH);
   }
 
-  protected void wireUI() {}
+  protected void wireUI() {
+    saveComments.addActionListener(this::save);
+    commentField.addKeyListener(
+        new KeyAdapter() {
+          /**
+           * Invoked when a key has been typed. This event occurs when a key press is followed by a
+           * key release.
+           *
+           * @param e
+           */
+          @Override
+          public void keyTyped(KeyEvent e) {
+            super.keyTyped(e);
+            comments_dirty = true;
+            updateInterface();
+          }
+        });
+  }
+
+  @Override
+  public void updateInterface() {
+    super.updateInterface();
+    saveComments.setEnabled(comments_dirty);
+  }
+
+  @Override
+  protected void save(ActionEvent e) {
+    String text_to_save = commentField.getText();
+    if (text_to_save.isEmpty()) {
+      dataStore.insert_value(lastActiveImage.getMostRecentImageName(), "MEAS COMMENTS", null);
+    } else {
+      dataStore.insert_value(
+          lastActiveImage.getMostRecentImageName(), "MEAS COMMENTS", text_to_save);
+    }
+    comments_dirty = false;
+    updateInterface();
+  }
+
+  /**
+   * Gives notification that an ImagePlus has taken focus.
+   *
+   * @param evt the ActiveImageChangeEvent
+   */
+  @Override
+  public void activeImageChanged(ActiveImageChangeEvent evt) {
+    super.activeImageChanged(evt);
+    String img = lastActiveImage.getMostRecentImageName();
+    if (img.equals(LastActiveImage.NO_OPEN_IMAGE)) {
+      commentField.setText("");
+    } else {
+      String saved_comments =
+          (String)
+              dataStore.get_value(lastActiveImage.getMostRecentImageName(), "MEAS COMMENTS", "");
+      commentField.setText(saved_comments);
+    }
+    comments_dirty = false;
+    updateInterface();
+  }
+
 }
