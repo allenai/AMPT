@@ -50,6 +50,7 @@ import javax.swing.event.TableModelEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Point2D;
@@ -77,6 +78,28 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   public PointInputPanel(DataStore dataStore) {
     super(dataStore);
     PointRoi.addRoiListener(this);
+  }
+
+  @Override
+  public void itemStateChanged(ItemEvent e) {
+    if (e.getStateChange() == ItemEvent.SELECTED) {
+      lastActiveImage.getMostRecentImageWindow().deleteRoi();
+      reload_fields();
+    }
+  }
+
+  @Override
+  public void reload_fields() {
+    savedPosition =
+        dataStore.get_point(
+            lastActiveImage.getMostRecentImageName(),
+            (String) measurementSelector.getSelectedItem());
+    if (savedPosition != null) {
+      currentPosition = (Point2D.Double) savedPosition.clone();
+    } else {
+      currentPosition = null;
+    }
+    updateInterface();
   }
 
   protected void buildUI() {
@@ -253,13 +276,14 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
 
   @Override
   protected void wireUI() {
-    save.addActionListener(e -> save_point());
-    revert.addActionListener(e -> revert_point());
-    clear.addActionListener(e -> clear_point());
+    save.addActionListener(this::save);
+    revert.addActionListener(this::revert);
+    clear.addActionListener(this::clear);
     measurementSelector.addItemListener(this);
   }
 
-  private void save_point() {
+  @Override
+  protected void save(ActionEvent e) {
     dataStore.set_point(
         lastActiveImage.getMostRecentImageName(),
         (String) measurementSelector.getSelectedItem(),
@@ -271,21 +295,15 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     updateInterface();
   }
 
-  private void revert_point() {
-    if (savedPosition != null) {
-      lastActiveImage.getMostRecentImageWindow().deleteRoi();
-      currentPosition = (Point2D.Double) savedPosition.clone();
-      updateInterface();
-    }
-  }
-
-  private void clear_point() {
-    currentPosition = null;
+  @Override
+  protected void revert(ActionEvent e) {
     lastActiveImage.getMostRecentImageWindow().deleteRoi();
+    currentPosition = (Point2D.Double) savedPosition.clone();
     updateInterface();
   }
 
-  private void updateInterface() {
+  @Override
+  public void updateInterface() {
     if (savedPosition != null) {
       savedPointX.setText(Integer.toString((int) savedPosition.x));
       savedPointY.setText(Integer.toString((int) savedPosition.y));
@@ -341,18 +359,10 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   }
 
   @Override
-  public void itemStateChanged(ItemEvent e) {
-    if (e.getStateChange() == ItemEvent.SELECTED) {
-      lastActiveImage.getMostRecentImageWindow().deleteRoi();
-      savedPosition =
-          dataStore.get_point(lastActiveImage.getMostRecentImageName(), (String) e.getItem());
-      if (savedPosition != null) {
-        currentPosition = (Point2D.Double) savedPosition.clone();
-      } else {
-        currentPosition = null;
-      }
-      updateInterface();
-    }
+  protected void clear(ActionEvent e) {
+    currentPosition = null;
+    lastActiveImage.getMostRecentImageWindow().deleteRoi();
+    updateInterface();
   }
 
   private void renderLandmark() {
@@ -377,6 +387,9 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       currentPosition = null;
     } else {
       Roi roi = imp.getRoi();
+      if (!(roi instanceof PointRoi)) {
+        return;
+      }
       Rectangle bounds = roi.getBounds();
       if (currentPosition == null) {
         currentPosition = new Point2D.Double();
