@@ -33,97 +33,102 @@ package com.vulcan.vmlci.orca;
 
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import com.vulcan.vmlci.orca.ui.InputPanel;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
-public class MetadataControl implements ActiveImageListener {
-  JPanel displayPanel;
+public class MetadataControl extends InputPanel implements ActiveImageListener {
   ButtonGroup underwaterGroup;
-  String activeImage;
-  /**
-   * Gives notification that an ImagePlus has taken focus.
-   *
-   * @param evt the ActiveImageChangeEvent
-   */
   private JTextField filenameField;
-
   private JTextField whaleIDField;
   private JTextField positionField;
   private HashMap<String, JRadioButton> underwater;
-  final private DataStore dataStore;
+  private JButton updateMetadata;
+  private boolean dirty = false;
 
   public MetadataControl(DataStore dataStore) {
-    this.dataStore = dataStore;
-    build_ui();
-    wire_ui();
-    LastActiveImage.getInstance().addActiveImageListener(this);
-    activeImage = LastActiveImage.getInstance().getMostRecentImageName();
+    super(dataStore);
   }
 
-  private void build_ui() {
+  @Override
+  protected void buildUI() {
     GridBagConstraints gbc;
+    updateMetadata = new JButton("Update Metadata");
+    controls.add(updateMetadata);
     JPanel buttonPanel = new JPanel();
     underwaterGroup = new ButtonGroup();
-    displayPanel = new JPanel();
-    filenameField = new JTextField();
+    filenameField = new JTextField("");
+    filenameField.setEditable(false);
     whaleIDField = new JTextField();
+    controls.add(whaleIDField);
     positionField = new JTextField();
+    controls.add(positionField);
     underwater = new HashMap<>();
     Stream.of("0", "1", "2")
         .forEach(
             checkbox_label -> {
               JRadioButton checkbox = new JRadioButton(checkbox_label, false);
+              checkbox.setActionCommand(checkbox_label);
               underwater.put(checkbox_label, checkbox);
               buttonPanel.add(checkbox);
               underwaterGroup.add(checkbox);
+              controls.add(checkbox);
             });
 
     buttonPanel.doLayout();
-    displayPanel.setLayout(new GridBagLayout());
+    this.setLayout(new GridBagLayout());
 
     // Filename Label and Field
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 0;
-    gbc.gridwidth = 3;
+    gbc.gridwidth = 1;
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.WEST;
-    displayPanel.add(new JLabel("Filename"), gbc);
+    JLabel filename = new JLabel("Filename");
+    filename.setLabelFor(filenameField);
+    this.add(filename, gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.gridwidth = 3;
+    gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    displayPanel.add(filenameField, gbc);
+    this.add(filenameField, gbc);
 
     // Labels
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 2;
     gbc.anchor = GridBagConstraints.WEST;
-    displayPanel.add(new JLabel("Whale ID"), gbc);
+    this.add(new JLabel("Whale ID"), gbc);
+
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 2;
     gbc.anchor = GridBagConstraints.WEST;
-    displayPanel.add(new JLabel("Position"), gbc);
+    this.add(new JLabel("Position"), gbc);
+
     gbc = new GridBagConstraints();
     gbc.gridx = 2;
     gbc.gridy = 2;
     gbc.anchor = GridBagConstraints.WEST;
-    displayPanel.add(new JLabel("Underwater"), gbc);
+    this.add(new JLabel("Underwater"), gbc);
 
     // Controls
     gbc = new GridBagConstraints();
@@ -132,106 +137,130 @@ public class MetadataControl implements ActiveImageListener {
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    displayPanel.add(whaleIDField, gbc);
+    this.add(whaleIDField, gbc);
+
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 3;
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    displayPanel.add(positionField, gbc);
+    this.add(positionField, gbc);
+
     gbc = new GridBagConstraints();
     gbc.gridx = 2;
     gbc.gridy = 3;
-    displayPanel.add(buttonPanel, gbc);
+    this.add(buttonPanel, gbc);
 
-    displayPanel.doLayout();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 4;
+    gbc.gridwidth = 3;
+    gbc.weightx = 1.0;
+    gbc.anchor = GridBagConstraints.WEST;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(updateMetadata, gbc);
+
+    this.doLayout();
   }
 
-  private void wire_ui() {
-    whaleIDField.setActionCommand("WhaleID");
-    whaleIDField.addActionListener(
-        e -> {
-          if (!activeImage.equals(LastActiveImage.NO_OPEN_IMAGE)) {
-            dataStore.insert_value(activeImage, "WhaleID", ((JTextField) e.getSource()).getText());
-          }
-        });
-    whaleIDField.addFocusListener(
-        new FocusListener() {
-          @Override
-          public void focusGained(FocusEvent e) {}
+  @Override
+  protected void wireUI() {
+    String activeImage = lastActiveImage.getMostRecentImageName();
+    underwater
+        .values()
+        .forEach(
+            radioButton ->
+                radioButton.addActionListener(
+                    e -> {
+                      dirty = true;
+                      updateInterface();
+                    }));
 
+    whaleIDField.addKeyListener(
+        new KeyAdapter() {
+          /**
+           * Invoked when a key has been typed. This event occurs when a key press is followed by a
+           * key release.
+           *
+           * @param e
+           */
           @Override
-          public void focusLost(FocusEvent e) {
-            if (!activeImage.equals(LastActiveImage.NO_OPEN_IMAGE)) {
-              dataStore.insert_value(
-                  activeImage, "WhaleID", ((JTextField) e.getSource()).getText());
-            }
-          }
-        });
-    positionField.setActionCommand("Position");
-    positionField.addActionListener(
-        e -> {
-          if (!activeImage.equals(LastActiveImage.NO_OPEN_IMAGE)) {
-            dataStore.insert_value(activeImage, "Position", ((JTextField) e.getSource()).getText());
-          }
-        });
-    positionField.addFocusListener(
-        new FocusListener() {
-          @Override
-          public void focusGained(FocusEvent e) {}
-
-          @Override
-          public void focusLost(FocusEvent e) {
-            if (!activeImage.equals(LastActiveImage.NO_OPEN_IMAGE)) {
-              dataStore.insert_value(
-                  activeImage, "Position", ((JTextField) e.getSource()).getText());
-            }
+          public void keyTyped(KeyEvent e) {
+            super.keyTyped(e);
+            dirty = true;
+            updateInterface();
           }
         });
 
-    underwater.forEach(
-        (s, jCheckBox) -> {
-          jCheckBox.setActionCommand(s);
-          jCheckBox.setEnabled(false);
-          jCheckBox.addActionListener(
-              e -> {
-                if (!activeImage.equals(LastActiveImage.NO_OPEN_IMAGE)) {
-                  dataStore.insert_value(activeImage, "UNDERWATER", e.getActionCommand());
-                }
-              });
+    positionField.addKeyListener(
+        new KeyAdapter() {
+          /**
+           * Invoked when a key has been typed. This event occurs when a key press is followed by a
+           * key release.
+           *
+           * @param e
+           */
+          @Override
+          public void keyTyped(KeyEvent e) {
+            super.keyTyped(e);
+            dirty = true;
+            updateInterface();
+          }
         });
+
+    updateMetadata.addActionListener(this::save);
+  }
+
+  @Override
+  protected void save(ActionEvent e) {
+    super.save(e);
+    String filename = lastActiveImage.getMostRecentImageName();
+    String whaleID = whaleIDField.getText();
+    String position = positionField.getText();
+    ButtonModel selection = underwaterGroup.getSelection();
+    if (whaleID.isEmpty()) {
+      whaleID = null;
+    }
+    dataStore.insert_value(filename, "WhaleID", whaleID);
+    if (position.isEmpty()) {
+      position = null;
+    }
+    dataStore.insert_value(filename, "Position", position);
+    if (selection == null) {
+      dataStore.insert_value(filename, "UNDERWATER", null);
+    } else {
+      dataStore.insert_value(filename, "UNDERWATER", selection.getActionCommand());
+    }
+    dirty = false;
+    updateInterface();
+  }
+
+  @Override
+  public void updateInterface() {
+    super.updateInterface();
+    updateMetadata.setEnabled(dirty);
   }
 
   @Override
   public void activeImageChanged(ActiveImageChangeEvent evt) {
-    activeImage = evt.getNewImage();
+    //    underwaterGroup.clearSelection();
+    super.activeImageChanged(evt);
+    String activeImage = evt.getNewImage();
+    filenameField.setText(activeImage);
+    underwaterGroup.clearSelection();
     if (activeImage.equals(LastActiveImage.NO_OPEN_IMAGE)) {
-      filenameField.setText("");
       whaleIDField.setText("");
-      whaleIDField.setEditable(false);
       positionField.setText("");
-      positionField.setEditable(false);
-      underwaterGroup.clearSelection();
-      underwater.forEach(
-          (s, jCheckBox) -> jCheckBox.setEnabled(false));
     } else {
-      filenameField.setText(activeImage);
-      String whaleID = (String) dataStore.get_value(activeImage, "WhaleID", "");
-      String position = (String) dataStore.get_value(activeImage, "Position", "");
+      whaleIDField.setText((String) dataStore.get_value(activeImage, "WhaleID", ""));
+      positionField.setText((String) dataStore.get_value(activeImage, "Position", ""));
       String underwaterCode = (String) dataStore.get_value(activeImage, "UNDERWATER", "");
-      whaleIDField.setText(whaleID);
-      whaleIDField.setEditable(true);
-      positionField.setText(position);
-      positionField.setEditable(true);
-      underwaterGroup.clearSelection();
-      underwater.forEach(
-          (s, jCheckBox) -> {
-            jCheckBox.setEnabled(true);
-            if (s.equals(underwaterCode)) {
-              jCheckBox.setSelected(true);
-            }
-          });
+      if (underwater.containsKey(underwaterCode)) {
+        underwater.get(underwaterCode).setSelected(true);
+      }
     }
+    dirty = false;
+    updateInterface();
   }
 }
