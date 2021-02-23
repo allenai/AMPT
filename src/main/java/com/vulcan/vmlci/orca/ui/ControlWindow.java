@@ -31,17 +31,16 @@
 
 package com.vulcan.vmlci.orca.ui;
 
-import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
-import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
-import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.calculator.MeasurementManager;
+import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
+import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -167,28 +166,32 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     frame.add(demo2, gbc);
 
     gbc.anchor = GridBagConstraints.NORTH;
-    gbc.weighty = 0;
+    gbc.weighty = 1;
     gbc.gridx = 0;
     gbc.gridy = 2;
     AccordionPanel measurements = new AccordionPanel("Length Measurements", true);
-    measurements.getContent_panel().add(new JLabel("Lorem Ipsum"));
+    JPanel lengthMeasurements =
+        new LengthDisplay(ds, s -> s.measurement_type.equals("length") && !s.name.contains("%"));
+    measurements.setContent_panel(lengthMeasurements);
     frame.add(measurements, gbc);
 
     gbc.anchor = GridBagConstraints.NORTH;
-    gbc.weighty = 0;
+    gbc.weighty = 1;
     gbc.gridx = 0;
     gbc.gridy = 3;
-    AccordionPanel demo4 = new AccordionPanel("Body Profiles", true);
-    demo4.getContent_panel().add(new JLabel("Lorem Ipsum"));
-    frame.add(demo4, gbc);
+    AccordionPanel bodyProfiles = new AccordionPanel("Body Profiles", true);
+    JPanel profileMeasurements =
+        new LengthDisplay(ds, s -> s.measurement_type.equals("length") && s.name.contains("%"));
+    bodyProfiles.setContent_panel(profileMeasurements);
+    frame.add(bodyProfiles, gbc);
 
-    final JPanel spacer = new JPanel();
-    gbc.gridx = 0;
-    gbc.gridy = 4;
-    gbc.weighty = 1;
-    gbc.fill = GridBagConstraints.VERTICAL;
-    frame.add(spacer, gbc);
-    frame.setBackground(Color.CYAN);
+//    final JPanel spacer = new JPanel();
+//    gbc.gridx = 0;
+//    gbc.gridy = 4;
+//    gbc.weighty = 1;
+//    gbc.fill = GridBagConstraints.VERTICAL;
+//    frame.add(spacer, gbc);
+//    frame.setBackground(Color.CYAN);
     return scrollPane;
   }
 
