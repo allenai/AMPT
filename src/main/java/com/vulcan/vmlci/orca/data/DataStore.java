@@ -743,6 +743,10 @@ public class DataStore extends AbstractTableModel {
         return "NA";
       }
     }
+    if(INTEGER_UNITS.contains(descriptors.get(columnName).units)){
+      Double retrieved = (Double) value;
+      return Integer.toString(retrieved.intValue());
+    }
     return value.toString();
   }
 
