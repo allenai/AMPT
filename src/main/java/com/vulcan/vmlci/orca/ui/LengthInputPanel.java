@@ -32,8 +32,8 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import ij.ImagePlus;
 import ij.gui.Line;
 import ij.gui.Roi;
@@ -107,7 +107,11 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
             (String) measurementSelector.getSelectedItem());
     if (savedMagnitude != null) {
       currentMagnitude = savedMagnitude;
-      currentLine = savedLine.clone();
+      if (savedLine != null) {
+        currentLine = savedLine.clone();
+      } else {
+        currentLine = null;
+      }
     } else {
       currentMagnitude = null;
       currentLine = null;
