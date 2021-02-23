@@ -31,7 +31,7 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
-import com.vulcan.vmlci.orca.DataStore;
+import com.vulcan.vmlci.orca.data.DataStore;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;

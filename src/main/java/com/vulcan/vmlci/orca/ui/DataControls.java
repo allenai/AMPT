@@ -29,8 +29,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
+package com.vulcan.vmlci.orca.ui;
 
+import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
+import com.vulcan.vmlci.orca.data.DataStore;
 import ij.gui.MessageDialog;
 import ij.gui.YesNoCancelDialog;
 import ij.io.OpenDialog;

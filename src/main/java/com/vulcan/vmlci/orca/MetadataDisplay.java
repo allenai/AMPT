@@ -31,8 +31,12 @@
 
 package com.vulcan.vmlci.orca;
 
+import com.vulcan.vmlci.orca.data.ColumnDescriptor;
+import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -52,8 +56,9 @@ import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.vulcan.vmlci.orca.ConfigurationLoader.get_csv_file;
+import static com.vulcan.vmlci.orca.helpers.ConfigurationLoader.get_csv_file;
 
+@Deprecated
 public class MetadataDisplay implements ActiveImageListener, ActionListener, FocusListener {
   private final LastActiveImage image_watcher = LastActiveImage.getInstance();
   private final DataStore ds;

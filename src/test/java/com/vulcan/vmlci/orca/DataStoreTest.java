@@ -31,6 +31,9 @@
 
 package com.vulcan.vmlci.orca;
 
+import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
+import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
 import junit.framework.TestCase;
 
 import java.awt.geom.Point2D;
@@ -107,7 +110,7 @@ public class DataStoreTest extends TestCase {
     File test_file = new File(DataStoreTest.class.getResource(test_csv).getPath());
     try {
       this.ds.loadData(test_file);
-    } catch (com.vulcan.vmlci.orca.DataFileLoadException e) {
+    } catch (DataFileLoadException e) {
       e.printStackTrace();
       fail();
     }
@@ -299,8 +302,8 @@ public class DataStoreTest extends TestCase {
       e.printStackTrace();
       fail();
     }
-//    } catch (com.vulcan.vmlci.orca.ConfigurationFileLoadException
-//        | com.vulcan.vmlci.orca.DataFileLoadException e) {
+//    } catch (com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException
+//        | com.vulcan.vmlci.orca.helpers.DataFileLoadException e) {
 //      e.printStackTrace();
 //      fail();
 //    }
@@ -325,7 +328,7 @@ public class DataStoreTest extends TestCase {
     try {
       this.ds.loadData(test_file);
       fail();
-    } catch (com.vulcan.vmlci.orca.DataFileLoadException e) {
+    } catch (DataFileLoadException e) {
       assertTrue(true);
     }
   }

@@ -31,6 +31,7 @@
 
 package com.vulcan.vmlci.orca;
 
+import com.vulcan.vmlci.orca.ui.ControlWindow;
 import org.scijava.command.Command;
 import org.scijava.log.Logger;
 import org.scijava.plugin.Parameter;

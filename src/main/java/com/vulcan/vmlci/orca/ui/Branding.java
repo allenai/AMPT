@@ -29,26 +29,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
+package com.vulcan.vmlci.orca.ui;
 
-public class ColumnDescriptor {
-    public final String name;
-    public final String description;
-    public final String units;
-    public final boolean export;
-    public final String measurement_type;
-    public final boolean editable;
-    public final boolean is_metadata;
-    public final int index;
+import com.vulcan.vmlci.orca.ui.AccordionPanel;
 
-    public ColumnDescriptor(String name, String description, String units, String export, String measurement_type, String editable, String is_metadata, int index) {
-        this.name = name;
-        this.description = description;
-        this.units = units;
-        this.export = export.equalsIgnoreCase("true");
-        this.measurement_type = measurement_type;
-        this.editable = editable.equalsIgnoreCase("true");
-        this.is_metadata = is_metadata.equalsIgnoreCase("true");
-        this.index = index;
+import javax.swing.*;
+import java.awt.*;
+
+
+/**
+ * The <code>Branding</code> class is part of the UI that identifies the plug and manages the about an
+ * help menus.
+ */
+public class Branding extends JPanel {
+
+    JLabel title;
+
+    public Branding() {
+        super();
+
+        GridBagConstraints gbc;
+        this.setLayout(new GridBagLayout());
+
+        title = new JLabel("Aquatic Mammal Photogrammetry Tool");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        this.add(title, gbc);
+
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        final Icon hamburger = new ImageIcon(AccordionPanel.class.getResource("/images/hamburger_32.png"));
+        this.add(new JLabel(hamburger), gbc);
     }
 }

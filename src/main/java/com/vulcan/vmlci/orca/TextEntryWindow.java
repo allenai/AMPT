@@ -31,9 +31,12 @@
 
 package com.vulcan.vmlci.orca;
 
+import com.vulcan.vmlci.orca.data.DataStore;
+
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+@Deprecated
 public class TextEntryWindow extends JTextArea {
   public JFrame frame;
   public TextEntryWindow(DataStore ds) {

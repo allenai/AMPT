@@ -29,11 +29,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
+package com.vulcan.vmlci.orca.ui;
 
+import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
-import com.vulcan.vmlci.orca.ui.InputPanel;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;

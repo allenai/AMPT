@@ -29,11 +29,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
+package com.vulcan.vmlci.orca.helpers;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
+import com.vulcan.vmlci.orca.helpers.CSVFileLoadException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

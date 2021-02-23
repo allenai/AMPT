@@ -31,7 +31,7 @@
 
 package com.vulcan.vmlci.orca.event;
 
-import com.vulcan.vmlci.orca.LastActiveImage;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 
 import java.util.EventObject;
 
