@@ -29,54 +29,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
+package com.vulcan.vmlci.orca.data;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import java.awt.Color;
-import java.awt.event.WindowAdapter;
+public class ColumnDescriptor {
+    public final String name;
+    public final String description;
+    public final String units;
+    public final boolean export;
+    public final String measurement_type;
+    public final boolean editable;
+    public final boolean is_metadata;
+    public final int index;
 
-public class MeasurementTable extends WindowAdapter implements TableModelListener {
-  final private DataStore dataStore;
-  private JFrame frame;
-
-  public MeasurementTable(DataStore dataStore) {
-    this.dataStore = dataStore;
-    build_ui();
-    this.dataStore.addTableModelListener(this);
-  }
-
-  private void build_ui() {
-    JTable table = new JTable(dataStore);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    table.setShowGrid(true);
-    table.setGridColor(Color.BLACK);
-    table.doLayout();
-    JScrollPane scrollPane = new JScrollPane(table);
-    frame = new JFrame(dataStore.getCsvFileName());
-    frame.add(scrollPane);
-    frame.pack();
-  }
-
-  final public JFrame getFrame() {
-    return frame;
-  }
-
-  /**
-   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
-   * changed.
-   *
-   * @param e event from table model
-   */
-  @Override
-  public void tableChanged(TableModelEvent e) {
-    if (dataStore.dirty()) {
-      frame.setTitle(String.format("%s - Unsaved Changes", dataStore.getCsvFileName()));
-    } else {
-      frame.setTitle(dataStore.getCsvFileName());
+    public ColumnDescriptor(String name, String description, String units, String export, String measurement_type, String editable, String is_metadata, int index) {
+        this.name = name;
+        this.description = description;
+        this.units = units;
+        this.export = export.equalsIgnoreCase("true");
+        this.measurement_type = measurement_type;
+        this.editable = editable.equalsIgnoreCase("true");
+        this.is_metadata = is_metadata.equalsIgnoreCase("true");
+        this.index = index;
     }
-  }
 }

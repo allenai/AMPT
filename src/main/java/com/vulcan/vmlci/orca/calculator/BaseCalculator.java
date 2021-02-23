@@ -31,8 +31,8 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
-import com.vulcan.vmlci.orca.ConfigurationLoader;
-import com.vulcan.vmlci.orca.DataStore;
+import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
+import com.vulcan.vmlci.orca.data.DataStore;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 import org.scijava.plugin.Parameter;

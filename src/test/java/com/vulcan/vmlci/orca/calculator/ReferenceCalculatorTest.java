@@ -31,9 +31,10 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
-import com.vulcan.vmlci.orca.ConfigurationLoader;
-import com.vulcan.vmlci.orca.DataStore;
+import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
+import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.DataStoreTest;
+import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
 import junit.framework.TestCase;
 
 import java.awt.geom.Point2D;
@@ -79,7 +80,7 @@ public class ReferenceCalculatorTest extends TestCase {
     File test_file = new File(DataStoreTest.class.getResource(test_csv).getPath());
     try {
       this.ds.loadData(test_file);
-    } catch (com.vulcan.vmlci.orca.DataFileLoadException e) {
+    } catch (DataFileLoadException e) {
       e.printStackTrace();
       fail();
     }

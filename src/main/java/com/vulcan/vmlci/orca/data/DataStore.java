@@ -29,9 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
+package com.vulcan.vmlci.orca.data;
 
 import com.opencsv.CSVWriter;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
+import com.vulcan.vmlci.orca.helpers.CSVFileLoadException;
+import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
+import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.geom.Point2D;
@@ -44,7 +48,7 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static com.vulcan.vmlci.orca.Utilities.loadCSVAsMap;
+import static com.vulcan.vmlci.orca.helpers.Utilities.loadCSVAsMap;
 import static java.util.Collections.addAll;
 
 public class DataStore extends AbstractTableModel {
@@ -336,7 +340,7 @@ public class DataStore extends AbstractTableModel {
     ArrayList<java.util.HashMap<String, String>> records;
     try {
       records = loadCSVAsMap(dataFile.toString());
-    } catch (com.vulcan.vmlci.orca.CSVFileLoadException e) {
+    } catch (CSVFileLoadException e) {
       throw new DataFileLoadException(String.format("Couldn't load %s", dataFile), e);
     }
 

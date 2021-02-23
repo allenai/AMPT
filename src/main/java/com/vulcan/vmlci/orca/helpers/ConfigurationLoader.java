@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
+package com.vulcan.vmlci.orca.helpers;
 
 import com.cedarsoftware.util.io.JsonReader;
 import com.opencsv.CSVReader;
@@ -114,8 +114,8 @@ public class ConfigurationLoader {
     CSVReader csv_reader = null;
     java.util.ArrayList<java.util.HashMap<String, String>> result;
     try {
-      result = com.vulcan.vmlci.orca.Utilities.loadCSVAsMap(config_file);
-    } catch (com.vulcan.vmlci.orca.CSVFileLoadException e) {
+      result = Utilities.loadCSVAsMap(config_file);
+    } catch (CSVFileLoadException e) {
       throw new ConfigurationFileLoadException(String.format("Couldn't load %s", filename), e);
     }
     return result;

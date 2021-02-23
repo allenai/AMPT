@@ -29,41 +29,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
-
-import com.vulcan.vmlci.orca.ui.AccordionPanel;
-
-import javax.swing.*;
-import java.awt.*;
-
+package com.vulcan.vmlci.orca.helpers;
 
 /**
- * The <code>Branding</code> class is part of the UI that identifies the plug and manages the about an
- * help menus.
+ * Exception raised during the loading of a CSV file.
  */
-public class Branding extends JPanel {
-
-    JLabel title;
-
-    public Branding() {
-        super();
-
-        GridBagConstraints gbc;
-        this.setLayout(new GridBagLayout());
-
-        title = new JLabel("Aquatic Mammal Photogrammetry Tool");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        this.add(title, gbc);
-
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        final Icon hamburger = new ImageIcon(AccordionPanel.class.getResource("/images/hamburger_32.png"));
-        this.add(new JLabel(hamburger), gbc);
+public class CSVFileLoadException extends Exception {
+    /**
+     * Constructs a new exception with the specified detail message and
+     * cause.  <p>Note that the detail message associated with
+     * {@code cause} is <i>not</i> automatically incorporated in
+     * this exception's detail message.
+     *
+     * @param message the detail message (which is saved for later retrieval
+     *                by the {@link #getMessage()} method).
+     * @param cause   the cause (which is saved for later retrieval by the
+     *                {@link #getCause()} method).  (A <tt>null</tt> value is
+     *                permitted, and indicates that the cause is nonexistent or
+     *                unknown.)
+     * @since 1.4
+     */
+    public CSVFileLoadException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

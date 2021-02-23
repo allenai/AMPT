@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
+package com.vulcan.vmlci.orca.helpers;
 
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
@@ -144,7 +144,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
    * @param oldImage the previous image name
    * @param newImage the new image name.
    */
-  protected void fireImageChange(String oldImage, String newImage) {
+  public void fireImageChange(String oldImage, String newImage) {
     // Guaranteed to return a non-null array
     Object[] listeners = listenerList.getListenerList();
     ActiveImageChangeEvent imageChangeEvent = new ActiveImageChangeEvent(this, oldImage, newImage);
