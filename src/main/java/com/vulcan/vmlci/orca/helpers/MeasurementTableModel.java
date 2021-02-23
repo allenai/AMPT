@@ -34,22 +34,29 @@ package com.vulcan.vmlci.orca.helpers;
 import com.vulcan.vmlci.orca.data.ColumnDescriptor;
 import com.vulcan.vmlci.orca.data.DataStore;
 
+import javax.swing.JTable;
+import javax.swing.event.EventListenerList;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import java.io.File;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class MeasurementTableModel extends AbstractTableModel {
+public class MeasurementTableModel extends AbstractTableModel implements TableModelListener {
   LastActiveImage lastActiveImage;
-  String active_image = "2018-09-11 20-39-58.jpg";
   Predicate<ColumnDescriptor> filter;
   /** The rows that are appropriate to the the view. */
-  private Vector<String> rows;
+  private Vector<ColumnDescriptor> rows;
 
   private Vector<Boolean> selections;
   private DataStore dataStore;
+  /** This hashmap converts a column index into the corresponding row index in out model. */
+  private HashMap<Integer, Integer> dataStoreColumnToLocalRow;
+
   private int nRows;
   /**
    * Constructs a default <code>DefaultTableModel</code> which is a table of zero columns and zero
@@ -58,8 +65,9 @@ public class MeasurementTableModel extends AbstractTableModel {
   public MeasurementTableModel(DataStore dataStore, Predicate<ColumnDescriptor> selection_filter) {
     this.dataStore = dataStore;
     filter = selection_filter;
-    System.err.println("Constructed");
+    lastActiveImage = LastActiveImage.getInstance();
     configure();
+    this.dataStore.addTableModelListener(this);
   }
 
   private void configure() {
@@ -68,8 +76,27 @@ public class MeasurementTableModel extends AbstractTableModel {
         dataStore.descriptors.values().stream() // Grab a stream of descriptors
             .filter(filter) // Grab the length descriptors.
             .sorted(Comparator.comparingInt(o -> o.index)) // Sort them by descriptor index
-            .map(s -> s.name) // Extract the names
+            //            .map(s -> s.name) // Extract the names
             .collect(Collectors.toCollection(Vector::new));
+    selections = new Vector<>();
+    dataStoreColumnToLocalRow = new HashMap<>();
+    for (int i = 0; i < rows.size(); i++) {
+      selections.add(false);
+      dataStoreColumnToLocalRow.put(rows.get(i).index, i);
+    }
+  }
+
+  /**
+   * Returns a default name for the column using spreadsheet conventions:
+   * A, B, C, ... Z, AA, AB, etc.  If <code>column</code> cannot be found,
+   * returns an empty string.
+   *
+   * @param column the column being queried
+   * @return a string containing the default name of <code>column</code>
+   */
+  @Override
+  public String getColumnName(int column) {
+    return new String[]{"Render", "Measurement", "Value", "Reviewed"}[column];
   }
 
   public static void main(String[] args) {
@@ -95,7 +122,6 @@ public class MeasurementTableModel extends AbstractTableModel {
    */
   @Override
   public int getRowCount() {
-    //    return 0;
     return rows.size();
   }
 
@@ -106,7 +132,7 @@ public class MeasurementTableModel extends AbstractTableModel {
    */
   @Override
   public int getColumnCount() {
-    return 3;
+    return 4;
   }
 
   /**
@@ -118,6 +144,66 @@ public class MeasurementTableModel extends AbstractTableModel {
    */
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
-    return null;
+    switch (columnIndex) {
+      case 0:
+        return selections.get(rowIndex);
+      case 1:
+        return rows.get(rowIndex).name;
+      case 2:
+        return dataStore.get_value(
+            lastActiveImage.getMostRecentImageName(), rows.get(rowIndex).name);
+      default:
+        return dataStore.get_value(
+            lastActiveImage.getMostRecentImageName(),
+            String.format("%s_reviewed", rows.get(rowIndex).name),
+            Boolean.FALSE);
+    }
+  }
+
+  /**
+   * Returns <code>Object.class</code> regardless of <code>columnIndex</code>.
+   *
+   * @param columnIndex the column being queried
+   * @return the Object.class
+   */
+  @Override
+  public Class<?> getColumnClass(int columnIndex) {
+    switch (columnIndex) {
+      case 0:
+      case 3:
+        return Boolean.class;
+      case 1:
+        return String.class;
+      default:
+        return Double.class;
+    }
+  }
+
+  /**
+   * Notifies all listeners that all cell values in the table's rows may have changed. The number of
+   * rows may also have changed and the <code>JTable</code> should redraw the table from scratch.
+   * The structure of the table (as in the order of the columns) is assumed to be the same.
+   *
+   * @see TableModelEvent
+   * @see EventListenerList
+   * @see JTable#tableChanged(TableModelEvent)
+   */
+  @Override
+  public void fireTableDataChanged() {
+    super.fireTableDataChanged();
+  }
+
+  /**
+   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
+   * changed.
+   *
+   * @param e
+   */
+  @Override
+  public void tableChanged(TableModelEvent e) {
+    Integer row = dataStoreColumnToLocalRow.get(e.getColumn());
+    if(row != null){
+      fireTableRowsUpdated(row, row);
+    }
   }
 }
