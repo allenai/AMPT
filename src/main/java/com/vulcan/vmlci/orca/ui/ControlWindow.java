@@ -171,7 +171,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     gbc.gridy = 2;
     AccordionPanel measurements = new AccordionPanel("Length Measurements", true);
     JPanel lengthMeasurements =
-        new LengthDisplay(ds, s -> s.measurement_type.equals("length") && !s.name.contains("%"));
+        new LengthDisplay(ds, s -> s.measurement_type.contains("length") && !s.name.contains("%"));
     measurements.setContent_panel(lengthMeasurements);
     frame.add(measurements, gbc);
 
@@ -181,7 +181,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     gbc.gridy = 3;
     AccordionPanel bodyProfiles = new AccordionPanel("Body Profiles", true);
     JPanel profileMeasurements =
-        new LengthDisplay(ds, s -> s.measurement_type.equals("length") && s.name.contains("%"));
+        new LengthDisplay(ds, s -> s.measurement_type.contains("length") && s.name.contains("%"));
     bodyProfiles.setContent_panel(profileMeasurements);
     frame.add(bodyProfiles, gbc);
 
