@@ -67,6 +67,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
     lastActiveImage = LastActiveImage.getInstance();
     configure();
     this.dataStore.addTableModelListener(this);
+    lastActiveImage.addActiveImageListener(e->this.fireTableDataChanged());
   }
 
   private void configure() {
