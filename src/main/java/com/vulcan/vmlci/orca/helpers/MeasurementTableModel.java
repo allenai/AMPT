@@ -39,7 +39,6 @@ import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import java.io.File;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Vector;
@@ -87,32 +86,48 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
   }
 
   /**
-   * Returns a default name for the column using spreadsheet conventions:
-   * A, B, C, ... Z, AA, AB, etc.  If <code>column</code> cannot be found,
-   * returns an empty string.
+   * Returns a default name for the column using spreadsheet conventions: A, B, C, ... Z, AA, AB,
+   * etc. If <code>column</code> cannot be found, returns an empty string.
    *
    * @param column the column being queried
    * @return a string containing the default name of <code>column</code>
    */
   @Override
   public String getColumnName(int column) {
-    return new String[]{"Render", "Measurement", "Value", "Reviewed"}[column];
+    return new String[] {"Render", "Measurement", "Value", "Status"}[column];
   }
 
-  public static void main(String[] args) {
-    DataStore dataStore = null;
-    try {
-      dataStore =
-          DataStore.createDataStore(
-              new File("/Users/palbee/Development/AMPT/src/test/resources/data/sample_full.csv"));
-    } catch (ConfigurationFileLoadException | DataFileLoadException e) {
-      e.printStackTrace();
+  /**
+   * Returns <code>Object.class</code> regardless of <code>columnIndex</code>.
+   *
+   * @param columnIndex the column being queried
+   * @return the Object.class
+   */
+  @Override
+  public Class<?> getColumnClass(int columnIndex) {
+    switch (columnIndex) {
+      case 0:
+        return Boolean.class;
+      case 3:
+      case 1:
+        return String.class;
+      default:
+        return Double.class;
     }
+  }
 
-    MeasurementTableModel mt =
-        new MeasurementTableModel(
-            dataStore, s -> s.measurement_type.equals("length") && !s.name.contains("%"));
-    System.out.println(String.format("nRows = %d", mt.getRowCount()));
+  /**
+   * Notifies all listeners that all cell values in the table's rows may have changed. The number of
+   * rows may also have changed and the <code>JTable</code> should redraw the table from scratch.
+   * The structure of the table (as in the order of the columns) is assumed to be the same.
+   *
+   * @see TableModelEvent
+   * @see EventListenerList
+   * @see JTable#tableChanged(TableModelEvent)
+   */
+  @Override
+  public void fireTableDataChanged() {
+    super.fireTableDataChanged();
   }
 
   /**
@@ -153,44 +168,18 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
         return dataStore.get_value(
             lastActiveImage.getMostRecentImageName(), rows.get(rowIndex).name);
       default:
-        return dataStore.get_value(
-            lastActiveImage.getMostRecentImageName(),
-            String.format("%s_reviewed", rows.get(rowIndex).name),
-            Boolean.FALSE);
+        Object result =
+            dataStore.get_value(
+                lastActiveImage.getMostRecentImageName(),
+                String.format("%s_reviewed", rows.get(rowIndex).name));
+        if (lastActiveImage.getMostRecentImageName() == LastActiveImage.NO_OPEN_IMAGE) {
+          return "";
+        } else if (result == null) {
+          return "Unreviewed";
+        } else {
+          return "Accepted";
+        }
     }
-  }
-
-  /**
-   * Returns <code>Object.class</code> regardless of <code>columnIndex</code>.
-   *
-   * @param columnIndex the column being queried
-   * @return the Object.class
-   */
-  @Override
-  public Class<?> getColumnClass(int columnIndex) {
-    switch (columnIndex) {
-      case 0:
-      case 3:
-        return Boolean.class;
-      case 1:
-        return String.class;
-      default:
-        return Double.class;
-    }
-  }
-
-  /**
-   * Notifies all listeners that all cell values in the table's rows may have changed. The number of
-   * rows may also have changed and the <code>JTable</code> should redraw the table from scratch.
-   * The structure of the table (as in the order of the columns) is assumed to be the same.
-   *
-   * @see TableModelEvent
-   * @see EventListenerList
-   * @see JTable#tableChanged(TableModelEvent)
-   */
-  @Override
-  public void fireTableDataChanged() {
-    super.fireTableDataChanged();
   }
 
   /**
@@ -202,7 +191,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
   @Override
   public void tableChanged(TableModelEvent e) {
     Integer row = dataStoreColumnToLocalRow.get(e.getColumn());
-    if(row != null){
+    if (row != null) {
       fireTableRowsUpdated(row, row);
     }
   }
