@@ -88,6 +88,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
       dataStoreColumnToLocalRow.put(rows.get(i).index, i);
       String target = String.format("%s_reviewed", rows.get(i).name);
       if (dataStore.descriptors.containsKey(target)) {
+        dataStoreColumnToLocalRow.put(dataStore.descriptors.get(target).index, i);
         needs_validation.add(target);
       }
     }
