@@ -32,8 +32,8 @@
 package com.vulcan.vmlci.orca.calculator;
 
 import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.helpers.Point;
 
-import java.awt.geom.Point2D;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 
@@ -65,11 +65,11 @@ public class ReferenceCalculator extends BaseCalculator {
    * @return a <code>HashMap&lt;String, Point2D[]&gt;</code> containing the markers and the
    *     reference axis.
    */
-  public static HashMap<String, Point2D.Double[]> interval_reference_markers(
-      Double axis_x_start,
-      Double axis_y_start,
-      Double axis_x_end,
-      Double axis_y_end,
+  public static HashMap<String, Point[]> interval_reference_markers(
+      Integer axis_x_start,
+      Integer axis_y_start,
+      Integer axis_x_end,
+      Integer axis_y_end,
       Long start_percentage,
       Long end_percentage,
       Long step_size) {
@@ -111,27 +111,27 @@ public class ReferenceCalculator extends BaseCalculator {
    * @return a <code>HashMap&lt;String, Point2D[]&gt;</code> containing the markers and the
    *     reference axis
    */
-  public static HashMap<String, Point2D.Double[]> interval_reference_markers_with_base_length(
-      Double axis_x_start,
-      Double axis_y_start,
-      Double axis_x_end,
-      Double axis_y_end,
-      Double ref_x_start,
-      Double ref_y_start,
-      Double ref_x_end,
-      Double ref_y_end,
+  public static HashMap<String, Point[]> interval_reference_markers_with_base_length(
+      Integer axis_x_start,
+      Integer axis_y_start,
+      Integer axis_x_end,
+      Integer axis_y_end,
+      Integer ref_x_start,
+      Integer ref_y_start,
+      Integer ref_x_end,
+      Integer ref_y_end,
       Long start_percentage,
       Long end_percentage,
       Long step_size,
       Long label_offset) {
 
     // Compute the deltas for the line being drawn.
-    Double axis_x_delta = axis_x_end - axis_x_start;
-    Double axis_y_delta = axis_y_end - axis_y_start;
+    double axis_x_delta = axis_x_end - axis_x_start;
+    double axis_y_delta = axis_y_end - axis_y_start;
 
     // Compute the marker offsets.
-    Double marker_x_offset = -axis_y_delta * 0.025;
-    Double marker_y_offset = axis_x_delta * 0.025;
+    double marker_x_offset = -axis_y_delta * 0.025;
+    double marker_y_offset = axis_x_delta * 0.025;
 
     // Unitize the deltas
     double axis_length = sqrt(axis_x_delta * axis_x_delta + axis_y_delta * axis_y_delta);
@@ -144,44 +144,46 @@ public class ReferenceCalculator extends BaseCalculator {
             (ref_x_end - ref_x_start) * (ref_x_end - ref_x_start)
                 + (ref_y_end - ref_y_start) * (ref_y_end - ref_y_start));
 
-    HashMap<String, Point2D.Double[]> result = new HashMap<>();
+    HashMap<String, Point[]> result = new HashMap<>();
 
     for (double percentage = start_percentage;
         percentage <= end_percentage;
         percentage += step_size) {
       if ((percentage * reference_length) / 100. <= axis_length) {
-        final Double offset = percentage * reference_length / 100.;
-        final Double marker_x = axis_x_start + axis_x_delta * offset;
-        final Double marker_y = axis_y_start + axis_y_delta * offset;
+        final double offset = percentage * reference_length / 100.;
+        final double marker_x = axis_x_start + axis_x_delta * offset;
+        final double marker_y = axis_y_start + axis_y_delta * offset;
         final String label = String.format("marker:%f%%", percentage + label_offset);
         result.put(
             label,
-            new Point2D.Double[] {
-              new Point2D.Double(marker_x + marker_x_offset, marker_y + marker_y_offset),
-              new Point2D.Double(marker_x - marker_x_offset, marker_y - marker_y_offset)
+            new Point[] {
+              new Point(
+                  (int) (marker_x + marker_x_offset + 0.5),
+                  (int) (marker_y + marker_y_offset + 0.5)),
+              new Point(
+                  (int) (marker_x - marker_x_offset + 0.5),
+                  (int) (marker_y - marker_y_offset + 0.5))
             });
       }
     }
 
     result.put(
         "axis",
-        new Point2D.Double[] {
-          new Point2D.Double(axis_x_start, axis_y_start), new Point2D.Double(axis_x_end, axis_y_end)
-        });
+        new Point[] {new Point(axis_x_start, axis_y_start), new Point(axis_x_end, axis_y_end)});
     return result;
   }
 
-  public static HashMap<String, Point2D.Double[]> compute_offset_reference_markers(
-      Double axis_x_start,
-      Double axis_y_start,
-      Double axis_x_end,
-      Double axis_y_end,
-      Double ref_line_x_start,
-      Double ref_line_y_start,
-      Double ref_line_x_end,
-      Double ref_line_y_end,
+  public static HashMap<String, Point[]> compute_offset_reference_markers(
+          Integer axis_x_start,
+          Integer axis_y_start,
+          Integer axis_x_end,
+          Integer axis_y_end,
+          Integer ref_line_x_start,
+          Integer ref_line_y_start,
+          Integer ref_line_x_end,
+          Integer ref_line_y_end,
       Long offset) {
-    Point2D.Double top =
+    Point top =
         ReferenceCalculator.compute_offset_reference(
             axis_x_start,
             axis_y_start,
@@ -193,7 +195,7 @@ public class ReferenceCalculator extends BaseCalculator {
             ref_line_y_end,
             0L);
 
-    Point2D.Double bot =
+    Point bot =
         ReferenceCalculator.compute_offset_reference(
             axis_x_start,
             axis_y_start,
@@ -205,7 +207,7 @@ public class ReferenceCalculator extends BaseCalculator {
             ref_line_y_end,
             1L);
 
-    Point2D.Double ref =
+    Point ref =
         ReferenceCalculator.compute_offset_reference(
             axis_x_start,
             axis_y_start,
@@ -219,32 +221,23 @@ public class ReferenceCalculator extends BaseCalculator {
     // generated deltas for reference line. Rotate axis by 90 degrees
     double d_x = (axis_y_start - axis_y_end) * 0.025;
     double d_y = (axis_x_end - axis_x_start) * 0.025;
-    HashMap<String, Point2D.Double[]> result = new HashMap<>();
+    HashMap<String, Point[]> result = new HashMap<>();
     result.put(
         "axis",
-        new Point2D.Double[] {
-          new Point2D.Double(axis_x_start, axis_y_start), new Point2D.Double(axis_x_end, axis_y_end)
-        });
+        new Point[] {new Point(axis_x_start, axis_y_start), new Point(axis_x_end, axis_y_end)});
     result.put(
         "ref top",
-        new Point2D.Double[] {
-          new Point2D.Double(top.x - d_x, top.y - d_y), new Point2D.Double(top.x + d_x, top.y + d_y)
-        });
+        new Point[] {new Point(top.x - d_x, top.y - d_y), new Point(top.x + d_x, top.y + d_y)});
     result.put(
         String.format("%d%% measurement", offset),
-        new Point2D.Double[] {
-          new Point2D.Double(ref.x - d_x, ref.y - d_y), new Point2D.Double(ref.x + d_x, ref.y + d_y)
-        });
+        new Point[] {new Point(ref.x - d_x, ref.y - d_y), new Point(ref.x + d_x, ref.y + d_y)});
     result.put(
         "ref bottom",
-        new Point2D.Double[] {
-          new Point2D.Double(bot.x - d_x, bot.y - d_y), new Point2D.Double(bot.x + d_x, bot.y + d_y)
-        });
+        new Point[] {new Point(bot.x - d_x, bot.y - d_y), new Point(bot.x + d_x, bot.y + d_y)});
     result.put(
         "reference line",
-        new Point2D.Double[] {
-          new Point2D.Double(ref_line_x_start, ref_line_y_start),
-          new Point2D.Double(ref_line_x_end, ref_line_y_end)
+        new Point[] {
+          new Point(ref_line_x_start, ref_line_y_start), new Point(ref_line_x_end, ref_line_y_end)
         });
 
     return result;
@@ -279,37 +272,37 @@ public class ReferenceCalculator extends BaseCalculator {
    * @param offset percentage along ref_line for ref_point.
    * @return the coordinates for proj.
    */
-  public static Point2D.Double compute_offset_reference(
-      Double axis_x_start,
-      Double axis_y_start,
-      Double axis_x_end,
-      Double axis_y_end,
-      Double ref_line_x_start,
-      Double ref_line_y_start,
-      Double ref_line_x_end,
-      Double ref_line_y_end,
+  public static Point compute_offset_reference(
+          Integer axis_x_start,
+          Integer axis_y_start,
+          Integer axis_x_end,
+          Integer axis_y_end,
+          Integer ref_line_x_start,
+          Integer ref_line_y_start,
+          Integer ref_line_x_end,
+          Integer ref_line_y_end,
       Long offset) {
 
     // Compute direction vector for main axis
-    Double axis_direction_x = axis_x_end - axis_x_start;
-    Double axis_direction_y = axis_y_end - axis_y_start;
-    Double length = sqrt(axis_direction_x * axis_direction_x + axis_direction_y * axis_direction_y);
+    double axis_direction_x = axis_x_end - axis_x_start;
+    double axis_direction_y = axis_y_end - axis_y_start;
+    double length = sqrt(axis_direction_x * axis_direction_x + axis_direction_y * axis_direction_y);
     axis_direction_x = axis_direction_x / length;
     axis_direction_y = axis_direction_y / length;
 
     // Compute reference point along ref line
-    Double ref_point_x = ref_line_x_start + (offset / 100.) * (ref_line_x_end - ref_line_x_start);
-    Double ref_point_y = ref_line_y_start + (offset / 100.) * (ref_line_y_end - ref_line_y_start);
+    double ref_point_x = ref_line_x_start + (offset / 100.) * (ref_line_x_end - ref_line_x_start);
+    double ref_point_y = ref_line_y_start + (offset / 100.) * (ref_line_y_end - ref_line_y_start);
 
     // Compute vector from axis start to reference point
-    Double c_x = ref_point_x - axis_x_start;
-    Double c_y = ref_point_y - axis_y_start;
+    double c_x = ref_point_x - axis_x_start;
+    double c_y = ref_point_y - axis_y_start;
 
     // Compute projection of vector (c_x, c_y) onto axis.
-    Double distance_along_axis = (c_x * axis_direction_x + c_y * axis_direction_y);
+    double distance_along_axis = (c_x * axis_direction_x + c_y * axis_direction_y);
 
     // Compute the location of the projection of the ref_point onto the axis.
-    return new Point2D.Double(
+    return new Point(
         axis_x_start + distance_along_axis * axis_direction_x,
         axis_y_start + distance_along_axis * axis_direction_y);
   }
