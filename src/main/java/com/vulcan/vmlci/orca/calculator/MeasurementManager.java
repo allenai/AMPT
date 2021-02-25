@@ -93,7 +93,7 @@ public class MeasurementManager extends BaseCalculator implements TableModelList
         new LinkedList<>(possible_measurements.getOrDefault(column_base, new ArrayList<>()));
     while (available_measurement.size() > 0) {
       String measure = available_measurement.removeFirst();
-      Double measurement_result = (Double) do_measurement(measure, title);
+      Object measurement_result = do_measurement(measure, title);
       dataStore.insert_value(title, measure, measurement_result);
       available_measurement.addAll(possible_measurements.getOrDefault(measure, new ArrayList<>()));
     }
