@@ -83,8 +83,8 @@ REPGuide_x_start,"Starting x for guideline along eyepatch, taken from RIGHT EYEP
 REPGuide_y_start,"Starting y for guideline along eyepatch, taken from RIGHT EYEPATCH TOP_y",pixels,auto point,False,False,False
 REPGuide_x_end,"Ending x for guideline along eyepatch, taken from RIGHT EYEPATCH BOTTOM_x",pixels,auto point,False,False,False
 REPGuide_y_end,"Ending y for guideline along eyepatch, taken from RIGHT EYEPATCH BOTTOM_y",pixels,auto point,False,False,False
-EP BOTTOM REFERENCE_x,"EP Bottom measurement reference, x position in image coordinates.",fractional pixels,auto point,False,False,False
-EP BOTTOM REFERENCE_y,"EP Bottom measurement reference, y position in image coordinates.",fractional pixels,auto point,False,False,False
+EP BOTTOM REFERENCE_x,"EP Bottom measurement reference, x position in image coordinates.",pixels,auto point,False,False,False
+EP BOTTOM REFERENCE_y,"EP Bottom measurement reference, y position in image coordinates.",pixels,auto point,False,False,False
 EP TOP_x_start,"Starting X for distance between eye patches at the top, measured from right eye patch to left.",pixels,auto point,False,False,False
 EP TOP_y_start,"Starting y for distance between eye patches at the top, measured from right eye patch to left.",pixels,auto point,False,False,False
 EP TOP_x_end,"Ending X for distance between eye patches at the top, measured from right eye patch to left.",pixels,auto point,False,False,False
