@@ -87,7 +87,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
       selections.add(false);
       dataStoreColumnToLocalRow.put(rows.get(i).index, i);
       String target = String.format("%s_reviewed", rows.get(i).name);
-      if (dataStore.descriptors.containsKey(target)){
+      if (dataStore.descriptors.containsKey(target)) {
         needs_validation.add(target);
       }
     }
@@ -183,8 +183,10 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
         if (!needs_validation.contains(target_row)) {
           return DataStore.NAStatus;
         }
-        Object result = dataStore.get_value(lastActiveImage.getMostRecentImageName(), target_row);
-        if (result == null) {
+        Boolean result =
+            dataStore.get_value(
+                lastActiveImage.getMostRecentImageName(), target_row, Boolean.class, null);
+        if (result == null || !result) {
           return DataStore.UNREVIEWED;
         } else {
           return DataStore.ACCEPTED;
