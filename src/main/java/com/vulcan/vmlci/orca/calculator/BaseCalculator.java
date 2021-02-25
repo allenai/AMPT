@@ -154,10 +154,11 @@ public abstract class BaseCalculator {
    * @return the Euclidean distance from start -&lt; end if all of the arguments are != null, null
    *     otherwise.
    */
-  public static Double length(Double x_start, Double y_start, Double x_end, Double y_end) {
+  public static Double length(Number x_start, Number y_start, Number x_end, Number y_end) {
+//    System.err.println("BaseCalculator.length");
     if (!(x_start == null || y_start == null || x_end == null || y_end == null)) {
-      Double delta_x = x_start - x_end;
-      Double delta_y = y_start - y_end;
+      double delta_x = x_start.doubleValue() - x_end.doubleValue();
+      double delta_y = y_start.doubleValue() - y_end.doubleValue();
       return sqrt(delta_x * delta_x + delta_y * delta_y);
     }
     return null;
@@ -169,7 +170,7 @@ public abstract class BaseCalculator {
    * @param source the value for the source column
    * @return the contents of source
    */
-  public static Double copy(Double source) {
+  public static Object copy(Object source) {
     return source;
   }
 
@@ -194,12 +195,13 @@ public abstract class BaseCalculator {
    *
    * @param start the starting value
    * @param end the ending value
-   * @param distance the interpolation distance
+   * @param distance the interpolation distance as a
    * @return the interpolated value
    */
-  public static Double parametric_point(Double start, Double end, Double distance) {
+  public static Integer parametric_point(Integer start, Integer end, Double distance) {
+//    System.err.println("BaseCalculator.parametric_point");
     if (!(start == null || end == null || distance == null)) {
-      return start + (end - start) * distance;
+      return (int)(start.doubleValue() + (end.doubleValue() - start.doubleValue()) * distance.doubleValue() + 0.5);
     }
     return null;
   }
