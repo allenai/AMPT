@@ -29,11 +29,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca;
+package com.vulcan.vmlci.orca.data;
 
-import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
+import com.vulcan.vmlci.orca.helpers.Point;
 import junit.framework.TestCase;
 
 import java.awt.geom.Point2D;
@@ -57,6 +57,7 @@ public class DataStoreTest extends TestCase {
         DataStoreTest.class.getResource("/measurement-tool-config/").getPath();
     ConfigurationLoader.setConfigDirectory(testingConfigPath);
     this.ds = DataStore.createDataStore();
+    this.ds.loadData(null);
   }
 
   /**
@@ -150,9 +151,9 @@ public class DataStoreTest extends TestCase {
 
   public void test_insert_value_new() {
     // Check that we can insert a value into a new row.
-    this.ds.insert_value("newrow", "Position", 42);
-    int retrieved_value = (Integer) this.ds.get_value("newrow", "Position");
-    assertEquals(42, retrieved_value);
+    this.ds.insert_value("newrow", "Position", "42");
+    String retrieved_value = (String) this.ds.get_value("newrow", "Position");
+    assertEquals("42", retrieved_value);
   }
 
   /** Check that we can insert a value into an existing row. */
@@ -185,7 +186,7 @@ public class DataStoreTest extends TestCase {
 
   public void test_insert_value_dirty_check_new() {
     assertFalse(this.ds.dirty());
-    this.ds.insert_value("newrow", "Position", 42);
+    this.ds.insert_value("newrow", "Position", "42");
     this.ds.get_value("newrow", "Position");
     assertTrue(this.ds.dirty());
   }
@@ -214,7 +215,7 @@ public class DataStoreTest extends TestCase {
     this.load_test_data("/data/sample_short.csv");
     Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull("this.ds should not contain any points at this time", result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", 10.);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", 10);
     result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull(result);
   }
@@ -223,7 +224,7 @@ public class DataStoreTest extends TestCase {
     this.load_test_data("/data/sample_short.csv");
     Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull("this.ds should not contain any points at this time", result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10.);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10);
     result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull(result);
   }
@@ -232,11 +233,11 @@ public class DataStoreTest extends TestCase {
     this.load_test_data("/data/sample_short.csv");
     Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull("this.ds should not contain any points at this time", result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", -10.);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10.);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", -10);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10);
     result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNotNull(result);
-    Point2D ground_truth = new Point2D.Double(-10., 10.);
+    Point ground_truth = new Point(-10, 10);
     assertEquals(ground_truth, result);
   }
 
@@ -244,9 +245,9 @@ public class DataStoreTest extends TestCase {
     this.load_test_data("/data/sample_short.csv");
     Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull("this.ds should not contain any points at this time", result);
-    this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", new Point2D.Double(-10., 10.));
-    assertEquals(-10., this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_x"));
-    assertEquals(10., this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_y"));
+    this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", new Point(-10, 10));
+    assertEquals(-10, this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_x"));
+    assertEquals(10, this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_y"));
   }
 
   public void testSet_point_null() {
@@ -264,24 +265,36 @@ public class DataStoreTest extends TestCase {
     assertNull(result);
   }
 
+  public void testInsertIncorrectType(){
+    this.load_test_data("/data/sample_short.csv");
+    try{
+      this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1.);
+      fail();
+    } catch (ClassCastException e) {
+
+    } catch (Exception e) {
+      fail();
+    }
+  }
+
   public void testGet_endpoints_partials() {
     this.load_test_data("/data/sample_short.csv");
-    Point2D.Double[] result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
+    Point[] result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNull(result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1.);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1);
     result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNull(result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_start", 2.);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_start", 2);
     result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNull(result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_end", 3.);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_end", 3);
     result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNull(result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_end", 4.);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_end", 4);
     result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNotNull(result);
-    assertEquals(new Point2D.Double(1., 2.), result[0]);
-    assertEquals(new Point2D.Double(3., 4.), result[1]);
+    assertEquals(new Point(1, 2), result[0]);
+    assertEquals(new Point(3, 4), result[1]);
     assertEquals(2, result.length);
   }
 
@@ -331,5 +344,9 @@ public class DataStoreTest extends TestCase {
     } catch (DataFileLoadException e) {
       assertTrue(true);
     }
+  }
+
+  public void testGet_value_generic() {
+    ds.set_point("Foo", "SN", new Point(1, 2));
   }
 }

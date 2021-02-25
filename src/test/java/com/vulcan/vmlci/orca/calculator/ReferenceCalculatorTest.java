@@ -33,8 +33,9 @@ package com.vulcan.vmlci.orca.calculator;
 
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.DataStoreTest;
+import com.vulcan.vmlci.orca.data.DataStoreTest;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
+import com.vulcan.vmlci.orca.helpers.Point;
 import junit.framework.TestCase;
 
 import java.awt.geom.Point2D;
@@ -42,6 +43,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.HashMap;
+
 
 @SuppressWarnings("UnusedAssignment")
 public class ReferenceCalculatorTest extends TestCase {
@@ -87,35 +89,35 @@ public class ReferenceCalculatorTest extends TestCase {
   }
 
   public void test_compute_offset_reference_normal() {
-    ds.set_point("foo", "SN", new Point2D.Double(100., 928.));
-    ds.set_point("foo", "DF", new Point2D.Double(101., 551.));
-    ds.set_point("foo", "RIGHT EYEPATCH TOP", new Point2D.Double(52., 865.));
-    ds.set_point("foo", "RIGHT EYEPATCH BOTTOM", new Point2D.Double(39., 772.));
+    ds.set_point("foo", "SN", new Point(100, 928));
+    ds.set_point("foo", "DF", new Point(101, 551));
+    ds.set_point("foo", "RIGHT EYEPATCH TOP", new Point(52, 865));
+    ds.set_point("foo", "RIGHT EYEPATCH BOTTOM", new Point(39, 772));
     assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
-    HashMap<String, Point2D.Double[]> result =
-        (HashMap<String, Point2D.Double[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
+    HashMap<String, Point[]> result;
+    result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
     assertNotNull(result);
     // Retrieve the 75% reference endpoints
-    Point2D.Double[] meas_endpoints = result.get(String.format("%.0f%% measurement", 0.75 * 100.));
+    Point[] meas_endpoints = result.get(String.format("%.0f%% measurement", 0.75 * 100.));
 
-    assertEquals(100.35, (meas_endpoints[0].x + meas_endpoints[1].x) / 2.0, 0.01);
-    assertEquals(795.40, (meas_endpoints[0].y + meas_endpoints[1].y) / 2.0, 0.01);
+    assertEquals(100, (int)(((meas_endpoints[0].x + meas_endpoints[1].x) / 2.0)+0.5));
+    assertEquals(795, (int)(((meas_endpoints[0].y + meas_endpoints[1].y) / 2.0)+0.5));
   }
 
   public void test_compute_offset_reference_reversed_axis() {
-    ds.set_point("foo", "DF", new Point2D.Double(100., 928.));
-    ds.set_point("foo", "SN", new Point2D.Double(101., 551.));
-    ds.set_point("foo", "RIGHT EYEPATCH TOP", new Point2D.Double(52., 865.));
-    ds.set_point("foo", "RIGHT EYEPATCH BOTTOM", new Point2D.Double(39., 772.));
+    ds.set_point("foo", "DF", new Point(100, 928));
+    ds.set_point("foo", "SN", new Point(101, 551));
+    ds.set_point("foo", "RIGHT EYEPATCH TOP", new Point(52, 865));
+    ds.set_point("foo", "RIGHT EYEPATCH BOTTOM", new Point(39, 772));
     assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
-    HashMap<String, Point2D.Double[]> result =
-            (HashMap<String, Point2D.Double[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
+    HashMap<String, Point[]> result;
+    result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
     assertNotNull(result);
     // Retrieve the 75% reference endpoints
-    Point2D.Double[] meas_endpoints = result.get(String.format("%d%% measurement", 75));
+    Point[] meas_endpoints = result.get(String.format("%d%% measurement", 75));
 
-    assertEquals(100.35, (meas_endpoints[0].x + meas_endpoints[1].x) / 2.0, 0.01);
-    assertEquals(795.40, (meas_endpoints[0].y + meas_endpoints[1].y) / 2.0, 0.01);
+    assertEquals(100, (int)(((meas_endpoints[0].x + meas_endpoints[1].x) / 2.0)+0.5));
+    assertEquals(795, (int)(((meas_endpoints[0].y + meas_endpoints[1].y) / 2.0)+0.5));
   }
 
   public void test_update_point_value_changes() {
@@ -125,8 +127,8 @@ public class ReferenceCalculatorTest extends TestCase {
     } catch (FileNotFoundException e) {
       fail(e.getMessage());
     }
-    ds.set_point("foo", "SN", new Point2D.Double(0., 3.));
-    ds.set_point("foo", "DF", new Point2D.Double(4., 0.));
+    ds.set_point("foo", "SN", new Point(0, 3));
+    ds.set_point("foo", "DF", new Point(4, 0));
     assertEquals(5., ds.get_value("foo", "SNDF"));
     ds.insert_value("foo", "SNDF_y_end", null);
     assertNull(ds.get_value("foo", "SNDF"));

@@ -33,8 +33,9 @@ package com.vulcan.vmlci.orca.calculator;
 
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.DataStoreTest;
+import com.vulcan.vmlci.orca.data.DataStoreTest;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
+import com.vulcan.vmlci.orca.helpers.Point;
 import junit.framework.TestCase;
 
 import java.awt.geom.Point2D;
@@ -89,10 +90,10 @@ public class MeasureManagerTest extends TestCase {
     } catch (FileNotFoundException e) {
       fail(e.getMessage());
     }
-    ds.insert_value("foo", "SNDF_x_start", 0.);
-    ds.insert_value("foo", "SNDF_y_start", 3.);
-    ds.insert_value("foo", "SNDF_x_end", 4.);
-    ds.insert_value("foo", "SNDF_y_end", 0.);
+    ds.insert_value("foo", "SNDF_x_start", 0);
+    ds.insert_value("foo", "SNDF_y_start", 3);
+    ds.insert_value("foo", "SNDF_x_end", 4);
+    ds.insert_value("foo", "SNDF_y_end", 0);
     assertEquals(5., ds.get_value("foo","SNDF"));
     ds.insert_value("foo", "SNDF_y_end", null);
     assertNull(ds.get_value("foo","SNDF"));
@@ -104,8 +105,8 @@ public class MeasureManagerTest extends TestCase {
     } catch (FileNotFoundException e) {
       fail(e.getMessage());
     }
-    ds.set_point("foo", "SN", new Point2D.Double(0.,3.));
-    ds.set_point("foo", "DF", new Point2D.Double(4.,0.));
+    ds.set_point("foo", "SN", new Point(0,3));
+    ds.set_point("foo", "DF", new Point(4,0));
     assertEquals(5., ds.get_value("foo","SNDF"));
     ds.insert_value("foo", "SNDF_y_end", null);
     assertNull(ds.get_value("foo","SNDF"));
