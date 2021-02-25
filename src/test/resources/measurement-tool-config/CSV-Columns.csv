@@ -83,8 +83,8 @@ REPGuide_x_start,"Starting x for guideline along eyepatch, taken from RIGHT EYEP
 REPGuide_y_start,"Starting y for guideline along eyepatch, taken from RIGHT EYEPATCH TOP_y",pixels,auto point,False,False,False
 REPGuide_x_end,"Ending x for guideline along eyepatch, taken from RIGHT EYEPATCH BOTTOM_x",pixels,auto point,False,False,False
 REPGuide_y_end,"Ending y for guideline along eyepatch, taken from RIGHT EYEPATCH BOTTOM_y",pixels,auto point,False,False,False
-EP BOTTOM REFERENCE_x,"EP Bottom measurement reference, x position in image coordinates.",fractional pixels,auto point,False,False,False
-EP BOTTOM REFERENCE_y,"EP Bottom measurement reference, y position in image coordinates.",fractional pixels,auto point,False,False,False
+EP BOTTOM REFERENCE_x,"EP Bottom measurement reference, x position in image coordinates.",pixels,auto point,False,False,False
+EP BOTTOM REFERENCE_y,"EP Bottom measurement reference, y position in image coordinates.",pixels,auto point,False,False,False
 EP TOP_x_start,"Starting X for distance between eye patches at the top, measured from right eye patch to left.",pixels,auto point,False,False,False
 EP TOP_y_start,"Starting y for distance between eye patches at the top, measured from right eye patch to left.",pixels,auto point,False,False,False
 EP TOP_x_end,"Ending X for distance between eye patches at the top, measured from right eye patch to left.",pixels,auto point,False,False,False
@@ -301,3 +301,58 @@ HEAD_x_start,Starting X for breadth of the head (taken at 15% of the length of t
 HEAD_y_start,Starting y for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
 HEAD_x_end,Ending X for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
 HEAD_y_end,Ending y for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
+EP TOP_reviewed,Review of EP TOP length,boolean,boolean,False,False,False
+EP BOTTOM_reviewed,Review of EP BOTTOM length,boolean,boolean,False,False,False
+GIRTH_reviewed,Review of GIRTH length,boolean,boolean,False,False,False
+HEAD_reviewed,Review of HEAD length,boolean,boolean,False,False,False
+FW_reviewed,Review of FW length,boolean,boolean,False,False,False
+5%_reviewed,Review of 5% length,boolean,boolean,False,False,False
+10%_reviewed,Review of 10% length,boolean,boolean,False,False,False
+15%_reviewed,Review of 15% length,boolean,boolean,False,False,False
+20%_reviewed,Review of 20% length,boolean,boolean,False,False,False
+25%_reviewed,Review of 25% length,boolean,boolean,False,False,False
+30%_reviewed,Review of 30% length,boolean,boolean,False,False,False
+35%_reviewed,Review of 35% length,boolean,boolean,False,False,False
+40%_reviewed,Review of 40% length,boolean,boolean,False,False,False
+45%_reviewed,Review of 45% length,boolean,boolean,False,False,False
+50%_reviewed,Review of 50% length,boolean,boolean,False,False,False
+55%_reviewed,Review of 55% length,boolean,boolean,False,False,False
+60%_reviewed,Review of 60% length,boolean,boolean,False,False,False
+65%_reviewed,Review of 65% length,boolean,boolean,False,False,False
+70%_reviewed,Review of 70% length,boolean,boolean,False,False,False
+75%_reviewed,Review of 75% length,boolean,boolean,False,False,False
+80%_reviewed,Review of 80% length,boolean,boolean,False,False,False
+85%_reviewed,Review of 85% length,boolean,boolean,False,False,False
+90%_reviewed,Review of 90% length,boolean,boolean,False,False,False
+95%_reviewed,Review of 95% length,boolean,boolean,False,False,False
+105%_reviewed,Review of 105% length,boolean,boolean,False,False,False
+110%_reviewed,Review of 110% length,boolean,boolean,False,False,False
+115%_reviewed,Review of 115% length,boolean,boolean,False,False,False
+120%_reviewed,Review of 120% length,boolean,boolean,False,False,False
+125%_reviewed,Review of 125% length,boolean,boolean,False,False,False
+130%_reviewed,Review of 130% length,boolean,boolean,False,False,False
+135%_reviewed,Review of 135% length,boolean,boolean,False,False,False
+140%_reviewed,Review of 140% length,boolean,boolean,False,False,False
+145%_reviewed,Review of 145% length,boolean,boolean,False,False,False
+150%_reviewed,Review of 150% length,boolean,boolean,False,False,False
+155%_reviewed,Review of 155% length,boolean,boolean,False,False,False
+160%_reviewed,Review of 160% length,boolean,boolean,False,False,False
+165%_reviewed,Review of 165% length,boolean,boolean,False,False,False
+170%_reviewed,Review of 170% length,boolean,boolean,False,False,False
+175%_reviewed,Review of 175% length,boolean,boolean,False,False,False
+180%_reviewed,Review of 180% length,boolean,boolean,False,False,False
+185%_reviewed,Review of 185% length,boolean,boolean,False,False,False
+190%_reviewed,Review of 190% length,boolean,boolean,False,False,False
+195%_reviewed,Review of 195% length,boolean,boolean,False,False,False
+200%_reviewed,Review of 200% length,boolean,boolean,False,False,False
+205%_reviewed,Review of 205% length,boolean,boolean,False,False,False
+210%_reviewed,Review of 210% length,boolean,boolean,False,False,False
+215%_reviewed,Review of 215% length,boolean,boolean,False,False,False
+220%_reviewed,Review of 220% length,boolean,boolean,False,False,False
+225%_reviewed,Review of 225% length,boolean,boolean,False,False,False
+BH_reviewed,Review of BH point,boolean,boolean,False,False,False
+SN_reviewed,Review of SN point,boolean,boolean,False,False,False
+DF_reviewed,Review of DF point,boolean,boolean,False,False,False
+FL_reviewed,Review of FL point,boolean,boolean,False,False,False
+RIGHT EYEPATCH TOP_reviewed,Review of RIGHT EYEPATCH TOP point,boolean,boolean,False,False,False
+RIGHT EYEPATCH BOTTOM_reviewed,Review of RIGHT EYEPATCH BOTTOM point,boolean,boolean,False,False,False
