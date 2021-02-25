@@ -65,10 +65,10 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
   protected abstract void wireUI();
 
   protected void save(ActionEvent e){};
-
   protected void revert(ActionEvent e){};
-
   protected void clear(ActionEvent e){};
+  protected void approve(ActionEvent e){};
+
 
   public void updateInterface(){};
 
