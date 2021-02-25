@@ -15,7 +15,7 @@ MEAS COMMENTS,Free text from scientist,editable text,free text,True,True,True
 UNDERWATER,"Animal underwater, 0=No, 1=Yes",editable text,manual,True,True,True
 EP TOP,"distance between eye patches at the top, measured from right eye patch to left.",fractional pixels,length,True,True,False
 EP BOTTOM,75% of the length of the right eye patch,fractional pixels,length,True,True,False
-GIRTH,breadth at anterior insertion of the dorsal fin (same as 100% measure in profile),fractional pixels,length,True,True,False
+GIRTH,breadth at anterior insertion of the dorsal fin (same as 100% measure in profile),fractional pixels,auto length,True,True,False
 HEAD,breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),fractional pixels,length,True,True,False
 SNDF,tip of rostrum to anterior insertion of dorsal fin,fractional pixels,auto length,True,False,False
 BHDF,center of blowhole to anterior insertion of dorsal fin,fractional pixels,auto length,True,False,False
@@ -41,7 +41,7 @@ FW,Maximum breadth of fluke,fractional pixels,length,True,True,False
 85%,Width of animal at 85% of distance of SNDF measurement,fractional pixels,length,True,True,False
 90%,Width of animal at 90% of distance of SNDF measurement,fractional pixels,length,True,True,False
 95%,Width of animal at 95% of distance of SNDF measurement,fractional pixels,length,True,True,False
-100%,Width of animal at 100% of distance of SNDF measurement,fractional pixels,auto length,True,False,False
+100%,Width of animal at 100% of distance of SNDF measurement,fractional pixels,length,True,False,False
 105%,Width of animal at 105% of distance of SNDF measurement,fractional pixels,length,True,True,False
 110%,Width of animal at 110% of distance of SNDF measurement,fractional pixels,length,True,True,False
 115%,Width of animal at 115% of distance of SNDF measurement,fractional pixels,length,True,True,False
@@ -303,7 +303,6 @@ HEAD_x_end,Ending X for breadth of the head (taken at 15% of the length of the b
 HEAD_y_end,Ending y for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
 EP TOP_reviewed,Review of EP TOP length,boolean,boolean,False,False,False
 EP BOTTOM_reviewed,Review of EP BOTTOM length,boolean,boolean,False,False,False
-GIRTH_reviewed,Review of GIRTH length,boolean,boolean,False,False,False
 HEAD_reviewed,Review of HEAD length,boolean,boolean,False,False,False
 FW_reviewed,Review of FW length,boolean,boolean,False,False,False
 5%_reviewed,Review of 5% length,boolean,boolean,False,False,False
@@ -325,6 +324,7 @@ FW_reviewed,Review of FW length,boolean,boolean,False,False,False
 85%_reviewed,Review of 85% length,boolean,boolean,False,False,False
 90%_reviewed,Review of 90% length,boolean,boolean,False,False,False
 95%_reviewed,Review of 95% length,boolean,boolean,False,False,False
+100%_reviewed,Review of 100% length,boolean,boolean,False,False,False
 105%_reviewed,Review of 105% length,boolean,boolean,False,False,False
 110%_reviewed,Review of 110% length,boolean,boolean,False,False,False
 115%_reviewed,Review of 115% length,boolean,boolean,False,False,False
