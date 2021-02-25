@@ -34,6 +34,7 @@ package com.vulcan.vmlci.orca.ui;
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
+import com.vulcan.vmlci.orca.helpers.Point;
 import ij.ImagePlus;
 import ij.gui.PointRoi;
 import ij.gui.Roi;
@@ -72,8 +73,8 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   private JCheckBox enableOverlays;
 
   // State Elements
-  private Point2D.Double currentPosition = null;
-  private Point2D.Double savedPosition = null;
+  private Point currentPosition = null;
+  private Point savedPosition = null;
 
   public PointInputPanel(DataStore dataStore) {
     super(dataStore);
@@ -95,7 +96,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
             lastActiveImage.getMostRecentImageName(),
             (String) measurementSelector.getSelectedItem());
     if (savedPosition != null) {
-      currentPosition = (Point2D.Double) savedPosition.clone();
+      currentPosition = (Point) savedPosition.clone();
     } else {
       currentPosition = null;
     }
@@ -265,7 +266,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     enableOverlays = new JCheckBox();
     enableOverlays.setHorizontalAlignment(SwingConstants.CENTER);
     enableOverlays.setHorizontalTextPosition(SwingConstants.TRAILING);
-    enableOverlays.setText("Overlays");
+    enableOverlays.setText("Cues");
     controls.add(enableOverlays);
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
@@ -298,23 +299,23 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   @Override
   protected void revert(ActionEvent e) {
     lastActiveImage.getMostRecentImageWindow().deleteRoi();
-    currentPosition = (Point2D.Double) savedPosition.clone();
+    currentPosition = (Point) savedPosition.clone();
     updateInterface();
   }
 
   @Override
   public void updateInterface() {
     if (savedPosition != null) {
-      savedPointX.setText(Integer.toString((int) savedPosition.x));
-      savedPointY.setText(Integer.toString((int) savedPosition.y));
+      savedPointX.setText(Integer.toString(savedPosition.x));
+      savedPointY.setText(Integer.toString(savedPosition.y));
     } else {
       savedPointX.setText("");
       savedPointY.setText("");
     }
 
     if (currentPosition != null) {
-      currentPointX.setText(Integer.toString((int) currentPosition.x));
-      currentPointY.setText(Integer.toString((int) currentPosition.y));
+      currentPointX.setText(Integer.toString(currentPosition.x));
+      currentPointY.setText(Integer.toString(currentPosition.y));
     } else {
       currentPointX.setText("");
       currentPointY.setText("");
@@ -335,7 +336,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   @Override
   public void activeImageChanged(ActiveImageChangeEvent evt) {
     super.activeImageChanged(evt);
-    if (lastActiveImage.getMostRecentImageName() != LastActiveImage.NO_OPEN_IMAGE) {
+    if (!lastActiveImage.getMostRecentImageName().equals(LastActiveImage.NO_OPEN_IMAGE)) {
       updateInterface();
     } else {
       currentPointX.setText("");
@@ -392,7 +393,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       }
       Rectangle bounds = roi.getBounds();
       if (currentPosition == null) {
-        currentPosition = new Point2D.Double();
+        currentPosition = new Point();
       }
       currentPosition.setLocation(bounds.x, bounds.y);
     }
