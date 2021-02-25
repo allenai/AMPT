@@ -1,7 +1,7 @@
 column_name,description,units,measurement_type,export,editable,is_metadata
 Filename,Name of the file used for the measurement,text,manual,True,False,True
 TimePhoto,Time stamp of the photo,timestamp,manual,True,False,True
-WhaleID,The <POD><NUMER> designator for the animal,editable text,selection,True,True,True
+WhaleID,The <POD><NUMBER> designator for the animal,editable text,selection,True,True,True
 Position,The <NUMBER>LR or <NUMBER>TB index for the animal being measured,editable text,manual,True,True,True
 Type,"Type of animal, SR => Southern Resident Killer Whale",editable text,manual,True,True,True
 Alt,Altitude from GPS,meters,manual,True,False,True
@@ -67,26 +67,6 @@ FW,Maximum breadth of fluke,fractional pixels,length,True,True,False
 215%,Width of animal at 215% of distance of SNDF measurement,fractional pixels,length,True,True,False
 220%,Width of animal at 220% of distance of SNDF measurement,fractional pixels,length,True,True,False
 225%,Width of animal at 225% of distance of SNDF measurement,fractional pixels,length,True,True,False
-FBP 5%,Width of animal at 5% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 10%,Width of animal at 10% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 15%,Width of animal at 15% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 20%,Width of animal at 20% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 25%,Width of animal at 25% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 30%,Width of animal at 30% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 35%,Width of animal at 35% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 40%,Width of animal at 40% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 45%,Width of animal at 45% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 50%,Width of animal at 50% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 55%,Width of animal at 55% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 60%,Width of animal at 60% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 65%,Width of animal at 65% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 70%,Width of animal at 70% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 75%,Width of animal at 75% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 80%,Width of animal at 80% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 85%,Width of animal at 85% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 90%,Width of animal at 90% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 95%,Width of animal at 95% of distance of SNFL measurement,fractional pixels,length,True,True,False
-FBP 100%,Width of animal at 100% of distance of SNFL measurement,fractional pixels,auto length,True,False,False
 BH_x,Blowhole x position in image coordinates,pixels,point,False,False,False
 BH_y,Blowhole y position in image coordinates,pixels,point,False,False,False
 SN_x,Rostrum x position in image coordinates,pixels,point,False,False,False
