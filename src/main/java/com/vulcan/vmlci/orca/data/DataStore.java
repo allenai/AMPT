@@ -32,8 +32,8 @@
 package com.vulcan.vmlci.orca.data;
 
 import com.opencsv.CSVWriter;
-import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.CSVFileLoadException;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
 
@@ -52,7 +52,9 @@ import static com.vulcan.vmlci.orca.helpers.Utilities.loadCSVAsMap;
 import static java.util.Collections.addAll;
 
 public class DataStore extends AbstractTableModel {
-  private static DataStore datastore_instance = null;
+  public static final String NAStatus = "N/A";
+  public static final String UNREVIEWED = "Unreviewed";
+  public static final String ACCEPTED = "Accepted";
   // Formatting constants.
   private static final String X_COL = "%s_x";
   private static final String Y_COL = "%s_y";
@@ -60,9 +62,9 @@ public class DataStore extends AbstractTableModel {
   private static final String Y_START_LENGTH = "%s_y_start";
   private static final String X_END_LENGTH = "%s_x_end";
   private static final String Y_END_LENGTH = "%s_y_end";
-
+  private static DataStore datastore_instance = null;
   /** Metadata about each column. */
-  final public HashMap<String, ColumnDescriptor> descriptors = new java.util.HashMap<>();
+  public final HashMap<String, ColumnDescriptor> descriptors = new java.util.HashMap<>();
 
   /**
    * The actual data store. Currently this a list of hashmaps, but may benefit from being converted
@@ -93,13 +95,10 @@ public class DataStore extends AbstractTableModel {
 
   /** The working csv file. */
   private File csvFile;
-
   /** Mapping to provide a quick lookup from tracked filename to row index. */
   private HashMap<String, Integer> rowMap = null;
-
   /** Mapping to provide a quick lookup from column index to column name. */
   private String[] columnMap = null;
-
   /** Track the dirty state of the data store. */
   private boolean dataDirty = false;
 
@@ -127,12 +126,14 @@ public class DataStore extends AbstractTableModel {
     rebuildRowMap();
   }
 
-  public static DataStore createDataStore() throws ConfigurationFileLoadException, DataFileLoadException {
+  public static DataStore createDataStore()
+      throws ConfigurationFileLoadException, DataFileLoadException {
     return createDataStore(null);
   }
 
-  public static DataStore createDataStore(File dataFile) throws ConfigurationFileLoadException, DataFileLoadException {
-    if(DataStore.datastore_instance == null){
+  public static DataStore createDataStore(File dataFile)
+      throws ConfigurationFileLoadException, DataFileLoadException {
+    if (DataStore.datastore_instance == null) {
       DataStore.datastore_instance = new DataStore(dataFile);
     }
     return DataStore.datastore_instance;
@@ -326,8 +327,15 @@ public class DataStore extends AbstractTableModel {
       return new Double(val);
     }
     if (INTEGER_UNITS.contains(units)) {
+      if (val.contains(".")) {
+        val = val.substring(0, val.indexOf('.'));
+      }
       return new Integer(val);
     }
+    if (BOOLEAN_UNITS.contains(units)) {
+      return new Boolean(val.equals("true"));
+    }
+
     throw new Exception(String.format("Unknown unit specification \"%s\"", units));
   }
 
@@ -588,6 +596,18 @@ public class DataStore extends AbstractTableModel {
   }
 
   /**
+   * Retrieves a value specified by column for image_filename from the data store. If the value
+   * can't be retrieved return missing.
+   *
+   * @param image_filename The name of the file being annotated.
+   * @param column The name of the column being annotated
+   * @return The retrieved value from the table
+   */
+  public <T> T get_value(String image_filename, String column, Class<T> type, Object missing) {
+    return type.cast(get_value(image_filename, column, missing));
+  }
+
+  /**
    * Stores a new point value.
    *
    * @param filename the file name if the image being annotated.
@@ -758,13 +778,11 @@ public class DataStore extends AbstractTableModel {
     if (value == null) {
       if (TEXT_UNITS.contains(descriptors.get(columnName).units)) {
         return "";
+      } else if (BOOLEAN_UNITS.contains(descriptors.get(columnName).units)) {
+        return "false";
       } else {
         return "NA";
       }
-    }
-    if(INTEGER_UNITS.contains(descriptors.get(columnName).units)){
-      Double retrieved = (Double) value;
-      return Integer.toString(retrieved.intValue());
     }
     return value.toString();
   }
