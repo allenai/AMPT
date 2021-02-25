@@ -69,7 +69,7 @@ public class InputControls implements ActiveImageListener {
     inputPanel.add(tabbedPane, BorderLayout.CENTER);
 
     tabbedPane.addTab("Comments", new CommentInputPanel(dataStore));
-    tabbedPane.addTab("Points", new PointInputPanel(dataStore));
+    tabbedPane.addTab("Reference Points", new PointInputPanel(dataStore));
     tabbedPane.addTab("Lengths", new LengthInputPanel(dataStore));
 
     tabbedPane.addChangeListener(
