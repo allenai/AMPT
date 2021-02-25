@@ -88,6 +88,9 @@ public class DataStore extends AbstractTableModel {
   /** Measurement units that correspond to points */
   public HashSet<String> FETCHABLE_POINTS;
 
+  public HashMap<String, Class<?>> UNIT_CLASSES;
+  public HashSet<String> BOOLEAN_UNITS;
+
   /** The working csv file. */
   private File csvFile;
 
@@ -160,6 +163,9 @@ public class DataStore extends AbstractTableModel {
     FLOAT_UNITS = new HashSet<>();
     addAll(FLOAT_UNITS, "meters", "millimeters", "unitless percentage", "fractional pixels");
 
+    BOOLEAN_UNITS = new HashSet<>();
+    addAll(BOOLEAN_UNITS, "boolean");
+
     EDITABLE = new HashSet<>();
     addAll(EDITABLE, "editable text");
 
@@ -168,6 +174,12 @@ public class DataStore extends AbstractTableModel {
 
     FETCHABLE_POINTS = new HashSet<>();
     addAll(FETCHABLE_POINTS, "point", "auto point");
+
+    UNIT_CLASSES = new HashMap<>();
+    INTEGER_UNITS.forEach(unit -> UNIT_CLASSES.put(unit, Integer.class));
+    FLOAT_UNITS.forEach(unit -> UNIT_CLASSES.put(unit, Double.class));
+    TEXT_UNITS.forEach(unit -> UNIT_CLASSES.put(unit, String.class));
+    BOOLEAN_UNITS.forEach(unit -> UNIT_CLASSES.put(unit, Boolean.class));
   }
 
   /**
@@ -477,9 +489,16 @@ public class DataStore extends AbstractTableModel {
    * @throws NoSuchElementException when an illegal column is specified
    */
   public void insert_value(final String image_filename, final String column, Object value)
-      throws NoSuchElementException {
+      throws NoSuchElementException, ClassCastException {
+    //    System.err.printf("Inserting %s at %s, %s\n", value, image_filename, column);
     if (!descriptors.containsKey(column)) {
       throw new NoSuchElementException(String.format("%s is not a legal column name", column));
+    }
+
+    Class<?> expected = UNIT_CLASSES.get(descriptors.get(column).units);
+    if (value != null && !expected.isInstance(value)) {
+      throw new ClassCastException(
+          String.format("Got %s instead of %s", value.getClass().getName(), expected.getName()));
     }
     int row = find_row(image_filename);
     if (row == -1) { // New record created
