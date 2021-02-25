@@ -133,7 +133,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     GridBagConstraints gbc;
     this.setLayout(new GridBagLayout());
     enableOverlays = new JCheckBox();
-    enableOverlays.setText("Overlays");
+    enableOverlays.setText("Cues");
     controls.add(enableOverlays);
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
@@ -302,8 +302,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   protected void save(ActionEvent e) {
-    String reviewColumn =
-        String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
     if (currentLine != null) { // Save the selected line to the data store
       dataStore.set_endpoints(
           lastActiveImage.getMostRecentImageName(),
@@ -360,8 +359,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   protected void approve(ActionEvent e) {
-    String reviewColumn =
-        String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
     dataStore.insert_value(lastActiveImage.getMostRecentImageName(), reviewColumn, true);
     reviewState =
         dataStore.get_value(
