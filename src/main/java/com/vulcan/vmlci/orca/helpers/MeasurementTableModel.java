@@ -41,6 +41,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -52,6 +53,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
   private Vector<ColumnDescriptor> rows;
 
   private Vector<Boolean> selections;
+  private HashSet<String> needs_validation;
   private DataStore dataStore;
   /** This hashmap converts a column index into the corresponding row index in out model. */
   private HashMap<Integer, Integer> dataStoreColumnToLocalRow;
@@ -67,7 +69,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
     lastActiveImage = LastActiveImage.getInstance();
     configure();
     this.dataStore.addTableModelListener(this);
-    lastActiveImage.addActiveImageListener(e->this.fireTableDataChanged());
+    lastActiveImage.addActiveImageListener(e -> this.fireTableDataChanged());
   }
 
   private void configure() {
@@ -80,9 +82,14 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
             .collect(Collectors.toCollection(Vector::new));
     selections = new Vector<>();
     dataStoreColumnToLocalRow = new HashMap<>();
+    needs_validation = new HashSet<>();
     for (int i = 0; i < rows.size(); i++) {
       selections.add(false);
       dataStoreColumnToLocalRow.put(rows.get(i).index, i);
+      String target = String.format("%s_reviewed", rows.get(i).name);
+      if (dataStore.descriptors.containsKey(target)){
+        needs_validation.add(target);
+      }
     }
   }
 
@@ -169,16 +176,18 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
         return dataStore.get_value(
             lastActiveImage.getMostRecentImageName(), rows.get(rowIndex).name);
       default:
-        Object result =
-            dataStore.get_value(
-                lastActiveImage.getMostRecentImageName(),
-                String.format("%s_reviewed", rows.get(rowIndex).name));
-        if (lastActiveImage.getMostRecentImageName() == LastActiveImage.NO_OPEN_IMAGE) {
+        if (lastActiveImage.getMostRecentImageName().equals(LastActiveImage.NO_OPEN_IMAGE)) {
           return "";
-        } else if (result == null) {
-          return "Unreviewed";
+        }
+        String target_row = String.format("%s_reviewed", rows.get(rowIndex).name);
+        if (!needs_validation.contains(target_row)) {
+          return DataStore.NAStatus;
+        }
+        Object result = dataStore.get_value(lastActiveImage.getMostRecentImageName(), target_row);
+        if (result == null) {
+          return DataStore.UNREVIEWED;
         } else {
-          return "Accepted";
+          return DataStore.ACCEPTED;
         }
     }
   }
