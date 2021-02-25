@@ -36,9 +36,9 @@ import com.vulcan.vmlci.orca.helpers.CSVFileLoadException;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
+import com.vulcan.vmlci.orca.helpers.Point;
 
 import javax.swing.table.AbstractTableModel;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -580,17 +580,17 @@ public class DataStore extends AbstractTableModel {
    * @return The points for point_column. If the value is not stored return null, else return the
    *     point. If the point_column's measurement_type isn't it FETCHABLE_POINTS, return null.
    */
-  public Point2D.Double get_point(String filename, String point_column) {
+  public Point get_point(String filename, String point_column) {
     final String x_col = String.format(X_COL, point_column);
     final String y_col = String.format(Y_COL, point_column);
     if (!FETCHABLE_POINTS.contains(descriptors.get(x_col).measurement_type)) {
       return null;
     }
-    Object x_value = get_value(filename, x_col);
-    Object y_value = get_value(filename, y_col);
+    Integer x_value = get_value(filename, x_col, Integer.class, null);
+    Integer y_value = get_value(filename, y_col, Integer.class, null);
 
     if (x_value != null && y_value != null) {
-      return new Point2D.Double((Double) x_value, (Double) y_value);
+      return new Point(x_value, y_value);
     }
     return null;
   }
@@ -614,7 +614,7 @@ public class DataStore extends AbstractTableModel {
    * @param point_column The point measurement to be updated
    * @param point The new point value, must not be null.
    */
-  public void set_point(String filename, String point_column, Point2D.Double point) {
+  public void set_point(String filename, String point_column, Point point) {
     final String x_col = String.format(X_COL, point_column);
     final String y_col = String.format(Y_COL, point_column);
     if (!descriptors.containsKey(x_col)) {
@@ -637,9 +637,9 @@ public class DataStore extends AbstractTableModel {
    *
    * @param filename the file name if the image being annotated.
    * @param length_column the length column
-   * @return An array of <code>Point2D.Double</code> instances.
+   * @return An array of <code>Point</code> instances.
    */
-  public Point2D.Double[] getEndpoints(String filename, String length_column) {
+  public Point[] getEndpoints(String filename, String length_column) {
     if (!FETCHABLE_LENGTHS.contains(descriptors.get(length_column).measurement_type)) {
       return null;
     }
@@ -649,18 +649,18 @@ public class DataStore extends AbstractTableModel {
     final String x_col_end = String.format(X_END_LENGTH, length_column);
     final String y_col_end = String.format(Y_END_LENGTH, length_column);
 
-    Double x_start = (Double) get_value(filename, x_col_start);
-    Double y_start = (Double) get_value(filename, y_col_start);
-    Double x_end = (Double) get_value(filename, x_col_end);
-    Double y_end = (Double) get_value(filename, y_col_end);
+    Integer x_start = get_value(filename, x_col_start, Integer.class, null);
+    Integer y_start = get_value(filename, y_col_start, Integer.class, null);
+    Integer x_end = get_value(filename, x_col_end, Integer.class, null);
+    Integer y_end = get_value(filename, y_col_end, Integer.class, null);
 
     if (x_start == null || y_start == null || x_end == null || y_end == null) {
       return null;
     }
 
-    Point2D.Double[] results = new Point2D.Double[2];
-    results[0] = new Point2D.Double(x_start, y_start);
-    results[1] = new Point2D.Double(x_end, y_end);
+    Point[] results = new Point[2];
+    results[0] = new Point(x_start, y_start);
+    results[1] = new Point(x_end, y_end);
     return results;
   }
 
@@ -674,8 +674,7 @@ public class DataStore extends AbstractTableModel {
    * @param start starting point for length
    * @param end ending point for length
    */
-  public void set_endpoints(
-      String filename, String length_column, Point2D.Double start, Point2D.Double end) {
+  public void set_endpoints(String filename, String length_column, Point start, Point end) {
     if (!FETCHABLE_LENGTHS.contains(descriptors.get(length_column).measurement_type)) {
       return;
     }
