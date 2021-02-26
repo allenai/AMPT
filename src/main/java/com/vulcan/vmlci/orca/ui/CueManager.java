@@ -33,7 +33,13 @@ package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.calculator.ReferenceCalculator;
 import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
+import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
+import com.vulcan.vmlci.orca.helpers.Point;
+import ij.ImagePlus;
+import ij.gui.Line;
+import ij.gui.Overlay;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -43,20 +49,60 @@ public class CueManager {
   private DataStore dataStore;
   private LastActiveImage lastActiveImage;
   private String config_file = "CueConfig.json";
-  private HashMap<String, Vector<String >> cue_lookup;
+  private HashMap<String, Vector<String>> cue_lookup;
   private ReferenceCalculator referenceCalculator;
 
-  public CueManager(DataStore dataStore) throws FileNotFoundException {
+  public CueManager(DataStore dataStore)
+      throws FileNotFoundException, ConfigurationFileLoadException {
     this.dataStore = dataStore;
+    this.lastActiveImage = LastActiveImage.getInstance();
     cue_lookup = new HashMap<>();
 
     referenceCalculator = new ReferenceCalculator(dataStore);
     load_configuration();
   }
 
-  private void load_configuration() {
-
+  private void load_configuration() throws ConfigurationFileLoadException {
+    HashMap<String, Object> cue_options = ConfigurationLoader.get_json_file(this.config_file);
+    for (String cue_name : cue_options.keySet()) {
+      for (Object cue_option : (Object[]) cue_options.get(cue_name)) {
+        cue_lookup.putIfAbsent((String) cue_option, new Vector<>());
+        cue_lookup.get((String) cue_option).add(cue_name);
+      }
+    }
   }
 
-  public void draw_cue(String cue){}
+  /**
+   * Draws cue lines on the image to aid measurement.
+   *
+   * @param measurement The current active measurement
+   */
+  public void draw_cue(String measurement) {
+    if (lastActiveImage.getMostRecentImageName().equals(LastActiveImage.NO_OPEN_IMAGE)) {
+      return;
+    }
+    String image_name = lastActiveImage.getMostRecentImageName();
+    ImagePlus image = lastActiveImage.getMostRecentImageWindow();
+    image.setOverlay(null);
+
+    if (!cue_lookup.containsKey(measurement)) {
+      return;
+    }
+    Overlay overlay = new Overlay();
+    overlay.drawNames(true);
+    overlay.drawLabels(true);
+    for (String cue : cue_lookup.get(measurement)) {
+      HashMap<String, Point[]> guideline;
+      guideline = (HashMap<String, Point[]>) referenceCalculator.do_measurement(cue, image_name);
+      for (String label : guideline.keySet()) {
+        Point[] endpoints = guideline.get(label);
+        if (label.equals("axis")) {
+          label = "";
+        }
+        overlay.add(
+            new Line(endpoints[0].x, endpoints[0].y, endpoints[1].x, endpoints[1].y), label);
+      }
+    }
+    image.setOverlay(overlay);
+  }
 }
