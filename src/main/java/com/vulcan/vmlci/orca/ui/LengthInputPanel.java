@@ -130,6 +130,9 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
       currentMagnitude = null;
       currentLine = null;
     }
+    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    reviewState = dataStore.get_value(
+            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
     updateInterface();
   }
 
