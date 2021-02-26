@@ -113,6 +113,10 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     } else {
       currentPosition = null;
     }
+    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    reviewState = dataStore.get_value(
+            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
+
     updateInterface();
   }
 
