@@ -198,37 +198,37 @@
     "function": "parametric_point"
   },
   {
-    "target": "100%",
+    "target": "GIRTH",
     "parameters": [
-      "GIRTH"
+      "100%"
     ],
     "function": "copy"
   },
   {
-    "target": "100%_x_start",
+    "target": "GIRTH_x_start",
     "parameters": [
-      "GIRTH_x_start"
+      "100%_x_start"
     ],
     "function": "copy"
   },
   {
-    "target": "100%_y_start",
+    "target": "GIRTH_y_start",
     "parameters": [
-      "GIRTH_y_start"
+      "100%_y_start"
     ],
     "function": "copy"
   },
   {
-    "target": "100%_x_end",
+    "target": "GIRTH_x_end",
     "parameters": [
-      "GIRTH_x_end"
+      "100%_x_end"
     ],
     "function": "copy"
   },
   {
-    "target": "100%_y_end",
+    "target": "GIRTH_y_end",
     "parameters": [
-      "GIRTH_y_end"
+      "100%_y_end"
     ],
     "function": "copy"
   }
