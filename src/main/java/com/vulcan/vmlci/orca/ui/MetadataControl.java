@@ -117,7 +117,7 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
     gbc.gridx = 0;
     gbc.gridy = 2;
     gbc.anchor = GridBagConstraints.WEST;
-    this.add(new JLabel("Whale ID"), gbc);
+    this.add(new JLabel("Animal ID"), gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
