@@ -32,8 +32,9 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.helpers.Point;
 import ij.ImagePlus;
 import ij.gui.PointRoi;
@@ -54,12 +55,14 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.geom.Point2D;
+import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
 public class PointInputPanel extends InputPanel implements RoiListener, ItemListener {
+  // Utilities
+  private CueManager cueManager;
 
   // UI Elements
   private JComboBox<String> measurementSelector;
@@ -67,17 +70,27 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   private JTextField currentPointY;
   private JTextField savedPointY;
   private JTextField savedPointX;
+  private JTextField statusField;
   private JButton save;
   private JButton revert;
   private JButton clear;
+  private JButton approveButton;
   private JCheckBox enableOverlays;
 
   // State Elements
   private Point currentPosition = null;
   private Point savedPosition = null;
+  private boolean reviewState = false;
 
   public PointInputPanel(DataStore dataStore) {
     super(dataStore);
+    try {
+      this.cueManager = new CueManager(dataStore);
+    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
+      e.printStackTrace();
+      cueManager = null;
+    }
+
     PointRoi.addRoiListener(this);
   }
 
@@ -115,20 +128,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
             .collect(Collectors.toCollection(Vector::new)); // Make a vector for JComboBox
 
     this.setLayout(new GridBagLayout());
-    final JPanel spacer1 = new JPanel();
     GridBagConstraints gbc;
-    gbc = new GridBagConstraints();
-    gbc.gridx = 1;
-    gbc.gridy = 2;
-    gbc.gridwidth = 2;
-    gbc.fill = GridBagConstraints.VERTICAL;
-    this.add(spacer1, gbc);
-    final JPanel spacer2 = new JPanel();
-    gbc = new GridBagConstraints();
-    gbc.gridx = 3;
-    gbc.gridy = 4;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(spacer2, gbc);
     currentPointX = new JTextField();
     currentPointX.setColumns(8);
     currentPointX.setEditable(false);
@@ -137,16 +137,18 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(currentPointX, gbc);
+
     measurementSelector = new JComboBox<>(measurements);
     controls.add(measurementSelector);
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 1;
-    gbc.gridwidth = 9;
+    gbc.gridwidth = 10;
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(measurementSelector, gbc);
+
     final JLabel label1 = new JLabel();
     label1.setHorizontalAlignment(SwingConstants.CENTER);
     label1.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -155,6 +157,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridx = 4;
     gbc.gridy = 3;
     this.add(label1, gbc);
+
     savedPointX = new JTextField();
     savedPointX.setColumns(8);
     savedPointX.setEditable(false);
@@ -163,12 +166,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 5;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(savedPointX, gbc);
-    final JPanel spacer3 = new JPanel();
-    gbc = new GridBagConstraints();
-    gbc.gridx = 5;
-    gbc.gridy = 4;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(spacer3, gbc);
+
     currentPointY = new JTextField();
     currentPointY.setColumns(8);
     currentPointY.setEditable(false);
@@ -177,6 +175,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(currentPointY, gbc);
+
     savedPointY = new JTextField();
     savedPointY.setColumns(8);
     savedPointY.setEditable(false);
@@ -193,12 +192,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridx = 6;
     gbc.gridy = 3;
     this.add(label2, gbc);
-    final JPanel spacer4 = new JPanel();
-    gbc = new GridBagConstraints();
-    gbc.gridx = 7;
-    gbc.gridy = 4;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(spacer4, gbc);
+
     save = new JButton();
     save.setText("Save");
     controls.add(save);
@@ -207,35 +201,34 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(save, gbc);
-    revert = new JButton();
-    revert.setText("Revert");
-    controls.add(revert);
+
+    approveButton = new JButton();
+    approveButton.setText("Approve");
+    controls.add(approveButton);
     gbc = new GridBagConstraints();
     gbc.gridx = 8;
     gbc.gridy = 5;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(revert, gbc);
-    final JPanel spacer5 = new JPanel();
+    this.add(approveButton, gbc);
+
+    revert = new JButton();
+    revert.setText("Revert");
+    controls.add(revert);
     gbc = new GridBagConstraints();
     gbc.gridx = 9;
-    gbc.gridy = 4;
-    gbc.weightx = 1.0;
+    gbc.gridy = 5;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(spacer5, gbc);
-    final JPanel spacer6 = new JPanel();
-    gbc = new GridBagConstraints();
-    gbc.gridx = 10;
-    gbc.gridy = 1;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(spacer6, gbc);
+    this.add(revert, gbc);
+
     clear = new JButton();
     clear.setText("Clear");
     controls.add(clear);
     gbc = new GridBagConstraints();
-    gbc.gridx = 8;
-    gbc.gridy = 6;
+    gbc.gridx = 9;
+    gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(clear, gbc);
+
     final JLabel label3 = new JLabel();
     label3.setText("Current");
     gbc = new GridBagConstraints();
@@ -243,6 +236,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 4;
     gbc.anchor = GridBagConstraints.WEST;
     this.add(label3, gbc);
+
     final JLabel label4 = new JLabel();
     label4.setText("Saved");
     gbc = new GridBagConstraints();
@@ -250,19 +244,26 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 5;
     gbc.anchor = GridBagConstraints.WEST;
     this.add(label4, gbc);
-    final JPanel spacer7 = new JPanel();
+
+    final JLabel label5 = new JLabel();
+    label5.setText("Status");
     gbc = new GridBagConstraints();
-    gbc.gridx = 1;
-    gbc.gridy = 4;
-    gbc.weightx = 1.0;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(spacer7, gbc);
-    final JPanel spacer8 = new JPanel();
+    gbc.gridx = 2;
+    gbc.gridy = 6;
+    gbc.anchor = GridBagConstraints.WEST;
+    this.add(label5, gbc);
+
+    statusField = new JTextField();
+    statusField.setColumns(8);
+    statusField.setEditable(false);
     gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 1;
+    gbc.gridx = 4;
+    gbc.gridy = 6;
+    gbc.gridwidth = 3;
+    gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(spacer8, gbc);
+    this.add(statusField, gbc);
+
     enableOverlays = new JCheckBox();
     enableOverlays.setHorizontalAlignment(SwingConstants.CENTER);
     enableOverlays.setHorizontalTextPosition(SwingConstants.TRAILING);
@@ -271,8 +272,68 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 0;
-    gbc.gridwidth = 9;
+    gbc.gridwidth = 10;
     this.add(enableOverlays, gbc);
+
+    // Spacers
+    final JPanel spacer1 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 2;
+    gbc.gridwidth = 2;
+    gbc.fill = GridBagConstraints.VERTICAL;
+    this.add(spacer1, gbc);
+
+    final JPanel spacer2 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 3;
+    gbc.gridy = 4;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(spacer2, gbc);
+
+    final JPanel spacer7 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 4;
+    gbc.weightx = 1.0;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(spacer7, gbc);
+
+    final JPanel spacer8 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(spacer8, gbc);
+
+    final JPanel spacer3 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 5;
+    gbc.gridy = 4;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(spacer3, gbc);
+
+    final JPanel spacer6 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 11;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(spacer6, gbc);
+
+    final JPanel spacer4 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 7;
+    gbc.gridy = 4;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(spacer4, gbc);
+
+    final JPanel spacer5 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 10;
+    gbc.gridy = 4;
+    gbc.weightx = 1.0;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(spacer5, gbc);
   }
 
   @Override
@@ -280,19 +341,26 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     save.addActionListener(this::save);
     revert.addActionListener(this::revert);
     clear.addActionListener(this::clear);
+    approveButton.addActionListener(this::approve);
     measurementSelector.addItemListener(this);
+    enableOverlays.addActionListener(e -> updateInterface());
   }
 
   @Override
   protected void save(ActionEvent e) {
+    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
     dataStore.set_point(
         lastActiveImage.getMostRecentImageName(),
         (String) measurementSelector.getSelectedItem(),
         currentPosition);
+    dataStore.insert_value(lastActiveImage.getMostRecentImageName(), reviewColumn, false);
     savedPosition =
         dataStore.get_point(
             lastActiveImage.getMostRecentImageName(),
             (String) measurementSelector.getSelectedItem());
+    reviewState =
+        dataStore.get_value(
+            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
     updateInterface();
   }
 
@@ -300,6 +368,23 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   protected void revert(ActionEvent e) {
     lastActiveImage.getMostRecentImageWindow().deleteRoi();
     currentPosition = (Point) savedPosition.clone();
+    updateInterface();
+  }
+
+  @Override
+  protected void clear(ActionEvent e) {
+    currentPosition = null;
+    lastActiveImage.getMostRecentImageWindow().deleteRoi();
+    updateInterface();
+  }
+
+  @Override
+  protected void approve(ActionEvent e) {
+    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    dataStore.insert_value(lastActiveImage.getMostRecentImageName(), reviewColumn, true);
+    reviewState =
+        dataStore.get_value(
+            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
     updateInterface();
   }
 
@@ -321,7 +406,24 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       currentPointY.setText("");
     }
 
+    if (lastActiveImage.getMostRecentImageName().equals(LastActiveImage.NO_OPEN_IMAGE)) {
+      statusField.setText("");
+    } else if (reviewState) {
+      statusField.setText(DataStore.ACCEPTED);
+    } else {
+      statusField.setText(DataStore.UNREVIEWED);
+    }
+
     ImagePlus img = lastActiveImage.getMostRecentImageWindow();
+    if (img == null) {
+      return;
+    }
+
+    if (enableOverlays.isSelected() && cueManager != null) {
+      cueManager.draw_cue((String) measurementSelector.getSelectedItem());
+    } else {
+      img.setOverlay(null);
+    }
     Roi active_roi = img.getRoi();
     if (active_roi == null && currentPosition != null) {
       img.setRoi(new PointRoi(currentPosition.x, currentPosition.y));
@@ -357,13 +459,6 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     if (e == null) {
       savedPosition = null;
     }
-  }
-
-  @Override
-  protected void clear(ActionEvent e) {
-    currentPosition = null;
-    lastActiveImage.getMostRecentImageWindow().deleteRoi();
-    updateInterface();
   }
 
   private void renderLandmark() {
