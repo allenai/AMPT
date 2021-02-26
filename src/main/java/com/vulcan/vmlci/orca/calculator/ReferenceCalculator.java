@@ -153,7 +153,7 @@ public class ReferenceCalculator extends BaseCalculator {
         final double offset = percentage * reference_length / 100.;
         final double marker_x = axis_x_start + axis_x_delta * offset;
         final double marker_y = axis_y_start + axis_y_delta * offset;
-        final String label = String.format("marker:%f%%", percentage + label_offset);
+        final String label = String.format("%d%%", (int) (percentage + label_offset));
         result.put(
             label,
             new Point[] {
@@ -205,7 +205,7 @@ public class ReferenceCalculator extends BaseCalculator {
             ref_line_y_start,
             ref_line_x_end,
             ref_line_y_end,
-            1L);
+            100L);
 
     Point ref =
         ReferenceCalculator.compute_offset_reference(
@@ -329,6 +329,6 @@ public class ReferenceCalculator extends BaseCalculator {
     if (preflight_measurement(measure, title)) {
       return super.do_measurement(measure, title);
     }
-    return null;
+    return new HashMap<String, Point[]>();
   }
 }
