@@ -33,6 +33,7 @@ package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.helpers.Point;
 import ij.ImagePlus;
@@ -54,11 +55,14 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
 public class LengthInputPanel extends InputPanel implements ItemListener, RoiListener {
+  // Utilities
+  private CueManager cueManager;
 
   // UI Elements
   private JCheckBox enableOverlays;
@@ -80,6 +84,13 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   public LengthInputPanel(DataStore dataStore) {
     super(dataStore);
+    try {
+      this.cueManager = new CueManager(dataStore);
+    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
+      e.printStackTrace();
+      cueManager = null;
+    }
+
     Line.addRoiListener(this);
   }
 
@@ -298,6 +309,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     clearButton.addActionListener(this::clear);
     approveButton.addActionListener(this::approve);
     measurementSelector.addItemListener(this);
+    enableOverlays.addActionListener(e->updateInterface());
   }
 
   @Override
@@ -392,6 +404,12 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     ImagePlus img = lastActiveImage.getMostRecentImageWindow();
     if (img == null) {
       return;
+    }
+
+    if (enableOverlays.isSelected() && cueManager != null) {
+      cueManager.draw_cue((String) measurementSelector.getSelectedItem());
+    } else {
+      img.setOverlay(null);
     }
     Roi active_roi = img.getRoi();
     if (active_roi == null && currentLine != null) {
