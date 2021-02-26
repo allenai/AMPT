@@ -67,6 +67,26 @@ FW,Maximum breadth of fluke,fractional pixels,length,True,True,False
 215%,Width of animal at 215% of distance of SNDF measurement,fractional pixels,length,True,True,False
 220%,Width of animal at 220% of distance of SNDF measurement,fractional pixels,length,True,True,False
 225%,Width of animal at 225% of distance of SNDF measurement,fractional pixels,length,True,True,False
+FBP 5%,Width of animal at 5% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 10%,Width of animal at 10% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 15%,Width of animal at 15% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 20%,Width of animal at 20% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 25%,Width of animal at 25% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 30%,Width of animal at 30% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 35%,Width of animal at 35% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 40%,Width of animal at 40% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 45%,Width of animal at 45% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 50%,Width of animal at 50% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 55%,Width of animal at 55% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 60%,Width of animal at 60% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 65%,Width of animal at 65% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 70%,Width of animal at 70% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 75%,Width of animal at 75% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 80%,Width of animal at 80% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 85%,Width of animal at 85% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 90%,Width of animal at 90% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 95%,Width of animal at 95% of distance of SNFL measurement,fractional pixels,length,True,True,False
+FBP 100%,Width of animal at 100% of distance of SNFL measurement,fractional pixels,length,True,False,False
 BH_x,Blowhole x position in image coordinates,pixels,point,False,False,False
 BH_y,Blowhole y position in image coordinates,pixels,point,False,False,False
 SN_x,Rostrum x position in image coordinates,pixels,point,False,False,False
@@ -356,3 +376,103 @@ DF_reviewed,Review of DF point,boolean,boolean,False,False,False
 FL_reviewed,Review of FL point,boolean,boolean,False,False,False
 RIGHT EYEPATCH TOP_reviewed,Review of RIGHT EYEPATCH TOP point,boolean,boolean,False,False,False
 RIGHT EYEPATCH BOTTOM_reviewed,Review of RIGHT EYEPATCH BOTTOM point,boolean,boolean,False,False,False
+FBP 5%_x_start,Starting X for Width of animal at 5% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 5%_y_start,Starting y for Width of animal at 5% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 5%_x_end,Ending X for Width of animal at 5% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 5%_y_end,Ending y for Width of animal at 5% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 10%_x_start,Starting X for Width of animal at 10% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 10%_y_start,Starting y for Width of animal at 10% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 10%_x_end,Ending X for Width of animal at 10% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 10%_y_end,Ending y for Width of animal at 10% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 15%_x_start,Starting X for Width of animal at 15% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 15%_y_start,Starting y for Width of animal at 15% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 15%_x_end,Ending X for Width of animal at 15% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 15%_y_end,Ending y for Width of animal at 15% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 20%_x_start,Starting X for Width of animal at 20% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 20%_y_start,Starting y for Width of animal at 20% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 20%_x_end,Ending X for Width of animal at 20% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 20%_y_end,Ending y for Width of animal at 20% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 25%_x_start,Starting X for Width of animal at 25% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 25%_y_start,Starting y for Width of animal at 25% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 25%_x_end,Ending X for Width of animal at 25% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 25%_y_end,Ending y for Width of animal at 25% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 30%_x_start,Starting X for Width of animal at 30% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 30%_y_start,Starting y for Width of animal at 30% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 30%_x_end,Ending X for Width of animal at 30% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 30%_y_end,Ending y for Width of animal at 30% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 35%_x_start,Starting X for Width of animal at 35% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 35%_y_start,Starting y for Width of animal at 35% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 35%_x_end,Ending X for Width of animal at 35% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 35%_y_end,Ending y for Width of animal at 35% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 40%_x_start,Starting X for Width of animal at 40% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 40%_y_start,Starting y for Width of animal at 40% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 40%_x_end,Ending X for Width of animal at 40% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 40%_y_end,Ending y for Width of animal at 40% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 45%_x_start,Starting X for Width of animal at 45% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 45%_y_start,Starting y for Width of animal at 45% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 45%_x_end,Ending X for Width of animal at 45% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 45%_y_end,Ending y for Width of animal at 45% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 50%_x_start,Starting X for Width of animal at 50% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 50%_y_start,Starting y for Width of animal at 50% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 50%_x_end,Ending X for Width of animal at 50% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 50%_y_end,Ending y for Width of animal at 50% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 55%_x_start,Starting X for Width of animal at 55% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 55%_y_start,Starting y for Width of animal at 55% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 55%_x_end,Ending X for Width of animal at 55% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 55%_y_end,Ending y for Width of animal at 55% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 60%_x_start,Starting X for Width of animal at 60% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 60%_y_start,Starting y for Width of animal at 60% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 60%_x_end,Ending X for Width of animal at 60% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 60%_y_end,Ending y for Width of animal at 60% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 65%_x_start,Starting X for Width of animal at 65% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 65%_y_start,Starting y for Width of animal at 65% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 65%_x_end,Ending X for Width of animal at 65% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 65%_y_end,Ending y for Width of animal at 65% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 70%_x_start,Starting X for Width of animal at 70% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 70%_y_start,Starting y for Width of animal at 70% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 70%_x_end,Ending X for Width of animal at 70% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 70%_y_end,Ending y for Width of animal at 70% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 75%_x_start,Starting X for Width of animal at 75% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 75%_y_start,Starting y for Width of animal at 75% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 75%_x_end,Ending X for Width of animal at 75% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 75%_y_end,Ending y for Width of animal at 75% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 80%_x_start,Starting X for Width of animal at 80% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 80%_y_start,Starting y for Width of animal at 80% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 80%_x_end,Ending X for Width of animal at 80% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 80%_y_end,Ending y for Width of animal at 80% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 85%_x_start,Starting X for Width of animal at 85% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 85%_y_start,Starting y for Width of animal at 85% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 85%_x_end,Ending X for Width of animal at 85% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 85%_y_end,Ending y for Width of animal at 85% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 90%_x_start,Starting X for Width of animal at 90% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 90%_y_start,Starting y for Width of animal at 90% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 90%_x_end,Ending X for Width of animal at 90% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 90%_y_end,Ending y for Width of animal at 90% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 95%_x_start,Starting X for Width of animal at 95% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 95%_y_start,Starting y for Width of animal at 95% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 95%_x_end,Ending X for Width of animal at 95% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 95%_y_end,Ending y for Width of animal at 95% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 100%_x_start,Starting X for Width of animal at 100% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 100%_y_start,Starting y for Width of animal at 100% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 100%_x_end,Ending X for Width of animal at 100% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 100%_y_end,Ending y for Width of animal at 100% of distance of SNFL measurement,pixels,auto point,False,False,False
+FBP 5%_reviewed,Review of FBP 5% length,boolean,boolean,False,False,False
+FBP 10%_reviewed,Review of FBP 10% length,boolean,boolean,False,False,False
+FBP 15%_reviewed,Review of FBP 15% length,boolean,boolean,False,False,False
+FBP 20%_reviewed,Review of FBP 20% length,boolean,boolean,False,False,False
+FBP 25%_reviewed,Review of FBP 25% length,boolean,boolean,False,False,False
+FBP 30%_reviewed,Review of FBP 30% length,boolean,boolean,False,False,False
+FBP 35%_reviewed,Review of FBP 35% length,boolean,boolean,False,False,False
+FBP 40%_reviewed,Review of FBP 40% length,boolean,boolean,False,False,False
+FBP 45%_reviewed,Review of FBP 45% length,boolean,boolean,False,False,False
+FBP 50%_reviewed,Review of FBP 50% length,boolean,boolean,False,False,False
+FBP 55%_reviewed,Review of FBP 55% length,boolean,boolean,False,False,False
+FBP 60%_reviewed,Review of FBP 60% length,boolean,boolean,False,False,False
+FBP 65%_reviewed,Review of FBP 65% length,boolean,boolean,False,False,False
+FBP 70%_reviewed,Review of FBP 70% length,boolean,boolean,False,False,False
+FBP 75%_reviewed,Review of FBP 75% length,boolean,boolean,False,False,False
+FBP 80%_reviewed,Review of FBP 80% length,boolean,boolean,False,False,False
+FBP 85%_reviewed,Review of FBP 85% length,boolean,boolean,False,False,False
+FBP 90%_reviewed,Review of FBP 90% length,boolean,boolean,False,False,False
+FBP 95%_reviewed,Review of FBP 95% length,boolean,boolean,False,False,False
+FBP 100%_reviewed,Review of FBP 100% length,boolean,boolean,False,False,False
