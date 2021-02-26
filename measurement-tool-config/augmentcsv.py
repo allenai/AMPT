@@ -62,16 +62,6 @@ def main():
                                        'export': 'False', 'editable': 'False', 'is_metadata': 'False'}
     for column in [x for x in records.keys() if
                    records[x]['measurement_type'] in ('point', 'length')]:
-        # for label_augment, desc_augment in [("{}_x_start", "Starting X for {}"),
-        #                                     ("{}_y_start", "Starting y for {}"),
-        #                                     ("{}_x_end", "Ending X for {}"),
-        #                                     ("{}_y_end", "Ending y for {}")]:
-        #     target_col = label_augment.format(column)
-        #     if target_col not in records:
-        #         desc = desc_augment.format(records[column]['description'])
-        #         records[target_col] = {'column_name': target_col, 'description': desc,
-        #                                'units': 'pixels', 'measurement_type': 'auto point',
-        #                                'export': 'False'}
         if records[column]['measurement_type'] == 'point' and column.endswith("_y"):
             continue
         measurement_type = records[column]['measurement_type']
@@ -83,10 +73,9 @@ def main():
                                'units': 'boolean', 'measurement_type': 'boolean',
                                'export': 'False', 'editable': 'False', 'is_metadata': 'False'}
 
-
     os.rename("./CSV-Columns.csv", "./CSV-Columns.csv.{}.bak".format(int(time.time())))
     with open("./CSV-Columns.csv", 'w') as outfile:
-    # with sys.stdout as outfile:
+        # with sys.stdout as outfile:
         dict_writer = csv.DictWriter(outfile, headers)
         dict_writer.writeheader()
         dict_writer.writerows(records.values())
