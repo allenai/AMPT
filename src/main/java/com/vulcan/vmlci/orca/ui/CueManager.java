@@ -40,6 +40,7 @@ import com.vulcan.vmlci.orca.helpers.Point;
 import ij.ImagePlus;
 import ij.gui.Line;
 import ij.gui.Overlay;
+import ij.gui.PointRoi;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -91,6 +92,7 @@ public class CueManager {
     Overlay overlay = new Overlay();
     overlay.drawNames(true);
     overlay.drawLabels(true);
+    overlay.setLabelFontSize(16, "");
     for (String cue : cue_lookup.get(measurement)) {
       HashMap<String, Point[]> guideline;
       guideline = (HashMap<String, Point[]>) referenceCalculator.do_measurement(cue, image_name);
@@ -99,8 +101,15 @@ public class CueManager {
         if (label.equals("axis")) {
           label = "";
         }
-        overlay.add(
-            new Line(endpoints[0].x, endpoints[0].y, endpoints[1].x, endpoints[1].y), label);
+        switch (endpoints.length) {
+          case 1:
+            overlay.add(new PointRoi(endpoints[0].x, endpoints[0].y), label);
+            break;
+          case 2:
+            overlay.add(
+                new Line(endpoints[0].x, endpoints[0].y, endpoints[1].x, endpoints[1].y), label);
+            break;
+        }
       }
     }
     image.setOverlay(overlay);
