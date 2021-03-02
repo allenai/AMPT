@@ -66,10 +66,10 @@ public class ReferenceCalculator extends BaseCalculator {
    *     reference axis.
    */
   public static HashMap<String, Point[]> interval_reference_markers(
-      Integer axis_x_start,
-      Integer axis_y_start,
-      Integer axis_x_end,
-      Integer axis_y_end,
+          Double axis_x_start,
+          Double axis_y_start,
+          Double axis_x_end,
+          Double axis_y_end,
       Long start_percentage,
       Long end_percentage,
       Long step_size) {
@@ -112,14 +112,14 @@ public class ReferenceCalculator extends BaseCalculator {
    *     reference axis
    */
   public static HashMap<String, Point[]> interval_reference_markers_with_base_length(
-      Integer axis_x_start,
-      Integer axis_y_start,
-      Integer axis_x_end,
-      Integer axis_y_end,
-      Integer ref_x_start,
-      Integer ref_y_start,
-      Integer ref_x_end,
-      Integer ref_y_end,
+          Double axis_x_start,
+          Double axis_y_start,
+          Double axis_x_end,
+          Double axis_y_end,
+          Double ref_x_start,
+          Double ref_y_start,
+          Double ref_x_end,
+          Double ref_y_end,
       Long start_percentage,
       Long end_percentage,
       Long step_size,
@@ -157,12 +157,8 @@ public class ReferenceCalculator extends BaseCalculator {
         result.put(
             label,
             new Point[] {
-              new Point(
-                  (int) (marker_x + marker_x_offset + 0.5),
-                  (int) (marker_y + marker_y_offset + 0.5)),
-              new Point(
-                  (int) (marker_x - marker_x_offset + 0.5),
-                  (int) (marker_y - marker_y_offset + 0.5))
+              new Point(marker_x + marker_x_offset, marker_y + marker_y_offset),
+              new Point(marker_x - marker_x_offset, marker_y - marker_y_offset)
             });
       }
     }
@@ -174,14 +170,14 @@ public class ReferenceCalculator extends BaseCalculator {
   }
 
   public static HashMap<String, Point[]> compute_offset_reference_markers(
-      Integer axis_x_start,
-      Integer axis_y_start,
-      Integer axis_x_end,
-      Integer axis_y_end,
-      Integer ref_line_x_start,
-      Integer ref_line_y_start,
-      Integer ref_line_x_end,
-      Integer ref_line_y_end,
+          Double axis_x_start,
+          Double axis_y_start,
+          Double axis_x_end,
+          Double axis_y_end,
+          Double ref_line_x_start,
+          Double ref_line_y_start,
+          Double ref_line_x_end,
+          Double ref_line_y_end,
       Long offset) {
     Point top =
         ReferenceCalculator.compute_offset_reference(
@@ -273,14 +269,14 @@ public class ReferenceCalculator extends BaseCalculator {
    * @return the coordinates for proj.
    */
   public static Point compute_offset_reference(
-      Integer axis_x_start,
-      Integer axis_y_start,
-      Integer axis_x_end,
-      Integer axis_y_end,
-      Integer ref_line_x_start,
-      Integer ref_line_y_start,
-      Integer ref_line_x_end,
-      Integer ref_line_y_end,
+          Double axis_x_start,
+          Double axis_y_start,
+          Double axis_x_end,
+          Double axis_y_end,
+          Double ref_line_x_start,
+          Double ref_line_y_start,
+          Double ref_line_x_end,
+          Double ref_line_y_end,
       Long offset) {
 
     // Compute direction vector for main axis
@@ -313,7 +309,7 @@ public class ReferenceCalculator extends BaseCalculator {
    * @param y The y-coordinate of the landmark
    * @return A HashMap containing the landmark rendering instructions.
    */
-  public static HashMap<String, Point[]> render_landmark(String label, Integer x, Integer y) {
+  public static HashMap<String, Point[]> render_landmark(String label, Double x, Double y) {
     HashMap<String, Point[]> result = new HashMap<>();
     result.put(label, new Point[] {new Point(x, y)});
     return result;
