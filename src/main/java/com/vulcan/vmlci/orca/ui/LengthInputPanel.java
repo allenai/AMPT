@@ -33,7 +33,6 @@ package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
-import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.helpers.Point;
 import ij.ImagePlus;
@@ -55,7 +54,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -82,15 +80,9 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   private Double savedMagnitude = null;
   private boolean reviewState = false;
 
-  public LengthInputPanel(DataStore dataStore) {
+  public LengthInputPanel(DataStore dataStore, CueManager cueManager) {
     super(dataStore);
-    try {
-      this.cueManager = new CueManager(dataStore);
-    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
-      e.printStackTrace();
-      cueManager = null;
-    }
-
+    this.cueManager = cueManager;
     Line.addRoiListener(this);
   }
 
@@ -119,6 +111,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
         dataStore.getEndpoints(
             lastActiveImage.getMostRecentImageName(),
             (String) measurementSelector.getSelectedItem());
+
     if (savedMagnitude != null) {
       currentMagnitude = savedMagnitude;
       if (savedLine != null) {
@@ -130,8 +123,10 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
       currentMagnitude = null;
       currentLine = null;
     }
+
     String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    reviewState = dataStore.get_value(
+    reviewState =
+        dataStore.get_value(
             lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
     updateInterface();
   }
@@ -312,7 +307,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     clearButton.addActionListener(this::clear);
     approveButton.addActionListener(this::approve);
     measurementSelector.addItemListener(this);
-    enableOverlays.addActionListener(e->updateInterface());
+    enableOverlays.addActionListener(e -> updateInterface());
   }
 
   @Override
@@ -384,17 +379,18 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   public void updateInterface() {
+    Roi roi;
     if (savedMagnitude != null) {
       savedLength.setText(String.format("%.3f", savedMagnitude));
     } else {
       savedLength.setText("");
     }
 
+    String currMag = "";
     if (currentMagnitude != null) {
-      currentLength.setText(String.format("%.3f", currentMagnitude));
-    } else {
-      currentLength.setText("");
+      currMag = String.format("%.3f", currentMagnitude);
     }
+    currentLength.setText(currMag);
 
     if (lastActiveImage.getMostRecentImageName().equals(LastActiveImage.NO_OPEN_IMAGE)) {
       statusField.setText("");
