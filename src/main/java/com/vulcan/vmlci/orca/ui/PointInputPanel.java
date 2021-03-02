@@ -389,16 +389,16 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   @Override
   public void updateInterface() {
     if (savedPosition != null) {
-      savedPointX.setText(Integer.toString(savedPosition.x));
-      savedPointY.setText(Integer.toString(savedPosition.y));
+      savedPointX.setText(Double.toString(savedPosition.x));
+      savedPointY.setText(Double.toString(savedPosition.y));
     } else {
       savedPointX.setText("");
       savedPointY.setText("");
     }
 
     if (currentPosition != null) {
-      currentPointX.setText(Integer.toString(currentPosition.x));
-      currentPointY.setText(Integer.toString(currentPosition.y));
+      currentPointX.setText(Double.toString(currentPosition.x));
+      currentPointY.setText(Double.toString(currentPosition.y));
     } else {
       currentPointX.setText("");
       currentPointY.setText("");
