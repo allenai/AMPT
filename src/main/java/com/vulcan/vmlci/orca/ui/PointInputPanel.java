@@ -50,7 +50,6 @@ import javax.swing.SwingConstants;
 import javax.swing.event.TableModelEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -389,16 +388,16 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   @Override
   public void updateInterface() {
     if (savedPosition != null) {
-      savedPointX.setText(Double.toString(savedPosition.x));
-      savedPointY.setText(Double.toString(savedPosition.y));
+      savedPointX.setText(String.format("%.3f",savedPosition.x));
+      savedPointY.setText(String.format("%.3f",savedPosition.y));
     } else {
       savedPointX.setText("");
       savedPointY.setText("");
     }
 
     if (currentPosition != null) {
-      currentPointX.setText(Double.toString(currentPosition.x));
-      currentPointY.setText(Double.toString(currentPosition.y));
+      currentPointX.setText(String.format("%.3f",currentPosition.x));
+      currentPointY.setText(String.format("%.3f",currentPosition.y));
     } else {
       currentPointX.setText("");
       currentPointY.setText("");
