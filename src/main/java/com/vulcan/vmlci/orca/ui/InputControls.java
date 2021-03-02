@@ -32,9 +32,10 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import ij.IJ;
 import ij.ImagePlus;
 
@@ -42,16 +43,25 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class InputControls implements ActiveImageListener {
   DataStore dataStore;
+  CueManager cueManager;
   String activeImage;
   JPanel inputPanel;
   ArrayList<JComponent> controls;
 
   public InputControls(DataStore dataStore) {
     this.dataStore = dataStore;
+    try {
+      this.cueManager = new CueManager(dataStore);
+    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
+      e.printStackTrace();
+      cueManager = null;
+    }
+
     buildUI();
     wireUI();
     LastActiveImage lastActiveImage = LastActiveImage.getInstance();
@@ -69,8 +79,8 @@ public class InputControls implements ActiveImageListener {
     inputPanel.add(tabbedPane, BorderLayout.CENTER);
 
     tabbedPane.addTab("Comments", new CommentInputPanel(dataStore));
-    tabbedPane.addTab("Reference Points", new PointInputPanel(dataStore));
-    tabbedPane.addTab("Lengths", new LengthInputPanel(dataStore));
+    tabbedPane.addTab("Reference Points", new PointInputPanel(dataStore, cueManager));
+    tabbedPane.addTab("Lengths", new LengthInputPanel(dataStore, cueManager));
 
     tabbedPane.addChangeListener(
         e -> {
