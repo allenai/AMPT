@@ -11,6 +11,7 @@ Lon,"Longitude, decimal notation",fractional degrees,manual,True,False,True
 CameraMake,Brand of camera,text,manual,True,False,True
 CameraModel,Model of camera,text,manual,True,False,True
 FocalLength,Camera focal length,millimeters,manual,True,False,True
+Comment,EXIF Field,text,manual,True,False,True
 MEAS COMMENTS,Free text from scientist,editable text,free text,True,True,True
 UNDERWATER,"Animal underwater, 0=No, 1=Yes",editable text,manual,True,True,True
 EP TOP,"distance between eye patches at the top, measured from right eye patch to left.",fractional pixels,length,True,True,False
