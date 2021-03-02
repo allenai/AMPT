@@ -54,6 +54,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.geom.Rectangle2D;
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -483,7 +484,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       if (!(roi instanceof PointRoi)) {
         return;
       }
-      Rectangle bounds = roi.getBounds();
+      Rectangle2D.Double bounds = roi.getFloatBounds();
       if (currentPosition == null) {
         currentPosition = new Point();
       }
