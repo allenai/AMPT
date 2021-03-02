@@ -50,10 +50,10 @@ import javax.swing.SwingConstants;
 import javax.swing.event.TableModelEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.geom.Rectangle2D;
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -388,16 +388,16 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   @Override
   public void updateInterface() {
     if (savedPosition != null) {
-      savedPointX.setText(Integer.toString(savedPosition.x));
-      savedPointY.setText(Integer.toString(savedPosition.y));
+      savedPointX.setText(String.format("%.3f",savedPosition.x));
+      savedPointY.setText(String.format("%.3f",savedPosition.y));
     } else {
       savedPointX.setText("");
       savedPointY.setText("");
     }
 
     if (currentPosition != null) {
-      currentPointX.setText(Integer.toString(currentPosition.x));
-      currentPointY.setText(Integer.toString(currentPosition.y));
+      currentPointX.setText(String.format("%.3f",currentPosition.x));
+      currentPointY.setText(String.format("%.3f",currentPosition.y));
     } else {
       currentPointX.setText("");
       currentPointY.setText("");
@@ -483,7 +483,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       if (!(roi instanceof PointRoi)) {
         return;
       }
-      Rectangle bounds = roi.getBounds();
+      Rectangle2D.Double bounds = roi.getFloatBounds();
       if (currentPosition == null) {
         currentPosition = new Point();
       }

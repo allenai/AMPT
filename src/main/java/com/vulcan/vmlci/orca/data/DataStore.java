@@ -156,13 +156,13 @@ public class DataStore extends AbstractTableModel {
    */
   private void populateReferenceSets() {
     INTEGER_UNITS = new HashSet<>();
-    addAll(INTEGER_UNITS, "pixels");
+//    addAll(INTEGER_UNITS, );
 
     TEXT_UNITS = new HashSet<>();
     addAll(TEXT_UNITS, "text", "timestamp", "fractional degrees", "editable text");
 
     FLOAT_UNITS = new HashSet<>();
-    addAll(FLOAT_UNITS, "meters", "millimeters", "unitless percentage", "fractional pixels");
+    addAll(FLOAT_UNITS, "pixels", "meters", "millimeters", "unitless percentage", "fractional pixels");
 
     BOOLEAN_UNITS = new HashSet<>();
     addAll(BOOLEAN_UNITS, "boolean");
@@ -586,8 +586,8 @@ public class DataStore extends AbstractTableModel {
     if (!FETCHABLE_POINTS.contains(descriptors.get(x_col).measurement_type)) {
       return null;
     }
-    Integer x_value = get_value(filename, x_col, Integer.class, null);
-    Integer y_value = get_value(filename, y_col, Integer.class, null);
+    Double x_value = get_value(filename, x_col, Double.class, null);
+    Double y_value = get_value(filename, y_col, Double.class, null);
 
     if (x_value != null && y_value != null) {
       return new Point(x_value, y_value);
@@ -649,10 +649,10 @@ public class DataStore extends AbstractTableModel {
     final String x_col_end = String.format(X_END_LENGTH, length_column);
     final String y_col_end = String.format(Y_END_LENGTH, length_column);
 
-    Integer x_start = get_value(filename, x_col_start, Integer.class, null);
-    Integer y_start = get_value(filename, y_col_start, Integer.class, null);
-    Integer x_end = get_value(filename, x_col_end, Integer.class, null);
-    Integer y_end = get_value(filename, y_col_end, Integer.class, null);
+    Double x_start = get_value(filename, x_col_start, Double.class, null);
+    Double y_start = get_value(filename, y_col_start, Double.class, null);
+    Double x_end = get_value(filename, x_col_end, Double.class, null);
+    Double y_end = get_value(filename, y_col_end, Double.class, null);
 
     if (x_start == null || y_start == null || x_end == null || y_end == null) {
       return null;
