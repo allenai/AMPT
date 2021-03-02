@@ -218,6 +218,9 @@ public abstract class BaseCalculator {
       if (!(parameter instanceof String)) {
         continue;
       }
+      if(((String) parameter).contains("\"")){
+        continue;
+      }
       if (dataStore.get_value(title, (String) parameter) == null) {
         return false;
       }
@@ -291,7 +294,11 @@ public abstract class BaseCalculator {
   Object retrieve_scalar_argument(String title, Object param) {
     Object value;
     if (param instanceof String) {
-      value = dataStore.get_value(title, (String) param);
+      if(((String) param).contains("\"")){ // Extract a string literal
+        value = ((String) param).substring(1,((String) param).length()-1);
+      } else {
+        value = dataStore.get_value(title, (String) param);
+      }
     } else {
       value = param;
     }
