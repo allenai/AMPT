@@ -32,7 +32,7 @@
 package com.vulcan.vmlci.orca.calculator;
 
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.Point;
+import com.vulcan.vmlci.orca.data.Point;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;

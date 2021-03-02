@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca.helpers;
+package com.vulcan.vmlci.orca.data;
 
 import java.io.Serializable;
 import java.util.Objects;

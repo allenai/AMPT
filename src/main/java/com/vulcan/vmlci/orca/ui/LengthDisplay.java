@@ -33,7 +33,7 @@ package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.ColumnDescriptor;
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.MeasurementTableModel;
+import com.vulcan.vmlci.orca.data.MeasurementTableModel;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;

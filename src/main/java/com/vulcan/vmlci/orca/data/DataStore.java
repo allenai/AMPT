@@ -36,7 +36,6 @@ import com.vulcan.vmlci.orca.helpers.CSVFileLoadException;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
-import com.vulcan.vmlci.orca.helpers.Point;
 
 import javax.swing.table.AbstractTableModel;
 import java.io.File;
