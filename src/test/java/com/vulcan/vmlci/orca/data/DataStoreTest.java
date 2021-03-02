@@ -72,7 +72,7 @@ public class DataStoreTest extends TestCase {
 
   public void testINTEGER_UNITS() {
     assertEquals(
-        "Failure - set cardinality for INTEGER_UNITS incorrect", 1, ds.INTEGER_UNITS.size());
+        "Failure - set cardinality for INTEGER_UNITS incorrect", 0, ds.INTEGER_UNITS.size());
   }
 
   public void testTEXT_UNITS() {
@@ -80,7 +80,7 @@ public class DataStoreTest extends TestCase {
   }
 
   public void testFLOAT_UNITS() {
-    assertEquals("Failure - set cardinality for FLOAT_UNITS incorrect", 4, ds.FLOAT_UNITS.size());
+    assertEquals("Failure - set cardinality for FLOAT_UNITS incorrect", 5, ds.FLOAT_UNITS.size());
   }
 
   public void testEDITABLE() {
@@ -215,7 +215,7 @@ public class DataStoreTest extends TestCase {
     this.load_test_data("/data/sample_short.csv");
     Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull("this.ds should not contain any points at this time", result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", 10);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", 10.);
     result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull(result);
   }
@@ -224,7 +224,7 @@ public class DataStoreTest extends TestCase {
     this.load_test_data("/data/sample_short.csv");
     Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull("this.ds should not contain any points at this time", result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10.);
     result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull(result);
   }
@@ -233,11 +233,11 @@ public class DataStoreTest extends TestCase {
     this.load_test_data("/data/sample_short.csv");
     Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull("this.ds should not contain any points at this time", result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", -10);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_x", -10.);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SN_y", 10.);
     result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNotNull(result);
-    Point ground_truth = new Point(-10, 10);
+    Point ground_truth = new Point(-10., 10.);
     assertEquals(ground_truth, result);
   }
 
@@ -245,9 +245,9 @@ public class DataStoreTest extends TestCase {
     this.load_test_data("/data/sample_short.csv");
     Object result = this.ds.get_point(SAMPLE_SHORT_FILES[0], "SN");
     assertNull("this.ds should not contain any points at this time", result);
-    this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", new Point(-10, 10));
-    assertEquals(-10, this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_x"));
-    assertEquals(10, this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_y"));
+    this.ds.set_point(SAMPLE_SHORT_FILES[0], "SN", new Point(-10., 10.));
+    assertEquals(-10., this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_x"));
+    assertEquals(10., this.ds.get_value(SAMPLE_SHORT_FILES[0], "SN_y"));
   }
 
   public void testSet_point_null() {
@@ -268,7 +268,7 @@ public class DataStoreTest extends TestCase {
   public void testInsertIncorrectType(){
     this.load_test_data("/data/sample_short.csv");
     try{
-      this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1.);
+      this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1);
       fail();
     } catch (ClassCastException e) {
 
@@ -281,20 +281,20 @@ public class DataStoreTest extends TestCase {
     this.load_test_data("/data/sample_short.csv");
     Point[] result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNull(result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1.);
     result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNull(result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_start", 2);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_start", 2.);
     result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNull(result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_end", 3);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_end", 3.);
     result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNull(result);
-    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_end", 4);
+    this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_y_end", 4.);
     result = this.ds.getEndpoints(SAMPLE_SHORT_FILES[0], "SNDF");
     assertNotNull(result);
-    assertEquals(new Point(1, 2), result[0]);
-    assertEquals(new Point(3, 4), result[1]);
+    assertEquals(new Point(1., 2.), result[0]);
+    assertEquals(new Point(3., 4.), result[1]);
     assertEquals(2, result.length);
   }
 

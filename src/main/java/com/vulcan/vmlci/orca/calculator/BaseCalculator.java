@@ -198,10 +198,10 @@ public abstract class BaseCalculator {
    * @param distance the interpolation distance as a
    * @return the interpolated value
    */
-  public static Integer parametric_point(Integer start, Integer end, Double distance) {
+  public static Double parametric_point(Double start, Double end, Double distance) {
 //    System.err.println("BaseCalculator.parametric_point");
     if (!(start == null || end == null || distance == null)) {
-      return (int)(start.doubleValue() + (end.doubleValue() - start.doubleValue()) * distance.doubleValue() + 0.5);
+      return start + (end - start) * distance;
     }
     return null;
   }

@@ -36,12 +36,12 @@ import java.util.Objects;
 
 public class Point implements Cloneable, Serializable {
 
-  public int x;
-  public int y;
+  public double x;
+  public double y;
 
   public Point(double x, double y) {
-    this.x = (int) (x + 0.5);
-    this.y = (int) (y + 0.5);
+    this.x = x;
+    this.y = y;
   }
 
   public Point() {
@@ -142,25 +142,25 @@ public class Point implements Cloneable, Serializable {
     return "Point{" + "x=" + x + ", y=" + y + '}';
   }
 
-  public int getX() {
+  public double getX() {
     return x;
   }
 
-  public void setX(int x) {
+  public void setX(double x) {
     this.x = x;
   }
 
-  public int getY() {
+  public double getY() {
     return y;
   }
 
-  public void setY(int y) {
+  public void setY(double y) {
     this.y = y;
   }
 
   public void setLocation(double x, double y) {
-    this.x = (int)(x + 0.5);
-    this.y = (int)(y + 0.5);
+    this.x = x;
+    this.y = y;
   }
 
   public void setLocation(int x, int y) {
