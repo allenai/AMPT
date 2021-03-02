@@ -90,10 +90,10 @@ public class MeasureManagerTest extends TestCase {
     } catch (FileNotFoundException e) {
       fail(e.getMessage());
     }
-    ds.insert_value("foo", "SNDF_x_start", 0);
-    ds.insert_value("foo", "SNDF_y_start", 3);
-    ds.insert_value("foo", "SNDF_x_end", 4);
-    ds.insert_value("foo", "SNDF_y_end", 0);
+    ds.insert_value("foo", "SNDF_x_start", 0.);
+    ds.insert_value("foo", "SNDF_y_start", 3.);
+    ds.insert_value("foo", "SNDF_x_end", 4.);
+    ds.insert_value("foo", "SNDF_y_end", 0.);
     assertEquals(5., ds.get_value("foo","SNDF"));
     ds.insert_value("foo", "SNDF_y_end", null);
     assertNull(ds.get_value("foo","SNDF"));

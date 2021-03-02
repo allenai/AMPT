@@ -31,19 +31,17 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
-import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.DataStoreTest;
+import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
 import com.vulcan.vmlci.orca.helpers.Point;
 import junit.framework.TestCase;
 
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.HashMap;
-
 
 @SuppressWarnings("UnusedAssignment")
 public class ReferenceCalculatorTest extends TestCase {
@@ -100,8 +98,8 @@ public class ReferenceCalculatorTest extends TestCase {
     // Retrieve the 75% reference endpoints
     Point[] meas_endpoints = result.get(String.format("%.0f%% measurement", 0.75 * 100.));
 
-    assertEquals(100, (int)(((meas_endpoints[0].x + meas_endpoints[1].x) / 2.0)+0.5));
-    assertEquals(795, (int)(((meas_endpoints[0].y + meas_endpoints[1].y) / 2.0)+0.5));
+    assertEquals(100., (meas_endpoints[0].x + meas_endpoints[1].x) / 2.0, 0.5);
+    assertEquals(795., (meas_endpoints[0].y + meas_endpoints[1].y) / 2.0, 0.5);
   }
 
   public void test_compute_offset_reference_reversed_axis() {
@@ -116,8 +114,8 @@ public class ReferenceCalculatorTest extends TestCase {
     // Retrieve the 75% reference endpoints
     Point[] meas_endpoints = result.get(String.format("%d%% measurement", 75));
 
-    assertEquals(100, (int)(((meas_endpoints[0].x + meas_endpoints[1].x) / 2.0)+0.5));
-    assertEquals(795, (int)(((meas_endpoints[0].y + meas_endpoints[1].y) / 2.0)+0.5));
+    assertEquals(100., ((meas_endpoints[0].x + meas_endpoints[1].x) / 2.0), 0.5);
+    assertEquals(795., ((meas_endpoints[0].y + meas_endpoints[1].y) / 2.0), 0.5);
   }
 
   public void test_update_point_value_changes() {
