@@ -58,7 +58,10 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
     wireUI();
   }
 
-  public void reload_fields(){};
+  /**
+   * Reloads the class's state fields with new values. */
+  public void reload_fields() {}
+  ;
 
   protected abstract void buildUI();
 
