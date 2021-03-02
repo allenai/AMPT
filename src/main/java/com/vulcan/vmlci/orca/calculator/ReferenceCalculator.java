@@ -51,7 +51,7 @@ public class ReferenceCalculator extends BaseCalculator {
   }
 
   /**
-   * Construct and return a dictionary that contains reference markers.
+   * Construct and return a hashmap that contains reference markers.
    *
    * @param axis_x_start the x coordinate of the start of the axis
    * @param axis_y_start the y coordinate of the start of the axis
@@ -174,14 +174,14 @@ public class ReferenceCalculator extends BaseCalculator {
   }
 
   public static HashMap<String, Point[]> compute_offset_reference_markers(
-          Integer axis_x_start,
-          Integer axis_y_start,
-          Integer axis_x_end,
-          Integer axis_y_end,
-          Integer ref_line_x_start,
-          Integer ref_line_y_start,
-          Integer ref_line_x_end,
-          Integer ref_line_y_end,
+      Integer axis_x_start,
+      Integer axis_y_start,
+      Integer axis_x_end,
+      Integer axis_y_end,
+      Integer ref_line_x_start,
+      Integer ref_line_y_start,
+      Integer ref_line_x_end,
+      Integer ref_line_y_end,
       Long offset) {
     Point top =
         ReferenceCalculator.compute_offset_reference(
@@ -273,14 +273,14 @@ public class ReferenceCalculator extends BaseCalculator {
    * @return the coordinates for proj.
    */
   public static Point compute_offset_reference(
-          Integer axis_x_start,
-          Integer axis_y_start,
-          Integer axis_x_end,
-          Integer axis_y_end,
-          Integer ref_line_x_start,
-          Integer ref_line_y_start,
-          Integer ref_line_x_end,
-          Integer ref_line_y_end,
+      Integer axis_x_start,
+      Integer axis_y_start,
+      Integer axis_x_end,
+      Integer axis_y_end,
+      Integer ref_line_x_start,
+      Integer ref_line_y_start,
+      Integer ref_line_x_end,
+      Integer ref_line_y_end,
       Long offset) {
 
     // Compute direction vector for main axis
@@ -305,6 +305,18 @@ public class ReferenceCalculator extends BaseCalculator {
     return new Point(
         axis_x_start + distance_along_axis * axis_direction_x,
         axis_y_start + distance_along_axis * axis_direction_y);
+  }
+
+  /**
+   * @param label The label to be used for drawing the landmark
+   * @param x The x-coordinate of the landmark
+   * @param y The y-coordinate of the landmark
+   * @return A HashMap containing the landmark rendering instructions.
+   */
+  public static HashMap<String, Point[]> render_landmark(String label, Integer x, Integer y) {
+    HashMap<String, Point[]> result = new HashMap<>();
+    result.put(label, new Point[] {new Point(x, y)});
+    return result;
   }
 
   /** @return The name of the configuration file required for this calculator. */
