@@ -33,7 +33,6 @@ package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
-import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.helpers.Point;
 import ij.ImagePlus;
@@ -55,7 +54,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -82,15 +80,9 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   private Point savedPosition = null;
   private boolean reviewState = false;
 
-  public PointInputPanel(DataStore dataStore) {
+  public PointInputPanel(DataStore dataStore, CueManager cueManager) {
     super(dataStore);
-    try {
-      this.cueManager = new CueManager(dataStore);
-    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
-      e.printStackTrace();
-      cueManager = null;
-    }
-
+    this.cueManager = cueManager;
     PointRoi.addRoiListener(this);
   }
 
@@ -114,7 +106,8 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       currentPosition = null;
     }
     String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    reviewState = dataStore.get_value(
+    reviewState =
+        dataStore.get_value(
             lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
 
     updateInterface();
