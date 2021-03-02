@@ -156,13 +156,13 @@ public class DataStore extends AbstractTableModel {
    */
   private void populateReferenceSets() {
     INTEGER_UNITS = new HashSet<>();
-    addAll(INTEGER_UNITS, "pixels");
+//    addAll(INTEGER_UNITS, );
 
     TEXT_UNITS = new HashSet<>();
     addAll(TEXT_UNITS, "text", "timestamp", "fractional degrees", "editable text");
 
     FLOAT_UNITS = new HashSet<>();
-    addAll(FLOAT_UNITS, "meters", "millimeters", "unitless percentage", "fractional pixels");
+    addAll(FLOAT_UNITS, "pixels", "meters", "millimeters", "unitless percentage", "fractional pixels");
 
     BOOLEAN_UNITS = new HashSet<>();
     addAll(BOOLEAN_UNITS, "boolean");
