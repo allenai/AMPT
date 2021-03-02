@@ -31,14 +31,13 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
+import com.vulcan.vmlci.orca.data.Point;
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.DataStoreTest;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
-import com.vulcan.vmlci.orca.helpers.Point;
 import junit.framework.TestCase;
 
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;

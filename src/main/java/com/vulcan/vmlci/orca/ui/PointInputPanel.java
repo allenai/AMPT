@@ -34,7 +34,7 @@ package com.vulcan.vmlci.orca.ui;
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
-import com.vulcan.vmlci.orca.helpers.Point;
+import com.vulcan.vmlci.orca.data.Point;
 import ij.ImagePlus;
 import ij.gui.PointRoi;
 import ij.gui.Roi;

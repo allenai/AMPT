@@ -29,10 +29,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.vulcan.vmlci.orca.helpers;
+package com.vulcan.vmlci.orca.data;
 
 import com.vulcan.vmlci.orca.data.ColumnDescriptor;
 import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 
 import javax.swing.JTable;
 import javax.swing.event.EventListenerList;
@@ -55,6 +56,35 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
   private Vector<Boolean> selections;
   private HashSet<String> needs_validation;
   private DataStore dataStore;
+
+  /**
+   * Returns false.  This is the default implementation for all cells.
+   *
+   * @param rowIndex    the row being queried
+   * @param columnIndex the column being queried
+   * @return false
+   */
+  @Override
+  public boolean isCellEditable(int rowIndex, int columnIndex) {
+    return (columnIndex == 0);
+  }
+
+  /**
+   * This empty implementation is provided so users don't have to implement
+   * this method if their data model is not editable.
+   *
+   * @param aValue      value to assign to cell
+   * @param rowIndex    row of cell
+   * @param columnIndex column of cell
+   */
+  @Override
+  public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+    if(columnIndex == 0){
+      selections.set(rowIndex, (Boolean) aValue);
+    }
+    super.setValueAt(aValue, rowIndex, columnIndex);
+  }
+
   /** This hashmap converts a column index into the corresponding row index in out model. */
   private HashMap<Integer, Integer> dataStoreColumnToLocalRow;
 
