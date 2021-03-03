@@ -59,8 +59,6 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 public class LengthInputPanel extends InputPanel implements ItemListener, RoiListener {
-  // Utilities
-  private CueManager cueManager;
 
   // UI Elements
   private JCheckBox enableOverlays;
@@ -81,8 +79,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   private boolean reviewState = false;
 
   public LengthInputPanel(DataStore dataStore, CueManager cueManager) {
-    super(dataStore);
-    this.cueManager = cueManager;
+    super(dataStore, cueManager);
     Line.addRoiListener(this);
   }
 
@@ -142,6 +139,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     GridBagConstraints gbc;
     this.setLayout(new GridBagLayout());
     enableOverlays = new JCheckBox();
+    enableOverlays.setModel(cueManager.toggleButtonModel);
     enableOverlays.setText("Cues");
     controls.add(enableOverlays);
     gbc = new GridBagConstraints();
@@ -379,6 +377,9 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   public void updateInterface() {
+    if(!this.isVisible()){
+      return;
+    }
     Roi roi;
     if (savedMagnitude != null) {
       savedLength.setText(String.format("%.3f", savedMagnitude));

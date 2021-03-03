@@ -60,8 +60,8 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
   private JButton updateMetadata;
   private boolean dirty = false;
 
-  public MetadataControl(DataStore dataStore) {
-    super(dataStore);
+  public MetadataControl(DataStore dataStore, CueManager cueManager) {
+    super(dataStore,cueManager);
   }
 
   @Override

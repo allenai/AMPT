@@ -32,8 +32,8 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 
 import javax.swing.JButton;
 import javax.swing.JTextArea;
@@ -41,15 +41,19 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class CommentInputPanel extends InputPanel {
   private JTextArea commentField;
   private JButton saveComments;
   private boolean comments_dirty = false;
 
-  public CommentInputPanel(DataStore dataStore) {
-    super(dataStore);
+  public CommentInputPanel(DataStore dataStore, CueManager cueManager) {
+    super(dataStore, cueManager);
   }
+
+
 
   protected void buildUI() {
     this.setLayout(new BorderLayout(0, 0));
@@ -82,12 +86,6 @@ public class CommentInputPanel extends InputPanel {
   }
 
   @Override
-  public void updateInterface() {
-    super.updateInterface();
-    saveComments.setEnabled(comments_dirty);
-  }
-
-  @Override
   protected void save(ActionEvent e) {
     String text_to_save = commentField.getText();
     if (text_to_save.isEmpty()) {
@@ -98,6 +96,16 @@ public class CommentInputPanel extends InputPanel {
     }
     comments_dirty = false;
     updateInterface();
+  }
+
+  @Override
+  public void updateInterface() {
+    if (!this.isVisible()) {
+      return;
+    }
+    super.updateInterface();
+    saveComments.setEnabled(comments_dirty);
+    cueManager.draw_cue(null);
   }
 
   /**
@@ -121,4 +129,19 @@ public class CommentInputPanel extends InputPanel {
     updateInterface();
   }
 
+  /**
+   * Makes the component visible or invisible.
+   * Overrides <code>Component.setVisible</code>.
+   *
+   * @param aFlag true to make the component visible; false to
+   *              make it invisible
+   * @beaninfo attribute: visualUpdate true
+   */
+  @Override
+  public void setVisible(boolean aFlag) {
+    super.setVisible(aFlag);
+    if(aFlag){
+      cueManager.draw_cue(null);
+    }
+  }
 }

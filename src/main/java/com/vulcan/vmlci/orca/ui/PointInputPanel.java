@@ -59,8 +59,6 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 public class PointInputPanel extends InputPanel implements RoiListener, ItemListener {
-  // Utilities
-  private CueManager cueManager;
 
   // UI Elements
   private JComboBox<String> measurementSelector;
@@ -81,8 +79,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   private boolean reviewState = false;
 
   public PointInputPanel(DataStore dataStore, CueManager cueManager) {
-    super(dataStore);
-    this.cueManager = cueManager;
+    super(dataStore, cueManager);
     PointRoi.addRoiListener(this);
   }
 
@@ -262,6 +259,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     this.add(statusField, gbc);
 
     enableOverlays = new JCheckBox();
+    enableOverlays.setModel(cueManager.toggleButtonModel);
     enableOverlays.setHorizontalAlignment(SwingConstants.CENTER);
     enableOverlays.setHorizontalTextPosition(SwingConstants.TRAILING);
     enableOverlays.setText("Cues");
@@ -387,6 +385,9 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
 
   @Override
   public void updateInterface() {
+    if(!this.isVisible()){
+      return;
+    }
     if (savedPosition != null) {
       savedPointX.setText(String.format("%.3f",savedPosition.x));
       savedPointY.setText(String.format("%.3f",savedPosition.y));

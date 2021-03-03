@@ -32,9 +32,9 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -44,12 +44,14 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public abstract class InputPanel extends JPanel implements ActiveImageListener, TableModelListener {
-  protected LastActiveImage lastActiveImage;
-  protected DataStore dataStore;
+  protected final CueManager cueManager;
+  protected final DataStore dataStore;
+  protected final LastActiveImage lastActiveImage;
   protected ArrayList<JComponent> controls;
 
-  public InputPanel(DataStore dataStore) {
+  public InputPanel(DataStore dataStore, CueManager cueManager) {
     this.dataStore = dataStore;
+    this.cueManager = cueManager;
     this.lastActiveImage = LastActiveImage.getInstance();
     this.controls = new ArrayList<>();
     this.lastActiveImage.addActiveImageListener(this);
@@ -58,22 +60,28 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
     wireUI();
   }
 
-  /**
-   * Reloads the class's state fields with new values. */
-  public void reload_fields() {}
-  ;
-
   protected abstract void buildUI();
+  ;
 
   protected abstract void wireUI();
 
-  protected void save(ActionEvent e){};
-  protected void revert(ActionEvent e){};
-  protected void clear(ActionEvent e){};
-  protected void approve(ActionEvent e){};
+  /** Reloads the class's state fields with new values. */
+  public void reload_fields() {}
 
+  protected void save(ActionEvent e) {}
+  ;
 
-  public void updateInterface(){};
+  protected void revert(ActionEvent e) {}
+  ;
+
+  protected void clear(ActionEvent e) {}
+  ;
+
+  protected void approve(ActionEvent e) {}
+  ;
+
+  public void updateInterface() {}
+  ;
 
   /**
    * Gives notification that an ImagePlus has taken focus.
