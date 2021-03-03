@@ -61,6 +61,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
   private final JPanel body_profiles = null;
   private JFrame application_frame = null;
   private DataStore ds;
+  private CueManager cueManager;
   private MetadataControl metadataControl;
   private InputControls inputControls;
   private String active_image;
@@ -71,6 +72,12 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     } catch (ConfigurationFileLoadException | DataFileLoadException e) {
       e.printStackTrace();
     }
+    try{
+      cueManager = new CueManager(ds);
+    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
+      e.printStackTrace();
+    }
+
     SwingUtilities.invokeLater(this::build_ui);
     ds.addTableModelListener(this);
     try {
@@ -82,8 +89,8 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
 
   private void build_ui() {
     LastActiveImage lastActiveImage = LastActiveImage.getInstance();
-    metadataControl = new MetadataControl(ds);
-    inputControls = new InputControls(ds);
+    metadataControl = new MetadataControl(ds, cueManager);
+    inputControls = new InputControls(ds, cueManager);
     GridBagConstraints c = new GridBagConstraints();
     JPanel toplevel = new JPanel();
     toplevel.setLayout(new GridBagLayout());

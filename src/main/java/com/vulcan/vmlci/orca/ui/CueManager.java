@@ -42,6 +42,7 @@ import ij.gui.Line;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
 
+import javax.swing.JToggleButton;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Vector;
@@ -52,11 +53,13 @@ public class CueManager {
   private String config_file = "CueConfig.json";
   private HashMap<String, Vector<String>> cue_lookup;
   private ReferenceCalculator referenceCalculator;
+  public JToggleButton.ToggleButtonModel toggleButtonModel;
 
   public CueManager(DataStore dataStore)
       throws FileNotFoundException, ConfigurationFileLoadException {
     this.dataStore = dataStore;
     this.lastActiveImage = LastActiveImage.getInstance();
+    this.toggleButtonModel = new JToggleButton.ToggleButtonModel();
     cue_lookup = new HashMap<>();
 
     referenceCalculator = new ReferenceCalculator(dataStore);
