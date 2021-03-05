@@ -102,4 +102,22 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
    */
   @Override
   public void tableChanged(TableModelEvent e) {}
+
+  /**
+   * Makes the component visible or invisible. Also sets activeCue in the CueManager to null.
+   * subclasses should override this if they have associated cues.
+   *
+   * Overrides <code>Component.setVisible</code>.
+   *
+   * @param aFlag true to make the component visible; false to make it invisible
+   * @beaninfo attribute: visualUpdate true
+   */
+  @Override
+  public void setVisible(boolean aFlag) {
+    if (aFlag) {
+      cueManager.setActiveCue(null);
+    }
+    super.setVisible(aFlag);
+    cueManager.draw();
+  }
 }
