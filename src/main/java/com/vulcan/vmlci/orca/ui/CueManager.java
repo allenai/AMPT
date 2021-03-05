@@ -50,27 +50,26 @@ import java.util.HashSet;
 import java.util.Vector;
 
 public class CueManager {
-  public JToggleButton.ToggleButtonModel cueToggle;
-  public JToggleButton.ToggleButtonModel overlayToggle;
-  private DataStore dataStore;
-  private LastActiveImage lastActiveImage;
-  private String config_file = "CueConfig.json";
-  private HashMap<String, Vector<String>> cue_lookup;
-  private ReferenceCalculator referenceCalculator;
-  /** The condition line selected for rendering */
-  private HashSet<String> conditionLines;
+  public final JToggleButton.ToggleButtonModel cueToggle;
+  public final JToggleButton.ToggleButtonModel overlayToggle;
+  private final DataStore dataStore;
+  private final LastActiveImage lastActiveImage;
+  private final HashMap<String, Vector<String>> cue_lookup;
+  private final ReferenceCalculator referenceCalculator;
+  private final HashSet<String> conditionLines = new HashSet<>();
   /** The measurement cue selected for rendering */
   private String activeCue;
 
   public CueManager(DataStore dataStore)
       throws FileNotFoundException, ConfigurationFileLoadException {
     this.dataStore = dataStore;
-    this.lastActiveImage = LastActiveImage.getInstance();
+    referenceCalculator = new ReferenceCalculator(dataStore);
+    lastActiveImage = LastActiveImage.getInstance();
+    cue_lookup = new HashMap<>();
+
     this.cueToggle = new JToggleButton.ToggleButtonModel();
     this.overlayToggle = new JToggleButton.ToggleButtonModel();
-    cue_lookup = new HashMap<>();
-    conditionLines = new HashSet<>();
-    referenceCalculator = new ReferenceCalculator(dataStore);
+
     load_configuration();
 
     // Configure toggles (essentially a radio group at allows de-selection).
@@ -89,11 +88,12 @@ public class CueManager {
   }
 
   private void load_configuration() throws ConfigurationFileLoadException {
-    HashMap<String, Object> cue_options = ConfigurationLoader.get_json_file(this.config_file);
+    String CONFIG_FILE = "CueConfig.json";
+    HashMap<String, Object> cue_options = ConfigurationLoader.get_json_file(CONFIG_FILE);
     for (String cue_name : cue_options.keySet()) {
       for (Object cue_option : (Object[]) cue_options.get(cue_name)) {
         cue_lookup.putIfAbsent((String) cue_option, new Vector<>());
-        cue_lookup.get((String) cue_option).add(cue_name);
+        cue_lookup.get(cue_option).add(cue_name);
       }
     }
   }

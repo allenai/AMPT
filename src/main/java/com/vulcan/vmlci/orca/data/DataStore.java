@@ -332,7 +332,7 @@ public class DataStore extends AbstractTableModel {
       return new Integer(val);
     }
     if (BOOLEAN_UNITS.contains(units)) {
-      return new Boolean(val.equals("true"));
+      return val.equals("true");
     }
 
     throw new Exception(String.format("Unknown unit specification \"%s\"", units));
