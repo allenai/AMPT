@@ -32,9 +32,9 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.data.Point;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
-import com.vulcan.vmlci.orca.data.Point;
 import ij.ImagePlus;
 import ij.gui.PointRoi;
 import ij.gui.Roi;
@@ -86,28 +86,10 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   @Override
   public void itemStateChanged(ItemEvent e) {
     if (e.getStateChange() == ItemEvent.SELECTED) {
+      cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
       lastActiveImage.getMostRecentImageWindow().deleteRoi();
       reload_fields();
     }
-  }
-
-  @Override
-  public void reload_fields() {
-    savedPosition =
-        dataStore.get_point(
-            lastActiveImage.getMostRecentImageName(),
-            (String) measurementSelector.getSelectedItem());
-    if (savedPosition != null) {
-      currentPosition = (Point) savedPosition.clone();
-    } else {
-      currentPosition = null;
-    }
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    reviewState =
-        dataStore.get_value(
-            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
-
-    updateInterface();
   }
 
   protected void buildUI() {
@@ -259,7 +241,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     this.add(statusField, gbc);
 
     enableOverlays = new JCheckBox();
-    enableOverlays.setModel(cueManager.toggleButtonModel);
+    enableOverlays.setModel(cueManager.cueToggle);
     enableOverlays.setHorizontalAlignment(SwingConstants.CENTER);
     enableOverlays.setHorizontalTextPosition(SwingConstants.TRAILING);
     enableOverlays.setText("Cues");
@@ -342,6 +324,25 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   }
 
   @Override
+  public void reload_fields() {
+    savedPosition =
+        dataStore.get_point(
+            lastActiveImage.getMostRecentImageName(),
+            (String) measurementSelector.getSelectedItem());
+    if (savedPosition != null) {
+      currentPosition = (Point) savedPosition.clone();
+    } else {
+      currentPosition = null;
+    }
+    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    reviewState =
+        dataStore.get_value(
+            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
+
+    updateInterface();
+  }
+
+  @Override
   protected void save(ActionEvent e) {
     String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
     dataStore.set_point(
@@ -385,26 +386,26 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
 
   @Override
   public void updateInterface() {
-    if(!this.isVisible()){
+    if (!this.isVisible()) {
       return;
     }
     if (savedPosition != null) {
-      savedPointX.setText(String.format("%.3f",savedPosition.x));
-      savedPointY.setText(String.format("%.3f",savedPosition.y));
+      savedPointX.setText(String.format("%.3f", savedPosition.x));
+      savedPointY.setText(String.format("%.3f", savedPosition.y));
     } else {
       savedPointX.setText("");
       savedPointY.setText("");
     }
 
     if (currentPosition != null) {
-      currentPointX.setText(String.format("%.3f",currentPosition.x));
-      currentPointY.setText(String.format("%.3f",currentPosition.y));
+      currentPointX.setText(String.format("%.3f", currentPosition.x));
+      currentPointY.setText(String.format("%.3f", currentPosition.y));
     } else {
       currentPointX.setText("");
       currentPointY.setText("");
     }
 
-    if (lastActiveImage.getMostRecentImageName().equals(LastActiveImage.NO_OPEN_IMAGE)) {
+    if (lastActiveImage.no_images()) {
       statusField.setText("");
     } else if (reviewState) {
       statusField.setText(DataStore.ACCEPTED);
@@ -417,11 +418,12 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       return;
     }
 
-    if (enableOverlays.isSelected() && cueManager != null) {
-      cueManager.draw_cue((String) measurementSelector.getSelectedItem());
-    } else {
-      img.setOverlay(null);
-    }
+//    if (enableOverlays.isSelected() && cueManager != null) {
+//      cueManager.draw_cue((String) measurementSelector.getSelectedItem());
+//    } else {
+//      img.setOverlay(null);
+//    }
+    cueManager.draw();
     Roi active_roi = img.getRoi();
     if (active_roi == null && currentPosition != null) {
       img.setRoi(new PointRoi(currentPosition.x, currentPosition.y));
@@ -436,7 +438,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   @Override
   public void activeImageChanged(ActiveImageChangeEvent evt) {
     super.activeImageChanged(evt);
-    if (!lastActiveImage.getMostRecentImageName().equals(LastActiveImage.NO_OPEN_IMAGE)) {
+    if (!lastActiveImage.no_images()) {
       updateInterface();
     } else {
       currentPointX.setText("");
@@ -456,6 +458,23 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   public void tableChanged(TableModelEvent e) {
     if (e == null) {
       savedPosition = null;
+    }
+  }
+
+  /**
+   * Makes the component visible or invisible. Sets the activeCue in CueManager to the selected
+   * measurement.
+   *
+   * <p>Overrides <code>Component.setVisible</code>.
+   *
+   * @param aFlag true to make the component visible; false to make it invisible
+   * @beaninfo attribute: visualUpdate true
+   */
+  @Override
+  public void setVisible(boolean aFlag) {
+    super.setVisible(aFlag);
+    if (aFlag) {
+      cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
     }
   }
 
