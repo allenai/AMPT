@@ -223,4 +223,10 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
       fireTableRowsUpdated(row, row);
     }
   }
+
+  public void setAll(boolean newState) {
+    int bound = selections.size();
+    IntStream.range(0, bound).forEach(i -> selections.set(i, newState));
+    fireTableRowsUpdated(0, selections.size() - 1);
+  }
 }
