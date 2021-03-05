@@ -31,86 +31,57 @@
 
 package com.vulcan.vmlci.orca.data;
 
-import com.vulcan.vmlci.orca.data.ColumnDescriptor;
-import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 
-import javax.swing.JTable;
-import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Vector;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MeasurementTableModel extends AbstractTableModel implements TableModelListener {
-  LastActiveImage lastActiveImage;
+  private final DataStore dataStore;
+  private final LastActiveImage lastActiveImage = LastActiveImage.getInstance();
   Predicate<ColumnDescriptor> filter;
   /** The rows that are appropriate to the the view. */
-  private Vector<ColumnDescriptor> rows;
+  private ArrayList<ColumnDescriptor> rows;
 
-  private Vector<Boolean> selections;
+  private ArrayList<Boolean> selections;
   private HashSet<String> needs_validation;
-  private DataStore dataStore;
-
-  /**
-   * Returns false.  This is the default implementation for all cells.
-   *
-   * @param rowIndex    the row being queried
-   * @param columnIndex the column being queried
-   * @return false
-   */
-  @Override
-  public boolean isCellEditable(int rowIndex, int columnIndex) {
-    return (columnIndex == 0);
-  }
-
-  /**
-   * This empty implementation is provided so users don't have to implement
-   * this method if their data model is not editable.
-   *
-   * @param aValue      value to assign to cell
-   * @param rowIndex    row of cell
-   * @param columnIndex column of cell
-   */
-  @Override
-  public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-    if(columnIndex == 0){
-      selections.set(rowIndex, (Boolean) aValue);
-    }
-    super.setValueAt(aValue, rowIndex, columnIndex);
-  }
-
   /** This hashmap converts a column index into the corresponding row index in out model. */
   private HashMap<Integer, Integer> dataStoreColumnToLocalRow;
 
   private int nRows;
+
   /**
    * Constructs a default <code>DefaultTableModel</code> which is a table of zero columns and zero
    * rows.
    */
   public MeasurementTableModel(DataStore dataStore, Predicate<ColumnDescriptor> selection_filter) {
     this.dataStore = dataStore;
-    filter = selection_filter;
-    lastActiveImage = LastActiveImage.getInstance();
-    configure();
+    configure(selection_filter);
     this.dataStore.addTableModelListener(this);
     lastActiveImage.addActiveImageListener(e -> this.fireTableDataChanged());
   }
 
-  private void configure() {
+  /**
+   * Construct the selections collection based in filter and the contents of the dataStore.
+   *
+   * @param filter predicate for selecting rows.
+   */
+  private void configure(Predicate<ColumnDescriptor> filter) {
     // Make a vector for JComboBox
     rows =
         dataStore.descriptors.values().stream() // Grab a stream of descriptors
             .filter(filter) // Grab the length descriptors.
             .sorted(Comparator.comparingInt(o -> o.index)) // Sort them by descriptor index
-            //            .map(s -> s.name) // Extract the names
-            .collect(Collectors.toCollection(Vector::new));
-    selections = new Vector<>();
+            .collect(Collectors.toCollection(ArrayList::new));
+    selections = new ArrayList<>();
     dataStoreColumnToLocalRow = new HashMap<>();
     needs_validation = new HashSet<>();
     for (int i = 0; i < rows.size(); i++) {
@@ -156,17 +127,32 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
   }
 
   /**
-   * Notifies all listeners that all cell values in the table's rows may have changed. The number of
-   * rows may also have changed and the <code>JTable</code> should redraw the table from scratch.
-   * The structure of the table (as in the order of the columns) is assumed to be the same.
+   * Returns true for the Render column, false otherwise.
    *
-   * @see TableModelEvent
-   * @see EventListenerList
-   * @see JTable#tableChanged(TableModelEvent)
+   * @param rowIndex the row being queried
+   * @param columnIndex the column being queried
+   * @return true for column 0, false otherwise.
    */
   @Override
-  public void fireTableDataChanged() {
-    super.fireTableDataChanged();
+  public boolean isCellEditable(int rowIndex, int columnIndex) {
+    return (columnIndex == 0);
+  }
+
+  /**
+   * Updates the value of the selections ArrayList to indicate which measurements should be drawn.
+   *
+   * @param aValue value to assign to cell
+   * @param rowIndex row of cell
+   * @param columnIndex column of cell
+   */
+  @Override
+  public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+    if (columnIndex == 0) {
+      selections.set(rowIndex, (Boolean) aValue);
+      this.fireTableCellUpdated(rowIndex, columnIndex);
+    } else {
+      super.setValueAt(aValue, rowIndex, columnIndex);
+    }
   }
 
   /**
@@ -207,7 +193,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
         return dataStore.get_value(
             lastActiveImage.getMostRecentImageName(), rows.get(rowIndex).name);
       default:
-        if (lastActiveImage.getMostRecentImageName().equals(LastActiveImage.NO_OPEN_IMAGE)) {
+        if (lastActiveImage.no_images()) {
           return "";
         }
         String target_row = String.format("%s_reviewed", rows.get(rowIndex).name);
@@ -226,10 +212,9 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
   }
 
   /**
-   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
-   * changed.
+   * Event handler to alert on changes from the underlying data store.
    *
-   * @param e
+   * @param e change event from the datastore
    */
   @Override
   public void tableChanged(TableModelEvent e) {
