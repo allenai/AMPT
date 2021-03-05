@@ -92,8 +92,26 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   @Override
   public void itemStateChanged(ItemEvent e) {
     if (e.getStateChange() == ItemEvent.SELECTED) {
+      cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
       lastActiveImage.getMostRecentImageWindow().deleteRoi();
       reload_fields();
+    }
+  }
+
+  /**
+   * Makes the component visible or invisible.
+   * Sets the activeCue in CueManager to the selected measurement.
+   * <p>
+   * Overrides <code>Component.setVisible</code>.
+   *
+   * @param aFlag true to make the component visible; false to make it invisible
+   * @beaninfo attribute: visualUpdate true
+   */
+  @Override
+  public void setVisible(boolean aFlag) {
+    super.setVisible(aFlag);
+    if(aFlag){
+      cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
     }
   }
 
@@ -139,7 +157,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     GridBagConstraints gbc;
     this.setLayout(new GridBagLayout());
     enableOverlays = new JCheckBox();
-    enableOverlays.setModel(cueManager.toggleButtonModel);
+    enableOverlays.setModel(cueManager.cueToggle);
     enableOverlays.setText("Cues");
     controls.add(enableOverlays);
     gbc = new GridBagConstraints();
@@ -393,7 +411,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     }
     currentLength.setText(currMag);
 
-    if (lastActiveImage.getMostRecentImageName().equals(LastActiveImage.NO_OPEN_IMAGE)) {
+    if (lastActiveImage.no_images()) {
       statusField.setText("");
     } else if (reviewState) {
       statusField.setText(DataStore.ACCEPTED);
@@ -406,11 +424,12 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
       return;
     }
 
-    if (enableOverlays.isSelected() && cueManager != null) {
-      cueManager.draw_cue((String) measurementSelector.getSelectedItem());
-    } else {
-      img.setOverlay(null);
-    }
+//    if (enableOverlays.isSelected() && cueManager != null) {
+//      cueManager.draw_cue((String) measurementSelector.getSelectedItem());
+//    } else {
+//      img.setOverlay(null);
+//    }
+    cueManager.draw();
     Roi active_roi = img.getRoi();
     if (active_roi == null && currentLine != null) {
       img.setRoi(new Line(currentLine[0].x, currentLine[0].y, currentLine[1].x, currentLine[1].y));
