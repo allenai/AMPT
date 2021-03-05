@@ -46,7 +46,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.FileNotFoundException;
@@ -72,7 +71,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     } catch (ConfigurationFileLoadException | DataFileLoadException e) {
       e.printStackTrace();
     }
-    try{
+    try {
       cueManager = new CueManager(ds);
     } catch (FileNotFoundException | ConfigurationFileLoadException e) {
       e.printStackTrace();
@@ -87,6 +86,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     }
   }
 
+  /** Layout the user interface */
   private void build_ui() {
     LastActiveImage lastActiveImage = LastActiveImage.getInstance();
     metadataControl = new MetadataControl(ds, cueManager);
@@ -162,7 +162,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.BOTH;
     gbc.weightx = 1;
-    gbc.weighty = 1;
+    gbc.weighty = 0;
     metadata.setContent_panel(metadataControl);
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.weighty = 0;
@@ -173,36 +173,41 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     frame.add(demo2, gbc);
 
     gbc.anchor = GridBagConstraints.NORTH;
-    gbc.weighty = 1;
+    gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 2;
     AccordionPanel measurements = new AccordionPanel("Length Measurements", true);
     JPanel lengthMeasurements =
-        new LengthDisplay(ds, s -> s.measurement_type.contains("length") && !s.name.contains("%"));
+        new LengthDisplay(
+            ds, s -> s.measurement_type.contains("length") && !s.name.contains("%"), cueManager);
     measurements.setContent_panel(lengthMeasurements);
     frame.add(measurements, gbc);
 
     gbc.anchor = GridBagConstraints.NORTH;
-    gbc.weighty = 1;
+    gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 3;
     AccordionPanel bodyProfiles = new AccordionPanel("Body Profiles", true);
     JPanel profileMeasurements =
-        new LengthDisplay(ds, s -> s.measurement_type.contains("length") && s.name.contains("%"));
+        new LengthDisplay(
+            ds, s -> s.measurement_type.contains("length") && s.name.contains("%"), cueManager);
     bodyProfiles.setContent_panel(profileMeasurements);
     frame.add(bodyProfiles, gbc);
 
-//    final JPanel spacer = new JPanel();
-//    gbc.gridx = 0;
-//    gbc.gridy = 4;
-//    gbc.weighty = 1;
-//    gbc.fill = GridBagConstraints.VERTICAL;
-//    frame.add(spacer, gbc);
-//    frame.setBackground(Color.CYAN);
+    final JPanel spacer = new JPanel();
+    gbc.gridx = 0;
+    gbc.gridy = 4;
+    gbc.weighty = 1;
+    gbc.fill = GridBagConstraints.VERTICAL;
+    frame.add(spacer, gbc);
     return scrollPane;
   }
 
-  void setTitle() {
+  /**
+   * Generate and set the title for the window. Title is based on the currently open file and the
+   * dirty state of the dataStore.
+   */
+  private void setTitle() {
     String saved_state;
     if (ds.dirty()) {
       saved_state = "CSV Unsaved";
@@ -212,6 +217,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     application_frame.setTitle(String.format("Measuring: %s  - %s", active_image, saved_state));
   }
 
+  /** @param evt the ActiveImageChangeEvent used for constructing the image title. */
   @Override
   public void activeImageChanged(ActiveImageChangeEvent evt) {
     active_image = evt.getNewImage();
@@ -219,8 +225,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
   }
 
   /**
-   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
-   * changed.
+   * The event handler supports updating the title to reflect the dirty status of the dataStore.
    *
    * @param e
    */
