@@ -178,4 +178,8 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
 
   @Override
   public void imageUpdated(ImagePlus imp) {}
+
+  public boolean no_images(){
+    return (WindowManager.getImageCount() == 0);
+  }
 }
