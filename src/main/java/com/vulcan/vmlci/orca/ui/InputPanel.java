@@ -61,7 +61,6 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
   }
 
   protected abstract void buildUI();
-  ;
 
   protected abstract void wireUI();
 
@@ -69,19 +68,14 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
   public void reload_fields() {}
 
   protected void save(ActionEvent e) {}
-  ;
 
   protected void revert(ActionEvent e) {}
-  ;
 
   protected void clear(ActionEvent e) {}
-  ;
 
   protected void approve(ActionEvent e) {}
-  ;
 
   public void updateInterface() {}
-  ;
 
   /**
    * Gives notification that an ImagePlus has taken focus.

@@ -418,11 +418,6 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       return;
     }
 
-//    if (enableOverlays.isSelected() && cueManager != null) {
-//      cueManager.draw_cue((String) measurementSelector.getSelectedItem());
-//    } else {
-//      img.setOverlay(null);
-//    }
     cueManager.draw();
     Roi active_roi = img.getRoi();
     if (active_roi == null && currentPosition != null) {
