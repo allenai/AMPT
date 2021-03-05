@@ -105,7 +105,7 @@ public class CommentInputPanel extends InputPanel {
     }
     super.updateInterface();
     saveComments.setEnabled(comments_dirty);
-    cueManager.draw_cue(null);
+    cueManager.draw();
   }
 
   /**
@@ -129,19 +129,4 @@ public class CommentInputPanel extends InputPanel {
     updateInterface();
   }
 
-  /**
-   * Makes the component visible or invisible.
-   * Overrides <code>Component.setVisible</code>.
-   *
-   * @param aFlag true to make the component visible; false to
-   *              make it invisible
-   * @beaninfo attribute: visualUpdate true
-   */
-  @Override
-  public void setVisible(boolean aFlag) {
-    super.setVisible(aFlag);
-    if(aFlag){
-      cueManager.draw_cue(null);
-    }
-  }
 }
