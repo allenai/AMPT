@@ -33,8 +33,6 @@ package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.Point;
-import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import ij.ImagePlus;
 import ij.gui.PointRoi;
 import ij.gui.Roi;
@@ -47,7 +45,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.event.TableModelEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -388,23 +385,20 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
 
   @Override
   public void updateInterface() {
-    if (!this.isVisible()) {
-      return;
-    }
-    if (savedPosition != null) {
-      savedPointX.setText(String.format("%.3f", savedPosition.x));
-      savedPointY.setText(String.format("%.3f", savedPosition.y));
-    } else {
+    if (savedPosition == null) {
       savedPointX.setText("");
       savedPointY.setText("");
+    } else {
+      savedPointX.setText(String.format("%.3f", savedPosition.x));
+      savedPointY.setText(String.format("%.3f", savedPosition.y));
     }
 
-    if (currentPosition != null) {
-      currentPointX.setText(String.format("%.3f", currentPosition.x));
-      currentPointY.setText(String.format("%.3f", currentPosition.y));
-    } else {
+    if (currentPosition == null) {
       currentPointX.setText("");
       currentPointY.setText("");
+    } else {
+      currentPointX.setText(String.format("%.3f", currentPosition.x));
+      currentPointY.setText(String.format("%.3f", currentPosition.y));
     }
 
     if (lastActiveImage.no_images()) {
@@ -415,6 +409,9 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       statusField.setText(DataStore.UNREVIEWED);
     }
 
+    if (!this.isVisible()) {
+      return;
+    }
     ImagePlus img = lastActiveImage.getMostRecentImageWindow();
     if (img == null) {
       return;
@@ -424,37 +421,6 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     Roi active_roi = img.getRoi();
     if (active_roi == null && currentPosition != null) {
       img.setRoi(new PointRoi(currentPosition.x, currentPosition.y));
-    }
-  }
-
-  /**
-   * Gives notification that an ImagePlus has taken focus.
-   *
-   * @param evt the ActiveImageChangeEvent
-   */
-  @Override
-  public void activeImageChanged(ActiveImageChangeEvent evt) {
-    super.activeImageChanged(evt);
-    if (!lastActiveImage.no_images()) {
-      updateInterface();
-    } else {
-      currentPointX.setText("");
-      currentPointY.setText("");
-      savedPointX.setText("");
-      savedPointY.setText("");
-    }
-  }
-
-  /**
-   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
-   * changed.
-   *
-   * @param e
-   */
-  @Override
-  public void tableChanged(TableModelEvent e) {
-    if (e == null) {
-      savedPosition = null;
     }
   }
 
@@ -475,18 +441,11 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     }
   }
 
-  private void renderLandmark() {
-    ImagePlus img = lastActiveImage.getMostRecentImageWindow();
-    if (currentPointX.getText().isEmpty() || currentPointY.getText().isEmpty()) {
-      img.deleteRoi();
-    } else {
-      img.setRoi(
-          new PointRoi(
-              Double.parseDouble(currentPointX.getText()),
-              Double.parseDouble(currentPointY.getText())));
-    }
-  }
-
+  /**
+   * Manage when the Roi Gets changed.
+   * @param imp The image the ROI is in.
+   * @param id The thing that happened to the ROI.
+   */
   @Override
   public void roiModified(ImagePlus imp, int id) {
     if (imp == null || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
