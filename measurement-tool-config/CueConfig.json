@@ -121,6 +121,11 @@
     "EP TOP",
     "EP BOTTOM"
   ],
+  "EyePatch Refs": [
+    "EP TOP",
+    "EP BOTTOM"
+  ],
+
   "Head Width": [
     "HEAD"
   ],

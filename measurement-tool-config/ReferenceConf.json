@@ -1,5 +1,17 @@
 [
   {
+    "target": "EyePatch Refs",
+    "parameters": [
+      "REPGuide_x_start",
+      "REPGuide_y_start",
+      "REPGuide_x_end",
+      "REPGuide_y_end",
+      75
+    ],
+    "function": "draw_ref_along_line"
+  },
+
+  {
     "target": "Eye Refs",
     "parameters": [
       "SNDF_x_start",
