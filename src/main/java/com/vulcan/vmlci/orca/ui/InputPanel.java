@@ -64,9 +64,6 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
 
   protected abstract void wireUI();
 
-  /** Reloads the class's state fields with new values. */
-  public void reload_fields() {}
-
   protected void save(ActionEvent e) {}
 
   protected void revert(ActionEvent e) {}
@@ -86,22 +83,31 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
   public void activeImageChanged(ActiveImageChangeEvent evt) {
     boolean new_state = !evt.getNewImage().equals(LastActiveImage.NO_OPEN_IMAGE);
     controls.forEach(component -> component.setEnabled(new_state));
+    reload_fields();
   }
+
+  /** Reloads the class's state fields with new values. */
+  public void reload_fields() {}
 
   /**
    * This fine grain notification tells listeners the exact range of cells, rows, or columns that
    * changed.
    *
-   * @param e
+   * @param e indicate what has changed in the table.
    */
   @Override
-  public void tableChanged(TableModelEvent e) {}
+  public void tableChanged(TableModelEvent e) {
+    if (e.getType() == TableModelEvent.UPDATE
+        && e.getLastRow() >= ((DataStore) e.getSource()).getRowCount()) {
+      reload_fields();
+    }
+  }
 
   /**
    * Makes the component visible or invisible. Also sets activeCue in the CueManager to null.
    * subclasses should override this if they have associated cues.
    *
-   * Overrides <code>Component.setVisible</code>.
+   * <p>Overrides <code>Component.setVisible</code>.
    *
    * @param aFlag true to make the component visible; false to make it invisible
    * @beaninfo attribute: visualUpdate true
