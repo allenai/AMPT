@@ -81,6 +81,11 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     reload_fields();
   }
 
+  /**
+   * Handle changes to the active measurement.
+   *
+   * @param e event triggered by switching the active measurement.
+   */
   @Override
   public void itemStateChanged(ItemEvent e) {
     if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -90,6 +95,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     }
   }
 
+  /** Responsible for populating the user interface components. */
   protected void buildUI() {
     Vector<String> measurements =
         dataStore.descriptors.values().stream() // Give me a stream of descriptors
@@ -311,6 +317,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     this.add(spacer5, gbc);
   }
 
+  /** Responsible for configuring the event handling. */
   @Override
   protected void wireUI() {
     save.addActionListener(this::save);
