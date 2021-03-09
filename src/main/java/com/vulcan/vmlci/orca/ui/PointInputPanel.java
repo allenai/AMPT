@@ -325,20 +325,29 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
 
   @Override
   public void reload_fields() {
-    savedPosition =
-        dataStore.get_point(
-            lastActiveImage.getMostRecentImageName(),
-            (String) measurementSelector.getSelectedItem());
-    if (savedPosition != null) {
-      currentPosition = (Point) savedPosition.clone();
-    } else {
+    if (lastActiveImage.no_images()) {
+      savedPosition = null;
       currentPosition = null;
-    }
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    reviewState =
-        dataStore.get_value(
-            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
+    } else {
+      savedPosition =
+          dataStore.get_point(
+              lastActiveImage.getMostRecentImageName(),
+              (String) measurementSelector.getSelectedItem());
 
+      // Snag the Roi if defined
+      Roi roi = lastActiveImage.getMostRecentImageWindow().getRoi();
+      if (roi == null || roi.getType() != Roi.POINT) {
+        currentPosition = savedPosition;
+      } else {
+        Rectangle2D.Double bounds = roi.getFloatBounds();
+        currentPosition = new Point(bounds.x, bounds.y);
+      }
+
+      String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+      reviewState =
+          dataStore.get_value(
+              lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
+    }
     updateInterface();
   }
 
@@ -350,14 +359,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
         (String) measurementSelector.getSelectedItem(),
         currentPosition);
     dataStore.insert_value(lastActiveImage.getMostRecentImageName(), reviewColumn, false);
-    savedPosition =
-        dataStore.get_point(
-            lastActiveImage.getMostRecentImageName(),
-            (String) measurementSelector.getSelectedItem());
-    reviewState =
-        dataStore.get_value(
-            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
-    updateInterface();
+    reload_fields();
   }
 
   @Override
