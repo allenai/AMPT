@@ -32,9 +32,9 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.data.Point;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
-import com.vulcan.vmlci.orca.data.Point;
 import ij.ImagePlus;
 import ij.gui.Line;
 import ij.gui.Roi;
@@ -94,54 +94,6 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
       lastActiveImage.getMostRecentImageWindow().deleteRoi();
       reload_fields();
     }
-  }
-
-  /**
-   * Makes the component visible or invisible.
-   * Sets the activeCue in CueManager to the selected measurement.
-   * <p>
-   * Overrides <code>Component.setVisible</code>.
-   *
-   * @param aFlag true to make the component visible; false to make it invisible
-   * @beaninfo attribute: visualUpdate true
-   */
-  @Override
-  public void setVisible(boolean aFlag) {
-    super.setVisible(aFlag);
-    if(aFlag){
-      cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
-    }
-  }
-
-  @Override
-  public void reload_fields() {
-    savedMagnitude =
-        (Double)
-            dataStore.get_value(
-                lastActiveImage.getMostRecentImageName(),
-                (String) measurementSelector.getSelectedItem());
-    savedLine =
-        dataStore.getEndpoints(
-            lastActiveImage.getMostRecentImageName(),
-            (String) measurementSelector.getSelectedItem());
-
-    if (savedMagnitude != null) {
-      currentMagnitude = savedMagnitude;
-      if (savedLine != null) {
-        currentLine = savedLine.clone();
-      } else {
-        currentLine = null;
-      }
-    } else {
-      currentMagnitude = null;
-      currentLine = null;
-    }
-
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    reviewState =
-        dataStore.get_value(
-            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
-    updateInterface();
   }
 
   protected void buildUI() {
@@ -393,7 +345,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   public void updateInterface() {
-    if(!this.isVisible()){
+    if (!this.isVisible()) {
       return;
     }
     Roi roi;
@@ -449,6 +401,53 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     updateInterface();
   }
 
+  @Override
+  public void reload_fields() {
+    savedMagnitude =
+        (Double)
+            dataStore.get_value(
+                lastActiveImage.getMostRecentImageName(),
+                (String) measurementSelector.getSelectedItem());
+    savedLine =
+        dataStore.getEndpoints(
+            lastActiveImage.getMostRecentImageName(),
+            (String) measurementSelector.getSelectedItem());
+
+    if (savedMagnitude != null) {
+      currentMagnitude = savedMagnitude;
+      if (savedLine != null) {
+        currentLine = savedLine.clone();
+      } else {
+        currentLine = null;
+      }
+    } else {
+      currentMagnitude = null;
+      currentLine = null;
+    }
+
+    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    reviewState =
+        dataStore.get_value(
+            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
+    updateInterface();
+  }
+
+  /**
+   * Makes the component visible or invisible. Sets the activeCue in CueManager to the selected
+   * measurement.
+   *
+   * <p>Overrides <code>Component.setVisible</code>.
+   *
+   * @param aFlag true to make the component visible; false to make it invisible
+   * @beaninfo attribute: visualUpdate true
+   */
+  @Override
+  public void setVisible(boolean aFlag) {
+    super.setVisible(aFlag);
+    if (aFlag) {
+      cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
+    }
+  }
 
   @Override
   public void roiModified(ImagePlus imp, int id) {
