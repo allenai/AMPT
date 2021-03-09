@@ -52,7 +52,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.geom.Rectangle2D;
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -461,21 +460,21 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
       currentLine = null;
       currentMagnitude = null;
     } else {
-      Roi raw_roi = imp.getRoi();
-      if (!(raw_roi instanceof Line)) {
+      final Roi raw_roi = imp.getRoi();
+      if (raw_roi.getType() != Roi.LINE) {
         return;
       }
-      Line roi = (Line) raw_roi;
 
-      Rectangle2D.Double bounds = roi.getFloatBounds();
       if (currentLine == null) {
         currentLine = new Point[2];
         currentLine[0] = new Point();
         currentLine[1] = new Point();
       }
-      currentLine[0].setLocation(roi.x1d, roi.y1d);
-      currentLine[1].setLocation(roi.x2d, roi.y2d);
-      currentMagnitude = roi.getLength();
+
+      final Line lineRoi = (Line) raw_roi;
+      currentLine[0].setLocation(lineRoi.x1d, lineRoi.y1d);
+      currentLine[1].setLocation(lineRoi.x2d, lineRoi.y2d);
+      currentMagnitude = lineRoi.getLength();
     }
     updateInterface();
   }
