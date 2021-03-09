@@ -47,7 +47,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.event.TableModelEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -451,16 +450,6 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     updateInterface();
   }
 
-  /**
-   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
-   * changed.
-   *
-   * @param e event describing the change
-   */
-  @Override
-  public void tableChanged(TableModelEvent e) {
-    super.tableChanged(e);
-  }
 
   @Override
   public void roiModified(ImagePlus imp, int id) {
