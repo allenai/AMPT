@@ -78,6 +78,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   public PointInputPanel(DataStore dataStore, CueManager cueManager) {
     super(dataStore, cueManager);
     PointRoi.addRoiListener(this);
+    reload_fields();
   }
 
   @Override
