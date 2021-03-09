@@ -66,10 +66,10 @@ public class ReferenceCalculator extends BaseCalculator {
    *     reference axis.
    */
   public static HashMap<String, Point[]> interval_reference_markers(
-          Double axis_x_start,
-          Double axis_y_start,
-          Double axis_x_end,
-          Double axis_y_end,
+      Double axis_x_start,
+      Double axis_y_start,
+      Double axis_x_end,
+      Double axis_y_end,
       Long start_percentage,
       Long end_percentage,
       Long step_size) {
@@ -112,14 +112,14 @@ public class ReferenceCalculator extends BaseCalculator {
    *     reference axis
    */
   public static HashMap<String, Point[]> interval_reference_markers_with_base_length(
-          Double axis_x_start,
-          Double axis_y_start,
-          Double axis_x_end,
-          Double axis_y_end,
-          Double ref_x_start,
-          Double ref_y_start,
-          Double ref_x_end,
-          Double ref_y_end,
+      Double axis_x_start,
+      Double axis_y_start,
+      Double axis_x_end,
+      Double axis_y_end,
+      Double ref_x_start,
+      Double ref_y_start,
+      Double ref_x_end,
+      Double ref_y_end,
       Long start_percentage,
       Long end_percentage,
       Long step_size,
@@ -169,15 +169,63 @@ public class ReferenceCalculator extends BaseCalculator {
     return result;
   }
 
+  /**
+   * Draws a line from (ref_line_x_start, ref_line_y_start) to (ref_line_x_end, ref_line_y_end) and
+   * a marker at offset% along the line. The marker gets a label of the form "%d%%".format(offset)
+   *
+   * @param ref_line_x_start the x coordinate of the start of the line
+   * @param ref_line_y_start the y coordinate of the start of the line
+   * @param ref_line_x_end the x coordinate of the end of the line
+   * @param ref_line_y_end the y coordinate of the end of the line
+   * @param offset The percentage offset from start along the line. Note the 1% resolution.
+   * @return
+   */
+  public static HashMap<String, Point[]> draw_ref_along_line(
+      Double ref_line_x_start,
+      Double ref_line_y_start,
+      Double ref_line_x_end,
+      Double ref_line_y_end,
+      Long offset) {
+    // Compute reference point along ref line
+    double ref_point_x = ref_line_x_start + (offset / 100.) * (ref_line_x_end - ref_line_x_start);
+    double ref_point_y = ref_line_y_start + (offset / 100.) * (ref_line_y_end - ref_line_y_start);
+
+    HashMap<String, Point[]> result = new HashMap<>();
+    result.put(
+        "",
+        new Point[] {
+          new Point(ref_line_x_start, ref_line_y_start), new Point(ref_line_x_end, ref_line_y_end)
+        });
+    result.put(String.format("%d%%", offset), new Point[] {new Point(ref_point_x, ref_point_y)});
+    return result;
+  }
+
+  /**
+   * Draws a reference along axis, two reference points pne the line. The first reference point is
+   * the projection of the ref line start onto the axis, the second is the offset point along ref
+   * line on the axis.
+   *
+   * @param axis_x_start the x coordinate of the start of the line being projected onto
+   * @param axis_y_start the y coordinate of the start of the line being projected onto
+   * @param axis_x_end the x coordinate of the end of the line being projected onto
+   * @param axis_y_end the y coordinate of the end of the line being projected onto
+   * @param ref_line_x_start the x coordinate of the start of the line being projected from
+   * @param ref_line_y_start the y coordinate of the start of the line being projected from
+   * @param ref_line_x_end the x coordinate of the end of the line being projected from
+   * @param ref_line_y_end the y coordinate of the end of the line being projected from
+   * @param offset The percentage offset from start along the line being projected from. Note the 1%
+   *     resolution.
+   * @return
+   */
   public static HashMap<String, Point[]> compute_offset_reference_markers(
-          Double axis_x_start,
-          Double axis_y_start,
-          Double axis_x_end,
-          Double axis_y_end,
-          Double ref_line_x_start,
-          Double ref_line_y_start,
-          Double ref_line_x_end,
-          Double ref_line_y_end,
+      Double axis_x_start,
+      Double axis_y_start,
+      Double axis_x_end,
+      Double axis_y_end,
+      Double ref_line_x_start,
+      Double ref_line_y_start,
+      Double ref_line_x_end,
+      Double ref_line_y_end,
       Long offset) {
     Point top =
         ReferenceCalculator.compute_offset_reference(
@@ -230,11 +278,12 @@ public class ReferenceCalculator extends BaseCalculator {
     result.put(
         "ref bottom",
         new Point[] {new Point(bot.x - d_x, bot.y - d_y), new Point(bot.x + d_x, bot.y + d_y)});
-    result.put(
-        "reference line",
-        new Point[] {
-          new Point(ref_line_x_start, ref_line_y_start), new Point(ref_line_x_end, ref_line_y_end)
-        });
+    //    result.put(
+    //        "reference line",
+    //        new Point[] {
+    //          new Point(ref_line_x_start, ref_line_y_start), new Point(ref_line_x_end,
+    // ref_line_y_end)
+    //        });
 
     return result;
   }
@@ -269,14 +318,14 @@ public class ReferenceCalculator extends BaseCalculator {
    * @return the coordinates for proj.
    */
   public static Point compute_offset_reference(
-          Double axis_x_start,
-          Double axis_y_start,
-          Double axis_x_end,
-          Double axis_y_end,
-          Double ref_line_x_start,
-          Double ref_line_y_start,
-          Double ref_line_x_end,
-          Double ref_line_y_end,
+      Double axis_x_start,
+      Double axis_y_start,
+      Double axis_x_end,
+      Double axis_y_end,
+      Double ref_line_x_start,
+      Double ref_line_y_start,
+      Double ref_line_x_end,
+      Double ref_line_y_end,
       Long offset) {
 
     // Compute direction vector for main axis
