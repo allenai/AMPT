@@ -106,17 +106,8 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
             .sorted(Comparator.comparingInt(o -> o.index)) // Sort, using index field
             .map(s -> s.name.substring(0, s.name.length() - 2)) // Get part of the descriptor name
             .collect(Collectors.toCollection(Vector::new)); // Make a vector for JComboBox
-
     this.setLayout(new GridBagLayout());
     GridBagConstraints gbc;
-    currentPointX = new JTextField();
-    currentPointX.setColumns(8);
-    currentPointX.setEditable(false);
-    gbc = new GridBagConstraints();
-    gbc.gridx = 4;
-    gbc.gridy = 4;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(currentPointX, gbc);
 
     measurementSelector = new JComboBox<>(measurements);
     controls.add(measurementSelector);
@@ -129,23 +120,32 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(measurementSelector, gbc);
 
-    final JLabel label1 = new JLabel();
-    label1.setHorizontalAlignment(SwingConstants.CENTER);
-    label1.setHorizontalTextPosition(SwingConstants.CENTER);
-    label1.setText("X");
+    final JLabel xColumnLabel = new JLabel();
+    xColumnLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    xColumnLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+    xColumnLabel.setText("X");
     gbc = new GridBagConstraints();
     gbc.gridx = 4;
     gbc.gridy = 3;
-    this.add(label1, gbc);
+    this.add(xColumnLabel, gbc);
 
-    savedPointX = new JTextField();
-    savedPointX.setColumns(8);
-    savedPointX.setEditable(false);
+    final JLabel yColumnLabel = new JLabel();
+    yColumnLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    yColumnLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+    yColumnLabel.setText("Y");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 6;
+    gbc.gridy = 3;
+    this.add(yColumnLabel, gbc);
+
+    currentPointX = new JTextField();
+    currentPointX.setColumns(8);
+    currentPointX.setEditable(false);
     gbc = new GridBagConstraints();
     gbc.gridx = 4;
-    gbc.gridy = 5;
+    gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(savedPointX, gbc);
+    this.add(currentPointX, gbc);
 
     currentPointY = new JTextField();
     currentPointY.setColumns(8);
@@ -156,6 +156,15 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(currentPointY, gbc);
 
+    savedPointX = new JTextField();
+    savedPointX.setColumns(8);
+    savedPointX.setEditable(false);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 4;
+    gbc.gridy = 5;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(savedPointX, gbc);
+
     savedPointY = new JTextField();
     savedPointY.setColumns(8);
     savedPointY.setEditable(false);
@@ -164,14 +173,6 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 5;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(savedPointY, gbc);
-    final JLabel label2 = new JLabel();
-    label2.setHorizontalAlignment(SwingConstants.CENTER);
-    label2.setHorizontalTextPosition(SwingConstants.CENTER);
-    label2.setText("Y");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 6;
-    gbc.gridy = 3;
-    this.add(label2, gbc);
 
     save = new JButton();
     save.setText("Save");
@@ -181,6 +182,15 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(save, gbc);
+
+    clear = new JButton();
+    clear.setText("Clear");
+    controls.add(clear);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 9;
+    gbc.gridy = 4;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(clear, gbc);
 
     approveButton = new JButton();
     approveButton.setText("Approve");
@@ -199,15 +209,6 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 5;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(revert, gbc);
-
-    clear = new JButton();
-    clear.setText("Clear");
-    controls.add(clear);
-    gbc = new GridBagConstraints();
-    gbc.gridx = 9;
-    gbc.gridy = 4;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(clear, gbc);
 
     final JLabel label3 = new JLabel();
     label3.setText("Current");
