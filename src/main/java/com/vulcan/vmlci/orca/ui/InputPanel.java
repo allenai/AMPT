@@ -74,31 +74,31 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
    *
    * @param e the event the triggers the save action
    */
-  protected void save(ActionEvent e) {}
+  protected abstract void save(ActionEvent e);
 
   /**
    * Perform the actions required to revert a measurement
    *
    * @param e the event the triggers the revert action
    */
-  protected void revert(ActionEvent e) {}
+  protected abstract void revert(ActionEvent e);
 
   /**
    * Perform the actions required to clear a measurement
    *
    * @param e the event the triggers the clear action
    */
-  protected void clear(ActionEvent e) {}
+  protected abstract void clear(ActionEvent e);
 
   /**
    * Perform the actions required to approve a measurement
    *
    * @param e the event the triggers the approve action
    */
-  protected void approve(ActionEvent e) {}
+  protected abstract void approve(ActionEvent e);
 
   /** Re-rerender the UI */
-  public void updateInterface() {}
+  public abstract void updateInterface();
 
   /**
    * Manage changes to system state when the active image changes.
@@ -113,7 +113,7 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
   }
 
   /** Reloads the class's state fields with new values. */
-  public void reload_fields() {}
+  public abstract void reload_fields();
 
   /**
    * This fine grain notification tells listeners the exact range of cells, rows, or columns that
