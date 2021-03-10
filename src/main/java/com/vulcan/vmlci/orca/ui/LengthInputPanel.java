@@ -87,7 +87,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
    */
   @Override
   public void itemStateChanged(ItemEvent e) {
-    if (e.getStateChange() == ItemEvent.SELECTED) {
+    if (ItemEvent.SELECTED == e.getStateChange()) {
       cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
       lastActiveImage.getMostRecentImageWindow().deleteRoi();
       reload_fields();
@@ -97,7 +97,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   protected void buildUI() {
     Vector<String> measurements =
         dataStore.descriptors.values().stream() // Grab a stream of descriptors
-            .filter(s -> s.measurement_type.equals("length")) // Grab the length descriptors.
+            .filter(s -> "length".equals(s.measurement_type)) // Grab the length descriptors.
             .sorted(Comparator.comparingInt(o -> o.index)) // Sort them by descriptor index
             .map(s -> s.name) // Extract the names
             .collect(Collectors.toCollection(Vector::new)); // Make a vector for JComboBox
@@ -276,8 +276,8 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   protected void save(ActionEvent e) {
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    if (currentLine != null) { // Save the selected line to the data store
+    final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    if (null != currentLine) { // Save the selected line to the data store
       dataStore.set_endpoints(
           lastActiveImage.getMostRecentImageName(),
           (String) measurementSelector.getSelectedItem(),
@@ -315,7 +315,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   protected void revert(ActionEvent e) {
-    if (savedMagnitude != null) {
+    if (null != savedMagnitude) {
       lastActiveImage.getMostRecentImageWindow().deleteRoi();
       currentLine = savedLine.clone();
       currentMagnitude = savedMagnitude;
@@ -367,14 +367,14 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
       statusField.setText(DataStore.UNREVIEWED);
     }
 
-    ImagePlus img = lastActiveImage.getMostRecentImageWindow();
-    if (img == null) {
+    final ImagePlus img = lastActiveImage.getMostRecentImageWindow();
+    if (null == img) {
       return;
     }
 
     cueManager.draw();
-    Roi active_roi = img.getRoi();
-    if (active_roi == null && currentLine != null) {
+    final Roi active_roi = img.getRoi();
+    if (null == active_roi && null != currentLine) {
       img.setRoi(new Line(currentLine[0].x, currentLine[0].y, currentLine[1].x, currentLine[1].y));
     }
   }
@@ -429,20 +429,20 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   public void roiModified(ImagePlus imp, int id) {
-    if (imp == null || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
+    if (null == imp || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
       return;
     }
 
-    if (id == RoiListener.DELETED) {
+    if (RoiListener.DELETED == id) {
       currentLine = null;
       currentMagnitude = null;
     } else {
       final Roi raw_roi = imp.getRoi();
-      if (raw_roi.getType() != Roi.LINE) {
+      if (Roi.LINE != raw_roi.getType()) {
         return;
       }
 
-      if (currentLine == null) {
+      if (null == currentLine) {
         currentLine = new Point[2];
         currentLine[0] = new Point();
         currentLine[1] = new Point();
