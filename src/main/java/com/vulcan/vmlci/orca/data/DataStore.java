@@ -50,7 +50,7 @@ import java.util.Set;
 import static com.vulcan.vmlci.orca.helpers.Utilities.loadCSVAsMap;
 import static java.util.Collections.addAll;
 
-public class DataStore extends AbstractTableModel {
+public final class DataStore extends AbstractTableModel {
   public static final String NAStatus = "N/A";
   public static final String UNREVIEWED = "Unreviewed";
   public static final String ACCEPTED = "Accepted";
@@ -155,13 +155,14 @@ public class DataStore extends AbstractTableModel {
    */
   private void populateReferenceSets() {
     INTEGER_UNITS = new HashSet<>();
-//    addAll(INTEGER_UNITS, );
+    //    addAll(INTEGER_UNITS, );
 
     TEXT_UNITS = new HashSet<>();
     addAll(TEXT_UNITS, "text", "timestamp", "fractional degrees", "editable text");
 
     FLOAT_UNITS = new HashSet<>();
-    addAll(FLOAT_UNITS, "pixels", "meters", "millimeters", "unitless percentage", "fractional pixels");
+    addAll(
+        FLOAT_UNITS, "pixels", "meters", "millimeters", "unitless percentage", "fractional pixels");
 
     BOOLEAN_UNITS = new HashSet<>();
     addAll(BOOLEAN_UNITS, "boolean");
