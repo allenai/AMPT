@@ -32,9 +32,9 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -61,7 +61,7 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
   private boolean dirty = false;
 
   public MetadataControl(DataStore dataStore, CueManager cueManager) {
-    super(dataStore,cueManager);
+    super(dataStore, cueManager);
   }
 
   @Override
@@ -178,37 +178,9 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
                       updateInterface();
                     }));
 
-    whaleIDField.addKeyListener(
-        new KeyAdapter() {
-          /**
-           * Invoked when a key has been typed. This event occurs when a key press is followed by a
-           * key release.
-           *
-           * @param e
-           */
-          @Override
-          public void keyTyped(KeyEvent e) {
-            super.keyTyped(e);
-            dirty = true;
-            updateInterface();
-          }
-        });
-
-    positionField.addKeyListener(
-        new KeyAdapter() {
-          /**
-           * Invoked when a key has been typed. This event occurs when a key press is followed by a
-           * key release.
-           *
-           * @param e
-           */
-          @Override
-          public void keyTyped(KeyEvent e) {
-            super.keyTyped(e);
-            dirty = true;
-            updateInterface();
-          }
-        });
+    final DirtyMetadata dirtyMetadata = new DirtyMetadata();
+    whaleIDField.addKeyListener(dirtyMetadata);
+    positionField.addKeyListener(dirtyMetadata);
 
     updateMetadata.addActionListener(this::save);
   }
@@ -263,5 +235,20 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
     }
     dirty = false;
     updateInterface();
+  }
+
+  private class DirtyMetadata extends KeyAdapter {
+    /**
+     * Invoked when a key has been typed. This event occurs when a key press is followed by a key
+     * release.
+     *
+     * @param e
+     */
+    @Override
+    public void keyTyped(KeyEvent e) {
+      super.keyTyped(e);
+      dirty = true;
+      updateInterface();
+    }
   }
 }

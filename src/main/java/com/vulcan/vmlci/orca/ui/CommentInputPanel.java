@@ -68,21 +68,7 @@ public class CommentInputPanel extends InputPanel {
 
   protected void wireUI() {
     saveComments.addActionListener(this::save);
-    commentField.addKeyListener(
-        new KeyAdapter() {
-          /**
-           * Invoked when a key has been typed. This event occurs when a key press is followed by a
-           * key release.
-           *
-           * @param e
-           */
-          @Override
-          public void keyTyped(KeyEvent e) {
-            super.keyTyped(e);
-            comments_dirty = true;
-            updateInterface();
-          }
-        });
+    commentField.addKeyListener(new DirtyAdapter());
   }
 
   @Override
@@ -129,4 +115,19 @@ public class CommentInputPanel extends InputPanel {
     updateInterface();
   }
 
+  /** Custom KeyTyped adapter to update the UI when characters have been typed*/
+  private class DirtyAdapter extends KeyAdapter {
+    /**
+     * Invoked when a key has been typed. This event occurs when a key press is followed by a
+     * key release.
+     *
+     * @param e
+     */
+    @Override
+    public void keyTyped(KeyEvent e) {
+      super.keyTyped(e);
+      comments_dirty = true;
+      updateInterface();
+    }
+  }
 }
