@@ -74,7 +74,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
    *
    * @param filter predicate for selecting rows.
    */
-  private void configure(Predicate<ColumnDescriptor> filter) {
+  private void configure(Predicate<? super ColumnDescriptor> filter) {
     // Make a vector for JComboBox
     rows =
         dataStore.descriptors.values().stream() // Grab a stream of descriptors
