@@ -73,7 +73,7 @@ public class ReferenceCalculator extends BaseCalculator {
       Long start_percentage,
       Long end_percentage,
       Long step_size) {
-    return interval_reference_markers_with_base_length(
+    return ReferenceCalculator.interval_reference_markers_with_base_length(
         axis_x_start,
         axis_y_start,
         axis_x_end,

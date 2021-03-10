@@ -61,7 +61,7 @@ public final class LastActiveImage implements PropertyChangeListener, ImageListe
     keyboardFocusManager.addPropertyChangeListener("focusedWindow", this);
     ImagePlus.addImageListener(this);
     if (0 == WindowManager.getImageCount()) {
-      most_recent_image = NO_OPEN_IMAGE;
+      most_recent_image = LastActiveImage.NO_OPEN_IMAGE;
     } else {
       most_recent_image = WindowManager.getCurrentImage().getTitle();
     }
@@ -73,10 +73,10 @@ public final class LastActiveImage implements PropertyChangeListener, ImageListe
    * @return reference to a LastActiveImage
    */
   public static LastActiveImage getInstance() {
-    if (null == instance) {
-      instance = new LastActiveImage();
+    if (null == LastActiveImage.instance) {
+      LastActiveImage.instance = new LastActiveImage();
     }
-    return instance;
+    return LastActiveImage.instance;
   }
 
   /**
@@ -133,7 +133,7 @@ public final class LastActiveImage implements PropertyChangeListener, ImageListe
       }
     }
     if (0 == WindowManager.getImageCount()) {
-      most_recent_image = NO_OPEN_IMAGE;
+      most_recent_image = LastActiveImage.NO_OPEN_IMAGE;
       this.fireImageChange(oldImage, most_recent_image);
     }
   }
@@ -169,7 +169,7 @@ public final class LastActiveImage implements PropertyChangeListener, ImageListe
   public void imageClosed(ImagePlus imp) {
     String closedImage = imp.getTitle();
     if (0 == WindowManager.getImageCount()) {
-      most_recent_image = NO_OPEN_IMAGE;
+      most_recent_image = LastActiveImage.NO_OPEN_IMAGE;
       this.fireImageChange(closedImage, most_recent_image);
     } else {
       fireImageChange(closedImage, WindowManager.getCurrentImage().getTitle());

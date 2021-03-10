@@ -127,7 +127,7 @@ public final class DataStore extends AbstractTableModel {
 
   public static DataStore createDataStore()
       throws ConfigurationFileLoadException, DataFileLoadException {
-    return createDataStore(null);
+    return DataStore.createDataStore(null);
   }
 
   public static DataStore createDataStore(File dataFile)
@@ -581,8 +581,8 @@ public final class DataStore extends AbstractTableModel {
    *     point. If the point_column's measurement_type isn't it FETCHABLE_POINTS, return null.
    */
   public Point get_point(String filename, String point_column) {
-    final String x_col = String.format(X_COL, point_column);
-    final String y_col = String.format(Y_COL, point_column);
+    final String x_col = String.format(DataStore.X_COL, point_column);
+    final String y_col = String.format(DataStore.Y_COL, point_column);
     if (!FETCHABLE_POINTS.contains(descriptors.get(x_col).measurement_type)) {
       return null;
     }
@@ -615,8 +615,8 @@ public final class DataStore extends AbstractTableModel {
    * @param point The new point value, must not be null.
    */
   public void set_point(String filename, String point_column, Point point) {
-    final String x_col = String.format(X_COL, point_column);
-    final String y_col = String.format(Y_COL, point_column);
+    final String x_col = String.format(DataStore.X_COL, point_column);
+    final String y_col = String.format(DataStore.Y_COL, point_column);
     if (!descriptors.containsKey(x_col)) {
       throw new NoSuchElementException(String.format("%s is not a legal point name", point_column));
     }
@@ -644,10 +644,10 @@ public final class DataStore extends AbstractTableModel {
       return null;
     }
 
-    final String x_col_start = String.format(X_START_LENGTH, length_column);
-    final String y_col_start = String.format(Y_START_LENGTH, length_column);
-    final String x_col_end = String.format(X_END_LENGTH, length_column);
-    final String y_col_end = String.format(Y_END_LENGTH, length_column);
+    final String x_col_start = String.format(DataStore.X_START_LENGTH, length_column);
+    final String y_col_start = String.format(DataStore.Y_START_LENGTH, length_column);
+    final String x_col_end = String.format(DataStore.X_END_LENGTH, length_column);
+    final String y_col_end = String.format(DataStore.Y_END_LENGTH, length_column);
 
     Double x_start = get_value(filename, x_col_start, Double.class, null);
     Double y_start = get_value(filename, y_col_start, Double.class, null);
@@ -679,10 +679,10 @@ public final class DataStore extends AbstractTableModel {
       return;
     }
 
-    final String x_col_start = String.format(X_START_LENGTH, length_column);
-    final String y_col_start = String.format(Y_START_LENGTH, length_column);
-    final String x_col_end = String.format(X_END_LENGTH, length_column);
-    final String y_col_end = String.format(Y_END_LENGTH, length_column);
+    final String x_col_start = String.format(DataStore.X_START_LENGTH, length_column);
+    final String y_col_start = String.format(DataStore.Y_START_LENGTH, length_column);
+    final String x_col_end = String.format(DataStore.X_END_LENGTH, length_column);
+    final String y_col_end = String.format(DataStore.Y_END_LENGTH, length_column);
 
     if ((null != start) && (null != end)) {
       insert_value(filename, x_col_start, start.getX());
