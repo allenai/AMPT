@@ -334,15 +334,8 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
    */
   @Override
   protected void revert(ActionEvent e) {
-    if (null != savedMagnitude) {
-      lastActiveImage.getMostRecentImageWindow().deleteRoi();
-      currentLine = savedLine.clone();
-      currentMagnitude = savedMagnitude;
-    } else {
-      currentMagnitude = null;
-      currentLine = null;
-    }
-    updateInterface();
+    lastActiveImage.getMostRecentImageWindow().deleteRoi();
+    reload_fields();
   }
 
   /**
