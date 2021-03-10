@@ -135,7 +135,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
    */
   @Override
   public boolean isCellEditable(int rowIndex, int columnIndex) {
-    return (columnIndex == 0);
+    return (0 == columnIndex);
   }
 
   /**
@@ -147,7 +147,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
    */
   @Override
   public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-    if (columnIndex == 0) {
+    if (0 == columnIndex) {
       selections.set(rowIndex, (Boolean) aValue);
       this.fireTableCellUpdated(rowIndex, columnIndex);
     } else {
@@ -203,7 +203,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
         Boolean result =
             dataStore.get_value(
                 lastActiveImage.getMostRecentImageName(), target_row, Boolean.class, null);
-        if (result == null || !result) {
+        if (null == result || !result) {
           return DataStore.UNREVIEWED;
         } else {
           return DataStore.ACCEPTED;
@@ -219,7 +219,7 @@ public class MeasurementTableModel extends AbstractTableModel implements TableMo
   @Override
   public void tableChanged(TableModelEvent e) {
     Integer row = dataStoreColumnToLocalRow.get(e.getColumn());
-    if (row != null) {
+    if (null != row) {
       fireTableRowsUpdated(row, row);
     }
   }

@@ -123,7 +123,7 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
    */
   @Override
   public void tableChanged(TableModelEvent e) {
-    if (e.getType() == TableModelEvent.UPDATE
+    if (TableModelEvent.UPDATE == e.getType()
         && e.getLastRow() >= ((DataStore) e.getSource()).getRowCount()) {
       reload_fields();
     }

@@ -68,9 +68,9 @@ public class MeasurementManager extends BaseCalculator implements TableModelList
   @Override
   public void tableChanged(TableModelEvent event) {
     int column = event.getColumn();
-    if (column != TableModelEvent.ALL_COLUMNS) {
+    if (TableModelEvent.ALL_COLUMNS != column) {
       String column_name = dataStore.getColumnName(column);
-      if (!column_name.equals("Filename")) {
+      if (!"Filename".equals(column_name)) {
         for (int row = event.getFirstRow(); row <= event.getLastRow(); row++) {
           String row_name = dataStore.getRowName(row);
           update(row_name, column_name);
@@ -91,7 +91,7 @@ public class MeasurementManager extends BaseCalculator implements TableModelList
   private void update(String title, String column_base) {
     LinkedList<String> available_measurement =
         new LinkedList<>(possible_measurements.getOrDefault(column_base, new ArrayList<>()));
-    while (available_measurement.size() > 0) {
+    while (0 < available_measurement.size()) {
       String measure = available_measurement.removeFirst();
       Object measurement_result = do_measurement(measure, title);
       dataStore.insert_value(title, measure, measurement_result);
