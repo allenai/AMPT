@@ -393,32 +393,35 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   public void reload_fields() {
-    savedMagnitude =
-        (Double)
-            dataStore.get_value(
-                lastActiveImage.getMostRecentImageName(),
-                (String) measurementSelector.getSelectedItem());
-    savedLine =
-        dataStore.getEndpoints(
-            lastActiveImage.getMostRecentImageName(),
-            (String) measurementSelector.getSelectedItem());
+    if (lastActiveImage.no_images()) {
+      savedMagnitude = null;
+      currentMagnitude = null;
+      savedLine = null;
+      currentLine = null;
+    } else {
+      savedMagnitude =
+          (Double)
+              dataStore.get_value(
+                  lastActiveImage.getMostRecentImageName(),
+                  (String) measurementSelector.getSelectedItem());
+      savedLine =
+          dataStore.getEndpoints(
+              lastActiveImage.getMostRecentImageName(),
+              (String) measurementSelector.getSelectedItem());
 
-    if (savedMagnitude != null) {
-      currentMagnitude = savedMagnitude;
-      if (savedLine != null) {
-        currentLine = savedLine.clone();
+      if (null != savedMagnitude && null != savedLine) {
+        currentMagnitude = savedMagnitude;
+        currentLine = savedLine;
       } else {
+        currentMagnitude = null;
         currentLine = null;
       }
-    } else {
-      currentMagnitude = null;
-      currentLine = null;
-    }
 
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    reviewState =
-        dataStore.get_value(
-            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
+      final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+      reviewState =
+          dataStore.get_value(
+              lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
+    }
     updateInterface();
   }
 
