@@ -45,10 +45,10 @@ public class ColumnDescriptor {
         this.name = name;
         this.description = description;
         this.units = units;
-        this.export = export.equalsIgnoreCase("true");
+        this.export = "true".equalsIgnoreCase(export);
         this.measurement_type = measurement_type;
-        this.editable = editable.equalsIgnoreCase("true");
-        this.is_metadata = is_metadata.equalsIgnoreCase("true");
+        this.editable = "true".equalsIgnoreCase(editable);
+        this.is_metadata = "true".equalsIgnoreCase(is_metadata);
         this.index = index;
     }
 }

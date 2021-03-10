@@ -228,7 +228,7 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
       position = null;
     }
     dataStore.insert_value(filename, "Position", position);
-    if (selection == null) {
+    if (null == selection) {
       dataStore.insert_value(filename, "UNDERWATER", null);
     } else {
       dataStore.insert_value(filename, "UNDERWATER", selection.getActionCommand());

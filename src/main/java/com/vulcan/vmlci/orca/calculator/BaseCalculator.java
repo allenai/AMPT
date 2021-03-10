@@ -156,7 +156,7 @@ public abstract class BaseCalculator {
    */
   public static Double length(Number x_start, Number y_start, Number x_end, Number y_end) {
 //    System.err.println("BaseCalculator.length");
-    if (!(x_start == null || y_start == null || x_end == null || y_end == null)) {
+    if (!(null == x_start || null == y_start || null == x_end || null == y_end)) {
       double delta_x = x_start.doubleValue() - x_end.doubleValue();
       double delta_y = y_start.doubleValue() - y_end.doubleValue();
       return sqrt(delta_x * delta_x + delta_y * delta_y);
@@ -182,7 +182,7 @@ public abstract class BaseCalculator {
    * @return numerator/denominator if both are != null, null otherwise.
    */
   public static Double ratio(Double antecedent, Double consequent) {
-    if (!(antecedent == null || consequent == null)) {
+    if (!(null == antecedent || null == consequent)) {
       return antecedent / consequent;
     }
     return null;
@@ -200,7 +200,7 @@ public abstract class BaseCalculator {
    */
   public static Double parametric_point(Double start, Double end, Double distance) {
 //    System.err.println("BaseCalculator.parametric_point");
-    if (!(start == null || end == null || distance == null)) {
+    if (!(null == start || null == end || null == distance)) {
       return start + (end - start) * distance;
     }
     return null;
@@ -221,7 +221,7 @@ public abstract class BaseCalculator {
       if(((String) parameter).contains("\"")){
         continue;
       }
-      if (dataStore.get_value(title, (String) parameter) == null) {
+      if (null == dataStore.get_value(title, (String) parameter)) {
         return false;
       }
     }

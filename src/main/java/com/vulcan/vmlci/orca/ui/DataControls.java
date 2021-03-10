@@ -141,7 +141,7 @@ public class DataControls extends JPanel {
           OpenDialog load_dialog = new OpenDialog("select a file");
           String load_directory = load_dialog.getDirectory();
           String load_filename = load_dialog.getFileName();
-          if (load_directory != null && load_filename != null) {
+          if (null != load_directory && null != load_filename) {
             try {
               ds.loadData(new File(load_directory, load_filename));
             } catch (DataFileLoadException f) {
@@ -161,7 +161,7 @@ public class DataControls extends JPanel {
             frame.setVisible(true);
           } else {
             int state = frame.getExtendedState();
-            if ((state & JFrame.ICONIFIED) > 0) {
+            if (0 < (state & JFrame.ICONIFIED)) {
               frame.setExtendedState(state & ~JFrame.ICONIFIED);
             }
           }
@@ -180,7 +180,7 @@ public class DataControls extends JPanel {
     if (ignore_dirty || ds.dirty()) {
       File csvFile = ds.getCsvFile();
       SaveDialog saveDialog;
-      if (csvFile != null) {
+      if (null != csvFile) {
         saveDialog =
             new SaveDialog("Save Results As CSV", csvFile.getParent(), csvFile.getName(), ".csv");
       } else {
@@ -188,7 +188,7 @@ public class DataControls extends JPanel {
       }
       String directory = saveDialog.getDirectory();
       String filename = saveDialog.getFileName();
-      if (directory != null && filename != null) {
+      if (null != directory && null != filename) {
         try {
           ds.save_as_csv(new File(directory, filename), export);
         } catch (IOException e) {

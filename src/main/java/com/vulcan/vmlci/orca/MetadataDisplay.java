@@ -124,7 +124,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
       String measurement_type = columnDescriptor.measurement_type;
       boolean editable = columnDescriptor.editable;
 
-      if (measurement_type.equals("manual") && !editable) {
+      if ("manual".equals(measurement_type) && !editable) {
         JLabel label = new JLabel(col_name);
         JTextField component = new JTextField("", 30);
         component.setEditable(false);
@@ -132,7 +132,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
         add_to_panel(label, component, grid_bag_layout, grid_constraints, panel);
         grid_constraints.gridy += 1;
         this.ui_components.put(col_name, component);
-      } else if (measurement_type.equals("manual")) {
+      } else if ("manual".equals(measurement_type)) {
         JLabel label = new JLabel(col_name);
         JTextField component = new JTextField("", 10);
         component.setEditable(true);
@@ -142,7 +142,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
         add_to_panel(label, component, grid_bag_layout, grid_constraints, panel);
         grid_constraints.gridy += 1;
         this.ui_components.put(col_name, component);
-      } else if (measurement_type.equals("selection")) {
+      } else if ("selection".equals(measurement_type)) {
         JLabel label = new JLabel(col_name);
         JComboBox<String> component = new JComboBox<>();
         for (String element : animal_ids) {
@@ -155,7 +155,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
         grid_constraints.gridy += 1;
         this.ui_components.put(col_name, component);
         component.addActionListener(this);
-      } else if (measurement_type.equals("free text")) {
+      } else if ("free text".equals(measurement_type)) {
         JLabel label = new JLabel(col_name);
         JButton component = new JButton("Edit");
         component.setName(col_name);
@@ -180,13 +180,13 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
       GridBagLayout layout,
       GridBagConstraints constraints,
       JPanel panel) {
-    if (label != null) {
+    if (null != label) {
       constraints.gridx = 0;
       constraints.anchor = GridBagConstraints.WEST;
       layout.setConstraints(label, constraints);
       panel.add(label);
     }
-    if (component != null) {
+    if (null != component) {
       constraints.gridy += 1;
       constraints.gridx = 0;
       constraints.anchor = GridBagConstraints.WEST;
@@ -250,7 +250,7 @@ public class MetadataDisplay implements ActiveImageListener, ActionListener, Foc
       }
       ds.insert_value(active_file_name, event_source.getName(), value);
     } else if (event_source instanceof JButton) {
-      if (text_editor == null) {
+      if (null == text_editor) {
         text_editor = new TextEntryWindow(ds);
       }
       text_editor.frame.setVisible(true);

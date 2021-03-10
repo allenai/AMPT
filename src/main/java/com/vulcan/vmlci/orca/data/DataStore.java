@@ -132,7 +132,7 @@ public class DataStore extends AbstractTableModel {
 
   public static DataStore createDataStore(File dataFile)
       throws ConfigurationFileLoadException, DataFileLoadException {
-    if (DataStore.datastore_instance == null) {
+    if (null == DataStore.datastore_instance) {
       DataStore.datastore_instance = new DataStore(dataFile);
     }
     return DataStore.datastore_instance;
@@ -282,11 +282,11 @@ public class DataStore extends AbstractTableModel {
    */
   public Object get_value(String image_filename, String column, Object missing) {
     final int row = find_row(image_filename);
-    if (row == -1) {
+    if (-1 == row) {
       return missing;
     }
     Object value = data.get(row).getOrDefault(column, null);
-    if (value == null) {
+    if (null == value) {
       return missing;
     }
     return value;
@@ -311,11 +311,11 @@ public class DataStore extends AbstractTableModel {
    * @throws Exception raised if value can't be converted.
    */
   private Object loadingMapper(String column, String value) throws Exception {
-    if (value == null) {
+    if (null == value) {
       return null;
     }
     String val = value.trim();
-    if (val.equals("NA") || val.equals("")) {
+    if ("NA".equals(val) || "".equals(val)) {
       return null;
     }
     String units = descriptors.get(column).units;
@@ -332,7 +332,7 @@ public class DataStore extends AbstractTableModel {
       return new Integer(val);
     }
     if (BOOLEAN_UNITS.contains(units)) {
-      return val.equals("true");
+      return "true".equals(val);
     }
 
     throw new Exception(String.format("Unknown unit specification \"%s\"", units));
@@ -348,7 +348,7 @@ public class DataStore extends AbstractTableModel {
    * @throws DataFileLoadException raised if the there any issues opening dataFile.
    */
   public void loadData(File dataFile) throws DataFileLoadException {
-    if (dataFile == null) {
+    if (null == dataFile) {
       csvFile = null;
       dataDirty = false;
       data.clear();
@@ -383,7 +383,7 @@ public class DataStore extends AbstractTableModel {
       }
       // Eat blank rows
       for (final Object value : processed_row.values()) {
-        if (value != null) {
+        if (null != value) {
           data.add(processed_row);
           break;
         }
@@ -400,7 +400,7 @@ public class DataStore extends AbstractTableModel {
    * @return The name of the file associated with the row, null if the row index is out of bounds.
    */
   public String getRowName(int row) {
-    if (row >= data.size() || row < 0) {
+    if (row >= data.size() || 0 > row) {
       return null;
     }
     return (String) data.get(row).get("Filename");
@@ -414,7 +414,7 @@ public class DataStore extends AbstractTableModel {
    */
   @Override
   public String getColumnName(int column) {
-    if (column < columnMap.length && column >= 0) {
+    if (column < columnMap.length && 0 <= column) {
       return columnMap[column];
     }
     return "";
@@ -466,7 +466,7 @@ public class DataStore extends AbstractTableModel {
    */
   @Override
   public boolean isCellEditable(int rowIndex, int columnIndex) {
-    if (columnIndex >= columnMap.length || columnIndex < 0) {
+    if (columnIndex >= columnMap.length || 0 > columnIndex) {
       return false;
     }
     return EDITABLE.contains(descriptors.get(columnMap[columnIndex]).units);
@@ -503,12 +503,12 @@ public class DataStore extends AbstractTableModel {
     }
 
     Class<?> expected = UNIT_CLASSES.get(descriptors.get(column).units);
-    if (value != null && !expected.isInstance(value)) {
+    if (null != value && !expected.isInstance(value)) {
       throw new ClassCastException(
           String.format("Got %s instead of %s", value.getClass().getName(), expected.getName()));
     }
     int row = find_row(image_filename);
-    if (row == -1) { // New record created
+    if (-1 == row) { // New record created
       HashMap<String, Object> record = new HashMap<>();
       record.put("Filename", image_filename);
       record.put(column, value);
@@ -523,7 +523,7 @@ public class DataStore extends AbstractTableModel {
       if (!data.get(row).containsKey(column) || !(data.get(row).get(column) == value)) {
         data.get(row).put(column, value);
         dataDirty = true;
-        if (column.equals("Filename")) {
+        if ("Filename".equals(column)) {
           rebuildRowMap();
         }
         fireTableCellUpdated(row, descriptors.get(column).index);
@@ -563,7 +563,7 @@ public class DataStore extends AbstractTableModel {
    */
   public void remove_row(String image_filename) {
     final int row = find_row(image_filename);
-    if (row != -1) {
+    if (-1 != row) {
       data.remove(row);
       rebuildRowMap();
       dataDirty = true;
@@ -588,7 +588,7 @@ public class DataStore extends AbstractTableModel {
     Double x_value = get_value(filename, x_col, Double.class, null);
     Double y_value = get_value(filename, y_col, Double.class, null);
 
-    if (x_value != null && y_value != null) {
+    if (null != x_value && null != y_value) {
       return new Point(x_value, y_value);
     }
     return null;
@@ -619,10 +619,10 @@ public class DataStore extends AbstractTableModel {
     if (!descriptors.containsKey(x_col)) {
       throw new NoSuchElementException(String.format("%s is not a legal point name", point_column));
     }
-    if (!descriptors.get(x_col).measurement_type.equals("point")) {
+    if (!"point".equals(descriptors.get(x_col).measurement_type)) {
       return;
     }
-    if (point == null) {
+    if (null == point) {
       insert_value(filename, x_col, null);
       insert_value(filename, y_col, null);
     } else {
@@ -653,7 +653,7 @@ public class DataStore extends AbstractTableModel {
     Double x_end = get_value(filename, x_col_end, Double.class, null);
     Double y_end = get_value(filename, y_col_end, Double.class, null);
 
-    if (x_start == null || y_start == null || x_end == null || y_end == null) {
+    if (null == x_start || null == y_start || null == x_end || null == y_end) {
       return null;
     }
 
@@ -683,7 +683,7 @@ public class DataStore extends AbstractTableModel {
     final String x_col_end = String.format(X_END_LENGTH, length_column);
     final String y_col_end = String.format(Y_END_LENGTH, length_column);
 
-    if ((start != null) && (end != null)) {
+    if ((null != start) && (null != end)) {
       insert_value(filename, x_col_start, start.getX());
       insert_value(filename, y_col_start, start.getY());
       insert_value(filename, x_col_end, end.getX());
@@ -773,7 +773,7 @@ public class DataStore extends AbstractTableModel {
    * @return <code>String</code> representation of value.
    */
   private String savingMapper(String columnName, Object value) {
-    if (value == null) {
+    if (null == value) {
       if (TEXT_UNITS.contains(descriptors.get(columnName).units)) {
         return "";
       } else if (BOOLEAN_UNITS.contains(descriptors.get(columnName).units)) {
@@ -791,7 +791,7 @@ public class DataStore extends AbstractTableModel {
    * @return the name component of csvFile if valid.
    */
   public String getCsvFileName() {
-    if (csvFile == null) {
+    if (null == csvFile) {
       return "No File";
     }
     return csvFile.getName();

@@ -68,7 +68,7 @@ public class CalculatorConfigItem {
     StringBuilder parameterString = new StringBuilder("[");
     for (int i = 0, parametersLength = parameters.length; i < parametersLength; i++) {
       Object parameter = parameters[i];
-      if (i > 0) {
+      if (0 < i) {
         parameterString.append(", ");
       }
       parameterString.append(parameter.toString());

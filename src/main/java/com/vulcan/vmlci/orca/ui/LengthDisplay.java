@@ -124,10 +124,10 @@ public class LengthDisplay extends JPanel implements TableModelListener {
    */
   @Override
   public void tableChanged(TableModelEvent e) {
-    if (e.getType() == TableModelEvent.UPDATE) {
+    if (TableModelEvent.UPDATE == e.getType()) {
       int start = e.getFirstRow();
       int end = e.getLastRow();
-      if (e.getColumn() == TableModelEvent.ALL_COLUMNS) {
+      if (TableModelEvent.ALL_COLUMNS == e.getColumn()) {
         start = 0;
         end = measurementTableModel.getRowCount() - 1;
       }

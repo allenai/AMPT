@@ -60,7 +60,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
         KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener("focusedWindow", this);
     ImagePlus.addImageListener(this);
-    if(WindowManager.getImageCount() == 0){
+    if(0 == WindowManager.getImageCount()){
       most_recent_image = NO_OPEN_IMAGE;
     } else {
       most_recent_image = WindowManager.getCurrentImage().getTitle();
@@ -73,7 +73,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
    * @return reference to a LastActiveImage
    */
   public static LastActiveImage getInstance() {
-    if (instance == null) {
+    if (null == instance) {
       instance = new LastActiveImage();
     }
     return instance;
@@ -132,7 +132,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
         this.fireImageChange(oldImage, most_recent_image);
       }
     }
-    if (WindowManager.getImageCount() == 0) {
+    if (0 == WindowManager.getImageCount()) {
       most_recent_image = NO_OPEN_IMAGE;
       this.fireImageChange(oldImage, most_recent_image);
     }
@@ -150,7 +150,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
     ActiveImageChangeEvent imageChangeEvent = new ActiveImageChangeEvent(this, oldImage, newImage);
 
     for (int i = 0; i < listeners.length - 1; i += 2) {
-      if (listeners[i] == ActiveImageListener.class) {
+      if (ActiveImageListener.class == listeners[i]) {
         ((ActiveImageListener) listeners[i + 1]).activeImageChanged(imageChangeEvent);
       }
     }
@@ -168,7 +168,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
   @Override
   public void imageClosed(ImagePlus imp) {
     String closedImage = imp.getTitle();
-    if (WindowManager.getImageCount() == 0) {
+    if (0 == WindowManager.getImageCount()) {
       most_recent_image = NO_OPEN_IMAGE;
       this.fireImageChange(closedImage, most_recent_image);
     } else {
@@ -180,6 +180,6 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
   public void imageUpdated(ImagePlus imp) {}
 
   public boolean no_images(){
-    return (WindowManager.getImageCount() == 0);
+    return (0 == WindowManager.getImageCount());
   }
 }
