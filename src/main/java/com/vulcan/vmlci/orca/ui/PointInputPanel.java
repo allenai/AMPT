@@ -55,6 +55,7 @@ import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
+/** Input panel that is used for managing point measurements. */
 public class PointInputPanel extends InputPanel implements RoiListener, ItemListener {
 
   // UI Elements
@@ -75,6 +76,12 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   private Point savedPosition = null;
   private boolean reviewState = false;
 
+  /**
+   * Constructs a PointInputPanel
+   *
+   * @param dataStore the DataStore that is used to hold the measurement data.
+   * @param cueManager the CueManager that used to render measurement cues.
+   */
   public PointInputPanel(DataStore dataStore, CueManager cueManager) {
     super(dataStore, cueManager);
     PointRoi.addRoiListener(this);
@@ -329,34 +336,11 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     enableOverlays.addActionListener(e -> updateInterface());
   }
 
-  @Override
-  public void reload_fields() {
-    if (lastActiveImage.no_images()) {
-      savedPosition = null;
-      currentPosition = null;
-    } else {
-      savedPosition =
-          dataStore.get_point(
-              lastActiveImage.getMostRecentImageName(),
-              (String) measurementSelector.getSelectedItem());
-
-      // Snag the Roi if defined
-      final Roi roi = lastActiveImage.getMostRecentImageWindow().getRoi();
-      if (null == roi || Roi.POINT != roi.getType()) {
-        currentPosition = (Point) savedPosition.clone();
-      } else {
-        final Rectangle2D.Double bounds = roi.getFloatBounds();
-        currentPosition = new Point(bounds.x, bounds.y);
-      }
-
-      final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-      reviewState =
-          dataStore.get_value(
-              lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
-    }
-    updateInterface();
-  }
-
+  /**
+   * Stash the current ROI and set the reviewed flag to false.
+   *
+   * @param e the event the triggers the save action
+   */
   @Override
   protected void save(ActionEvent e) {
     final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
@@ -368,6 +352,11 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     reload_fields();
   }
 
+  /**
+   * Revert the current ROI to the saved ROI.
+   *
+   * @param e the event the triggers the revert action
+   */
   @Override
   protected void revert(ActionEvent e) {
     lastActiveImage.getMostRecentImageWindow().deleteRoi();
@@ -375,6 +364,11 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     updateInterface();
   }
 
+  /**
+   * Clear the current position
+   *
+   * @param e the event the triggers the clear action
+   */
   @Override
   protected void clear(ActionEvent e) {
     currentPosition = null;
@@ -382,6 +376,11 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     updateInterface();
   }
 
+  /**
+   * Approve the saved position.
+   *
+   * @param e the event the triggers the approve action
+   */
   @Override
   protected void approve(ActionEvent e) {
     final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
@@ -392,6 +391,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     updateInterface();
   }
 
+  /** Rerender the values in the UI. */
   @Override
   public void updateInterface() {
     if (null == savedPosition) {
@@ -433,6 +433,36 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     }
   }
 
+  /** Load all of the state data. */
+  @Override
+  public void reload_fields() {
+    if (lastActiveImage.no_images()) {
+      savedPosition = null;
+      currentPosition = null;
+    } else {
+      savedPosition =
+          dataStore.get_point(
+              lastActiveImage.getMostRecentImageName(),
+              (String) measurementSelector.getSelectedItem());
+
+      // Snag the Roi if defined
+      final Roi roi = lastActiveImage.getMostRecentImageWindow().getRoi();
+      if (null == roi || Roi.POINT != roi.getType()) {
+        currentPosition = (Point) savedPosition.clone();
+      } else {
+        final Rectangle2D.Double bounds = roi.getFloatBounds();
+        currentPosition = new Point(bounds.x, bounds.y);
+      }
+
+      final String reviewColumn =
+          String.format("%s_reviewed", measurementSelector.getSelectedItem());
+      reviewState =
+          dataStore.get_value(
+              lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
+    }
+    updateInterface();
+  }
+
   /**
    * Makes the component visible or invisible. Sets the activeCue in CueManager to the selected
    * measurement.
@@ -440,7 +470,6 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
    * <p>Overrides <code>Component.setVisible</code>.
    *
    * @param aFlag true to make the component visible; false to make it invisible
-   * @beaninfo attribute: visualUpdate true
    */
   @Override
   public void setVisible(boolean aFlag) {
@@ -452,6 +481,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
 
   /**
    * Manage when the Roi Gets changed.
+   *
    * @param imp The image the ROI is in.
    * @param id The thing that happened to the ROI.
    */
