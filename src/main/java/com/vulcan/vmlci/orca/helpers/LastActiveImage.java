@@ -48,7 +48,7 @@ import java.beans.PropertyChangeListener;
  *
  * <p>This class emits {@link ActiveImageChangeEvent}s when the front-most ImagePlus window changes.
  */
-public class LastActiveImage implements PropertyChangeListener, ImageListener {
+public final class LastActiveImage implements PropertyChangeListener, ImageListener {
   public static final String NO_OPEN_IMAGE = "No Open Image";
   private static LastActiveImage instance;
   private final EventListenerList listenerList = new EventListenerList();
@@ -60,7 +60,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
         KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener("focusedWindow", this);
     ImagePlus.addImageListener(this);
-    if(0 == WindowManager.getImageCount()){
+    if (0 == WindowManager.getImageCount()) {
       most_recent_image = NO_OPEN_IMAGE;
     } else {
       most_recent_image = WindowManager.getCurrentImage().getTitle();
@@ -179,7 +179,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
   @Override
   public void imageUpdated(ImagePlus imp) {}
 
-  public boolean no_images(){
+  public boolean no_images() {
     return (0 == WindowManager.getImageCount());
   }
 }
