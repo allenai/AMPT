@@ -54,6 +54,9 @@ import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
+/**
+ * Input panel that is used for managing length measurements.
+ */
 public class LengthInputPanel extends InputPanel implements ItemListener, RoiListener {
 
   // UI Elements
@@ -85,8 +88,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   }
 
   /**
-   * Invoked when an item has been selected or deselected by the user. The code written for this
-   * method performs the operations that need to occur when an item is selected (or deselected).
+   * Handle changes to the active measurement.
    *
    * @param e event that describing the change.
    */
@@ -271,6 +273,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     add(new JPanel(), gbc);
   }
 
+  /** Responsible for configuring the event handling. */
   protected void wireUI() {
     saveButton.addActionListener(this::save);
     revertButton.addActionListener(this::revert);
@@ -280,6 +283,9 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     enableOverlays.addActionListener(e -> updateInterface());
   }
 
+  /**
+   *  Stash the current  ROI and set the reviewed flag to false.
+   *  @param e the event the triggers the save action */
   @Override
   protected void save(ActionEvent e) {
     final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
@@ -423,7 +429,6 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
    * <p>Overrides <code>Component.setVisible</code>.
    *
    * @param aFlag true to make the component visible; false to make it invisible
-   * @beaninfo attribute: visualUpdate true
    */
   @Override
   public void setVisible(boolean aFlag) {
@@ -433,6 +438,12 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     }
   }
 
+  /**
+   * Invoked when the region of interest is changed.
+   *
+   * @param imp the image whose ROI has changed.
+   * @param id the action that happened.
+   */
   @Override
   public void roiModified(ImagePlus imp, int id) {
     if (null == imp || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
