@@ -345,7 +345,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   protected void approve(ActionEvent e) {
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
     dataStore.insert_value(lastActiveImage.getMostRecentImageName(), reviewColumn, true);
     reviewState =
         dataStore.get_value(
