@@ -448,7 +448,11 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       // Snag the Roi if defined
       final Roi roi = lastActiveImage.getMostRecentImageWindow().getRoi();
       if (null == roi || Roi.POINT != roi.getType()) {
-        currentPosition = (Point) savedPosition.clone();
+        if (null == savedPosition) {
+          currentPosition = null;
+        } else {
+          currentPosition = (Point) savedPosition.clone();
+        }
       } else {
         final Rectangle2D.Double bounds = roi.getFloatBounds();
         currentPosition = new Point(bounds.x, bounds.y);
