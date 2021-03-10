@@ -94,8 +94,9 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     }
   }
 
+  /** Responsible for populating the user interface components. */
   protected void buildUI() {
-    Vector<String> measurements =
+    final Vector<String> measurements =
         dataStore.descriptors.values().stream() // Grab a stream of descriptors
             .filter(s -> "length".equals(s.measurement_type)) // Grab the length descriptors.
             .sorted(Comparator.comparingInt(o -> o.index)) // Sort them by descriptor index
@@ -103,7 +104,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
             .collect(Collectors.toCollection(Vector::new)); // Make a vector for JComboBox
 
     GridBagConstraints gbc;
-    this.setLayout(new GridBagLayout());
+    setLayout(new GridBagLayout());
     enableOverlays = new JCheckBox();
     enableOverlays.setModel(cueManager.cueToggle);
     enableOverlays.setText("Cues");
@@ -112,7 +113,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 1;
     gbc.gridy = 0;
     gbc.gridwidth = 8;
-    this.add(enableOverlays, gbc);
+    add(enableOverlays, gbc);
 
     measurementSelector = new JComboBox<>(measurements);
     controls.add(measurementSelector);
@@ -122,7 +123,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridwidth = 8;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(measurementSelector, gbc);
+    add(measurementSelector, gbc);
 
     final JLabel currentLabel = new JLabel();
     currentLabel.setText("Current");
@@ -130,7 +131,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 2;
     gbc.gridy = 3;
     gbc.anchor = GridBagConstraints.WEST;
-    this.add(currentLabel, gbc);
+    add(currentLabel, gbc);
 
     currentLength = new JTextField();
     currentLength.setColumns(8);
@@ -141,7 +142,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridy = 3;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(currentLength, gbc);
+    add(currentLength, gbc);
 
     final JLabel savedLabel = new JLabel();
     savedLabel.setText("Saved");
@@ -149,7 +150,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 2;
     gbc.gridy = 4;
     gbc.anchor = GridBagConstraints.WEST;
-    this.add(savedLabel, gbc);
+    add(savedLabel, gbc);
 
     savedLength = new JTextField();
     savedLength.setColumns(8);
@@ -159,7 +160,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridy = 4;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(savedLength, gbc);
+    add(savedLength, gbc);
 
     saveButton = new JButton();
     saveButton.setText("Save");
@@ -168,7 +169,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 6;
     gbc.gridy = 3;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(saveButton, gbc);
+    add(saveButton, gbc);
 
     revertButton = new JButton();
     revertButton.setText("Revert");
@@ -177,7 +178,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 7;
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(revertButton, gbc);
+    add(revertButton, gbc);
 
     approveButton = new JButton();
     approveButton.setText("Approve");
@@ -186,7 +187,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 6;
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(approveButton, gbc);
+    add(approveButton, gbc);
 
     clearButton = new JButton();
     clearButton.setText("Clear");
@@ -195,7 +196,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 7;
     gbc.gridy = 3;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(clearButton, gbc);
+    add(clearButton, gbc);
 
     final JLabel lengthUnitLabel = new JLabel();
     lengthUnitLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -204,7 +205,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc = new GridBagConstraints();
     gbc.gridx = 4;
     gbc.gridy = 2;
-    this.add(lengthUnitLabel, gbc);
+    add(lengthUnitLabel, gbc);
 
     final JLabel statusLabel = new JLabel();
     statusLabel.setText("Status");
@@ -222,7 +223,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridy = 5;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(statusField, gbc);
+    add(statusField, gbc);
 
     // Spacers
     gbc = new GridBagConstraints();
@@ -230,39 +231,39 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridy = 3;
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 8;
     gbc.gridy = 3;
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     final JPanel spacer11 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 9;
     gbc.gridy = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 5;
     gbc.gridy = 3;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 3;
     gbc.gridy = 3;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
   }
 
   protected void wireUI() {
