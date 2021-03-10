@@ -43,11 +43,14 @@ import javax.swing.event.TableModelListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
+/** Subclass of JPanel that has an associated cue manager, datastore, and last active image. */
 public abstract class InputPanel extends JPanel implements ActiveImageListener, TableModelListener {
   protected final CueManager cueManager;
   protected final DataStore dataStore;
   protected final LastActiveImage lastActiveImage;
-  protected ArrayList<JComponent> controls;
+
+  /** Collection of the JComponents whose states are dependent on there being an open image. */
+  protected final ArrayList<JComponent> controls;
 
   public InputPanel(DataStore dataStore, CueManager cueManager) {
     this.dataStore = dataStore;
@@ -60,22 +63,45 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
     wireUI();
   }
 
+  /** Build the user interface. Called during instance construction. */
   protected abstract void buildUI();
 
+  /** Wire the event handlers. Called during instance construction. */
   protected abstract void wireUI();
 
+  /**
+   * Perform the actions required to save a measurement
+   *
+   * @param e the event the triggers the save action
+   */
   protected void save(ActionEvent e) {}
 
+  /**
+   * Perform the actions required to revert a measurement
+   *
+   * @param e the event the triggers the revert action
+   */
   protected void revert(ActionEvent e) {}
 
+  /**
+   * Perform the actions required to clear a measurement
+   *
+   * @param e the event the triggers the clear action
+   */
   protected void clear(ActionEvent e) {}
 
+  /**
+   * Perform the actions required to approve a measurement
+   *
+   * @param e the event the triggers the approve action
+   */
   protected void approve(ActionEvent e) {}
 
+  /** Re-rerender the UI */
   public void updateInterface() {}
 
   /**
-   * Gives notification that an ImagePlus has taken focus.
+   * Manage changes to system state when the active image changes.
    *
    * @param evt the ActiveImageChangeEvent
    */
@@ -110,7 +136,6 @@ public abstract class InputPanel extends JPanel implements ActiveImageListener, 
    * <p>Overrides <code>Component.setVisible</code>.
    *
    * @param aFlag true to make the component visible; false to make it invisible
-   * @beaninfo attribute: visualUpdate true
    */
   @Override
   public void setVisible(boolean aFlag) {
