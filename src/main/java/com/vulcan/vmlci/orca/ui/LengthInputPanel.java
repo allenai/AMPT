@@ -74,9 +74,14 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   private Double savedMagnitude = null;
   private boolean reviewState = false;
 
+  /** Constructs a LengthInputPanel
+   * @param dataStore the DataStore that is used to hold the measurement data.
+   * @param cueManager the CueManager that used to render measurement cues.
+   */
   public LengthInputPanel(DataStore dataStore, CueManager cueManager) {
     super(dataStore, cueManager);
     Line.addRoiListener(this);
+    reload_fields();
   }
 
   /**
