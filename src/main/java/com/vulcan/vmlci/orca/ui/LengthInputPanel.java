@@ -475,15 +475,14 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
         return;
       }
 
-      if (null == currentLine) {
-        currentLine = new Point[2];
-        currentLine[0] = new Point();
-        currentLine[1] = new Point();
-      }
-
       final Line lineRoi = (Line) raw_roi;
-      currentLine[0].setLocation(lineRoi.x1d, lineRoi.y1d);
-      currentLine[1].setLocation(lineRoi.x2d, lineRoi.y2d);
+      if (null == currentLine) {
+        currentLine =
+            new Point[] {new Point(lineRoi.x1d, lineRoi.y1d), new Point(lineRoi.x2d, lineRoi.y2d)};
+      } else {
+        currentLine[0].setLocation(lineRoi.x1d, lineRoi.y1d);
+        currentLine[1].setLocation(lineRoi.x2d, lineRoi.y2d);
+      }
       currentMagnitude = lineRoi.getLength();
     }
     updateInterface();
