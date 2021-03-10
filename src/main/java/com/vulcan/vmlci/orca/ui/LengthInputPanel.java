@@ -54,9 +54,7 @@ import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-/**
- * Input panel that is used for managing length measurements.
- */
+/** Input panel that is used for managing length measurements. */
 public class LengthInputPanel extends InputPanel implements ItemListener, RoiListener {
 
   // UI Elements
@@ -77,7 +75,9 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   private Double savedMagnitude;
   private boolean reviewState;
 
-  /** Constructs a LengthInputPanel
+  /**
+   * Constructs a LengthInputPanel
+   *
    * @param dataStore the DataStore that is used to hold the measurement data.
    * @param cueManager the CueManager that used to render measurement cues.
    */
@@ -284,8 +284,10 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   }
 
   /**
-   *  Stash the current  ROI and set the reviewed flag to false.
-   *  @param e the event the triggers the save action */
+   * Stash the current ROI and set the reviewed flag to false.
+   *
+   * @param e the event the triggers the save action
+   */
   @Override
   protected void save(ActionEvent e) {
     final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
@@ -325,6 +327,11 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     updateInterface();
   }
 
+  /**
+   * Revert the current length.
+   *
+   * @param e the event the triggers the revert action
+   */
   @Override
   protected void revert(ActionEvent e) {
     if (null != savedMagnitude) {
@@ -338,11 +345,21 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     updateInterface();
   }
 
+  /**
+   * Clear the current length
+   *
+   * @param e the event the triggers the clear action
+   */
   @Override
   protected void clear(ActionEvent e) {
     lastActiveImage.getMostRecentImageWindow().deleteRoi();
   }
 
+  /**
+   * Approve the saved length.
+   *
+   * @param e the event the triggers the approve action
+   */
   @Override
   protected void approve(ActionEvent e) {
     final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
@@ -353,6 +370,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     updateInterface();
   }
 
+  /** Rerender the values in the UI. */
   @Override
   public void updateInterface() {
     if (!isVisible()) {
@@ -391,6 +409,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     }
   }
 
+  /** Load all of the state data. */
   @Override
   public void reload_fields() {
     if (lastActiveImage.no_images()) {
@@ -417,7 +436,8 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
         currentLine = null;
       }
 
-      final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+      final String reviewColumn =
+          String.format("%s_reviewed", measurementSelector.getSelectedItem());
       reviewState =
           dataStore.get_value(
               lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
