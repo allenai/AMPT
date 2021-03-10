@@ -68,11 +68,11 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   private JButton approveButton;
 
   // State Elements
-  private Point[] currentLine = null;
-  private Double currentMagnitude = null;
-  private Point[] savedLine = null;
-  private Double savedMagnitude = null;
-  private boolean reviewState = false;
+  private Point[] currentLine;
+  private Double currentMagnitude;
+  private Point[] savedLine;
+  private Double savedMagnitude;
+  private boolean reviewState;
 
   /** Constructs a LengthInputPanel
    * @param dataStore the DataStore that is used to hold the measurement data.
