@@ -355,21 +355,21 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
   @Override
   public void updateInterface() {
-    if (!this.isVisible()) {
+    if (!isVisible()) {
       return;
     }
-    Roi roi;
-    if (savedMagnitude != null) {
-      savedLength.setText(String.format("%.3f", savedMagnitude));
-    } else {
+
+    if (null == savedMagnitude) {
       savedLength.setText("");
+    } else {
+      savedLength.setText(String.format("%.3f", savedMagnitude));
     }
 
-    String currMag = "";
-    if (currentMagnitude != null) {
-      currMag = String.format("%.3f", currentMagnitude);
+    if (null == currentMagnitude) {
+      currentLength.setText("");
+    } else {
+      currentLength.setText(String.format("%.3f", currentMagnitude));
     }
-    currentLength.setText(currMag);
 
     if (lastActiveImage.no_images()) {
       statusField.setText("");
