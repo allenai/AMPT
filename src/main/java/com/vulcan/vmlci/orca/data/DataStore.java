@@ -155,7 +155,7 @@ public final class DataStore extends AbstractTableModel {
    */
   private void populateReferenceSets() {
     INTEGER_UNITS = new HashSet<>();
-    //    addAll(INTEGER_UNITS, );
+    // addAll(INTEGER_UNITS, );
 
     TEXT_UNITS = new HashSet<>();
     addAll(TEXT_UNITS, "text", "timestamp", "fractional degrees", "editable text");
@@ -190,7 +190,7 @@ public final class DataStore extends AbstractTableModel {
    * @throws ConfigurationFileLoadException if a configuration file can't be loaded.
    */
   private void loadColumnDefs() throws ConfigurationFileLoadException {
-    ArrayList<HashMap<String, String>> column_config_file =
+    final ArrayList<HashMap<String, String>> column_config_file =
         ConfigurationLoader.get_csv_file("CSV-Columns.csv");
     columnMap = new String[column_config_file.size()];
     descriptors.clear();
