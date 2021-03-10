@@ -187,7 +187,6 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
 
   @Override
   protected void save(ActionEvent e) {
-    super.save(e);
     String filename = lastActiveImage.getMostRecentImageName();
     String whaleID = whaleIDField.getText();
     String position = positionField.getText();
@@ -209,9 +208,38 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
     updateInterface();
   }
 
+  /**
+   * Perform the actions required to revert a measurement
+   *
+   * @param e the event the triggers the revert action
+   */
+  @Override
+  protected void revert(ActionEvent e) {
+
+  }
+
+  /**
+   * Perform the actions required to clear a measurement
+   *
+   * @param e the event the triggers the clear action
+   */
+  @Override
+  protected void clear(ActionEvent e) {
+
+  }
+
+  /**
+   * Perform the actions required to approve a measurement
+   *
+   * @param e the event the triggers the approve action
+   */
+  @Override
+  protected void approve(ActionEvent e) {
+
+  }
+
   @Override
   public void updateInterface() {
-    super.updateInterface();
     updateMetadata.setEnabled(dirty);
   }
 
@@ -235,6 +263,14 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
     }
     dirty = false;
     updateInterface();
+  }
+
+  /**
+   * Reloads the class's state fields with new values.
+   */
+  @Override
+  public void reload_fields() {
+
   }
 
   private class DirtyMetadata extends KeyAdapter {
