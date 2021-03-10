@@ -164,6 +164,7 @@ public class CueManager {
       for (String label : guideline.keySet()) {
         Point[] endpoints = guideline.get(label);
         if ("axis".equals(label)) {
+          //noinspection AssignmentToForLoopParameter
           label = "";
         }
         Roi marker = null;
