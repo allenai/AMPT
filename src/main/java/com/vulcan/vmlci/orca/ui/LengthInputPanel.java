@@ -381,26 +381,6 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     }
   }
 
-  /**
-   * Gives notification that an ImagePlus has taken focus.
-   *
-   * @param evt the ActiveImageChangeEvent
-   */
-  @Override
-  public void activeImageChanged(ActiveImageChangeEvent evt) {
-    super.activeImageChanged(evt);
-    boolean measuring = !evt.getNewImage().equals(LastActiveImage.NO_OPEN_IMAGE);
-    if (measuring) {
-      String currentMeasurement = (String) measurementSelector.getSelectedItem();
-      savedLine =
-          dataStore.getEndpoints(lastActiveImage.getMostRecentImageName(), currentMeasurement);
-      savedMagnitude =
-          (Double)
-              dataStore.get_value(lastActiveImage.getMostRecentImageName(), currentMeasurement);
-    }
-    updateInterface();
-  }
-
   @Override
   public void reload_fields() {
     savedMagnitude =
