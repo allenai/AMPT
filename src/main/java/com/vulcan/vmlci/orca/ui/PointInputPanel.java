@@ -88,7 +88,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
    */
   @Override
   public void itemStateChanged(ItemEvent e) {
-    if (e.getStateChange() == ItemEvent.SELECTED) {
+    if (ItemEvent.SELECTED == e.getStateChange()) {
       cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
       lastActiveImage.getMostRecentImageWindow().deleteRoi();
       reload_fields();
@@ -101,7 +101,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
         dataStore.descriptors.values().stream() // Give me a stream of descriptors
             .filter( // Grab the relevant descriptors
                 s ->
-                    s.measurement_type.equals("point") // We need points
+                    "point".equals(s.measurement_type) // We need points
                         && s.name.endsWith("_x")) // but only the x coordinate
             .sorted(Comparator.comparingInt(o -> o.index)) // Sort, using index field
             .map(s -> s.name.substring(0, s.name.length() - 2)) // Get part of the descriptor name
@@ -342,7 +342,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
 
       // Snag the Roi if defined
       Roi roi = lastActiveImage.getMostRecentImageWindow().getRoi();
-      if (roi == null || roi.getType() != Roi.POINT) {
+      if (null == roi || Roi.POINT != roi.getType()) {
         currentPosition = savedPosition;
       } else {
         Rectangle2D.Double bounds = roi.getFloatBounds();
@@ -394,7 +394,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
 
   @Override
   public void updateInterface() {
-    if (savedPosition == null) {
+    if (null == savedPosition) {
       savedPointX.setText("");
       savedPointY.setText("");
     } else {
@@ -402,7 +402,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       savedPointY.setText(String.format("%.3f", savedPosition.y));
     }
 
-    if (currentPosition == null) {
+    if (null == currentPosition) {
       currentPointX.setText("");
       currentPointY.setText("");
     } else {
@@ -422,13 +422,13 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       return;
     }
     ImagePlus img = lastActiveImage.getMostRecentImageWindow();
-    if (img == null) {
+    if (null == img) {
       return;
     }
 
     cueManager.draw();
     Roi active_roi = img.getRoi();
-    if (active_roi == null && currentPosition != null) {
+    if (null == active_roi && null != currentPosition) {
       img.setRoi(new PointRoi(currentPosition.x, currentPosition.y));
     }
   }
@@ -457,11 +457,11 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
    */
   @Override
   public void roiModified(ImagePlus imp, int id) {
-    if (imp == null || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
+    if (null == imp || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
       return;
     }
 
-    if (id == RoiListener.DELETED) {
+    if (RoiListener.DELETED == id) {
       currentPosition = null;
     } else {
       Roi roi = imp.getRoi();
@@ -469,7 +469,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
         return;
       }
       Rectangle2D.Double bounds = roi.getFloatBounds();
-      if (currentPosition == null) {
+      if (null == currentPosition) {
         currentPosition = new Point();
       }
       currentPosition.setLocation(bounds.x, bounds.y);
