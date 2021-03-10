@@ -411,7 +411,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
 
       if (null != savedMagnitude && null != savedLine) {
         currentMagnitude = savedMagnitude;
-        currentLine = savedLine;
+        currentLine = savedLine.clone();
       } else {
         currentMagnitude = null;
         currentLine = null;
