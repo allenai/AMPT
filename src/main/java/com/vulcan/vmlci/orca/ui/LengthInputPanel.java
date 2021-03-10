@@ -220,7 +220,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 2;
     gbc.gridy = 5;
     gbc.anchor = GridBagConstraints.WEST;
-    this.add(statusLabel, gbc);
+    add(statusLabel, gbc);
 
     statusField = new JTextField();
     statusField.setColumns(8);
