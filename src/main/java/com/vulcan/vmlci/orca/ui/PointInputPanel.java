@@ -360,8 +360,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   @Override
   protected void revert(ActionEvent e) {
     lastActiveImage.getMostRecentImageWindow().deleteRoi();
-    currentPosition = (Point) savedPosition.clone();
-    updateInterface();
+    reload_fields();
   }
 
   /**
