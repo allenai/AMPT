@@ -31,11 +31,10 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
-import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.data.DataStore;
-import org.scijava.log.Logger;
+import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
+import org.scijava.log.LogService;
 import org.scijava.log.StderrLogService;
-import org.scijava.plugin.Parameter;
 
 import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandle;
@@ -49,11 +48,11 @@ import java.util.HashMap;
 import static java.lang.Math.sqrt;
 
 public abstract class BaseCalculator {
+  protected static LogService logger = new StderrLogService();
   protected final DataStore dataStore;
   public HashMap<String, MethodHandle> measurement_funcs;
   protected CalculatorConfig measurement_dependencies;
   protected HashMap<String, ArrayList<String>> possible_measurements;
-  @Parameter Logger logger;
 
   /**
    * Default constructor.
@@ -72,7 +71,6 @@ public abstract class BaseCalculator {
    * @throws FileNotFoundException when the configuration file is not present.
    */
   public BaseCalculator(DataStore ds) throws FileNotFoundException {
-    logger = new StderrLogService();
     dataStore = ds;
     loadMethods();
     loadConfiguration();
@@ -105,6 +103,12 @@ public abstract class BaseCalculator {
           MethodHandle mh =
               lookup.findStatic(method.getDeclaringClass(), method.getName(), methodType);
           measurement_funcs.put(method.getName(), mh);
+          logger.debug(
+              String.format(
+                  "Registered %s.%s in %s",
+                  method.getDeclaringClass().getName(),
+                  method.getName(),
+                  this.getClass().getName()));
         } catch (NoSuchMethodException | IllegalAccessException e) {
           e.printStackTrace();
         }
@@ -155,12 +159,20 @@ public abstract class BaseCalculator {
    *     otherwise.
    */
   public static Double length(Number x_start, Number y_start, Number x_end, Number y_end) {
-//    System.err.println("BaseCalculator.length");
+    //    System.err.println("BaseCalculator.length");
     if (!(null == x_start || null == y_start || null == x_end || null == y_end)) {
+      logger.trace(
+          String.format(
+              "length(%.3f, %.3f, %.3f, %.3f)",
+              x_start.doubleValue(),
+              y_start.doubleValue(),
+              x_end.doubleValue(),
+              y_end.doubleValue()));
       double delta_x = x_start.doubleValue() - x_end.doubleValue();
       double delta_y = y_start.doubleValue() - y_end.doubleValue();
       return sqrt(delta_x * delta_x + delta_y * delta_y);
     }
+    logger.trace(String.format("length(%s, %s, %s, %s)", x_start, y_start, x_end, y_end));
     return null;
   }
 
@@ -199,7 +211,8 @@ public abstract class BaseCalculator {
    * @return the interpolated value
    */
   public static Double parametric_point(Double start, Double end, Double distance) {
-//    System.err.println("BaseCalculator.parametric_point");
+    logger.trace(String.format("parametric_point(%.3f, %.3f, %.3f)", start, end, distance));
+    //    System.err.println("BaseCalculator.parametric_point");
     if (!(null == start || null == end || null == distance)) {
       return start + (end - start) * distance;
     }
@@ -218,7 +231,7 @@ public abstract class BaseCalculator {
       if (!(parameter instanceof String)) {
         continue;
       }
-      if(((String) parameter).contains("\"")){
+      if (((String) parameter).contains("\"")) {
         continue;
       }
       if (null == dataStore.get_value(title, (String) parameter)) {
@@ -294,8 +307,8 @@ public abstract class BaseCalculator {
   Object retrieve_scalar_argument(String title, Object param) {
     Object value;
     if (param instanceof String) {
-      if(((String) param).contains("\"")){ // Extract a string literal
-        value = ((String) param).substring(1,((String) param).length()-1);
+      if (((String) param).contains("\"")) { // Extract a string literal
+        value = ((String) param).substring(1, ((String) param).length() - 1);
       } else {
         value = dataStore.get_value(title, (String) param);
       }

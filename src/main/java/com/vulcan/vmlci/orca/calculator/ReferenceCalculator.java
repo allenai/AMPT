@@ -73,6 +73,16 @@ public class ReferenceCalculator extends BaseCalculator {
       Long start_percentage,
       Long end_percentage,
       Long step_size) {
+    logger.trace(
+        String.format(
+            "interval_reference_markers(%.3f, %.3f, %.3f, %.3f, %d, %d, %d)",
+            axis_x_start,
+            axis_y_start,
+            axis_x_end,
+            axis_y_end,
+            start_percentage,
+            end_percentage,
+            step_size));
     return ReferenceCalculator.interval_reference_markers_with_base_length(
         axis_x_start,
         axis_y_start,
@@ -124,6 +134,21 @@ public class ReferenceCalculator extends BaseCalculator {
       Long end_percentage,
       Long step_size,
       Long label_offset) {
+    logger.trace(
+        String.format(
+            "interval_reference_markers_with_base_length(%.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f,"
+                + " %.3f, %d, %d, %d)",
+            axis_x_start,
+            axis_y_start,
+            axis_x_end,
+            axis_y_end,
+            ref_x_start,
+            ref_y_start,
+            ref_x_end,
+            ref_y_end,
+            start_percentage,
+            end_percentage,
+            step_size));
 
     // Compute the deltas for the line being drawn.
     double axis_x_delta = axis_x_end - axis_x_start;
@@ -186,6 +211,10 @@ public class ReferenceCalculator extends BaseCalculator {
       Double ref_line_x_end,
       Double ref_line_y_end,
       Long offset) {
+    logger.trace(
+        String.format(
+            "draw_ref_along_line(%.3f, %.3f %.3f, %.3f, %d)",
+            ref_line_x_start, ref_line_y_start, ref_line_x_end, ref_line_y_end, offset));
     // Compute reference point along ref line
     double ref_point_x = ref_line_x_start + (offset / 100.) * (ref_line_x_end - ref_line_x_start);
     double ref_point_y = ref_line_y_start + (offset / 100.) * (ref_line_y_end - ref_line_y_start);
@@ -227,6 +256,19 @@ public class ReferenceCalculator extends BaseCalculator {
       Double ref_line_x_end,
       Double ref_line_y_end,
       Long offset) {
+    logger.trace(
+        String.format(
+            "compute_offset_reference_markers(%.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %d)",
+            axis_x_start,
+            axis_y_start,
+            axis_x_end,
+            axis_y_end,
+            ref_line_x_start,
+            ref_line_y_start,
+            ref_line_x_end,
+            ref_line_y_end,
+            offset));
+
     Point top =
         ReferenceCalculator.compute_offset_reference(
             axis_x_start,
@@ -278,13 +320,6 @@ public class ReferenceCalculator extends BaseCalculator {
     result.put(
         "ref bottom",
         new Point[] {new Point(bot.x - d_x, bot.y - d_y), new Point(bot.x + d_x, bot.y + d_y)});
-    //    result.put(
-    //        "reference line",
-    //        new Point[] {
-    //          new Point(ref_line_x_start, ref_line_y_start), new Point(ref_line_x_end,
-    // ref_line_y_end)
-    //        });
-
     return result;
   }
 
@@ -328,6 +363,18 @@ public class ReferenceCalculator extends BaseCalculator {
       Double ref_line_y_end,
       Long offset) {
 
+    logger.trace(
+        String.format(
+            "compute_offset_reference(%.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %d)",
+            axis_x_start,
+            axis_y_start,
+            axis_x_end,
+            axis_y_end,
+            ref_line_x_start,
+            ref_line_y_start,
+            ref_line_x_end,
+            ref_line_y_end,
+            offset));
     // Compute direction vector for main axis
     double axis_direction_x = axis_x_end - axis_x_start;
     double axis_direction_y = axis_y_end - axis_y_start;
@@ -359,6 +406,7 @@ public class ReferenceCalculator extends BaseCalculator {
    * @return A HashMap containing the landmark rendering instructions.
    */
   public static HashMap<String, Point[]> render_landmark(String label, Double x, Double y) {
+    logger.trace(String.format("render_landmark(%s, %.3f, %.3f)", label, x, y));
     HashMap<String, Point[]> result = new HashMap<>();
     result.put(label, new Point[] {new Point(x, y)});
     return result;
@@ -383,6 +431,7 @@ public class ReferenceCalculator extends BaseCalculator {
    */
   @Override
   public Object do_measurement(String measure, String title) {
+    logger.trace(String.format("do_measurement(%s, %s)", measure, title));
     if (preflight_measurement(measure, title)) {
       return super.do_measurement(measure, title);
     }
