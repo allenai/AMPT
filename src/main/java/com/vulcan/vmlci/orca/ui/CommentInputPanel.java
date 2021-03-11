@@ -41,8 +41,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class CommentInputPanel extends InputPanel {
   private JTextArea commentField;
@@ -52,8 +50,6 @@ public class CommentInputPanel extends InputPanel {
   public CommentInputPanel(DataStore dataStore, CueManager cueManager) {
     super(dataStore, cueManager);
   }
-
-
 
   protected void buildUI() {
     this.setLayout(new BorderLayout(0, 0));
@@ -68,21 +64,7 @@ public class CommentInputPanel extends InputPanel {
 
   protected void wireUI() {
     saveComments.addActionListener(this::save);
-    commentField.addKeyListener(
-        new KeyAdapter() {
-          /**
-           * Invoked when a key has been typed. This event occurs when a key press is followed by a
-           * key release.
-           *
-           * @param e
-           */
-          @Override
-          public void keyTyped(KeyEvent e) {
-            super.keyTyped(e);
-            comments_dirty = true;
-            updateInterface();
-          }
-        });
+    commentField.addKeyListener(new DirtyAdapter());
   }
 
   @Override
@@ -98,12 +80,35 @@ public class CommentInputPanel extends InputPanel {
     updateInterface();
   }
 
+  /**
+   * Perform the actions required to revert a measurement
+   *
+   * @param e the event the triggers the revert action
+   */
+  @Override
+  protected void revert(ActionEvent e) {}
+
+  /**
+   * Perform the actions required to clear a measurement
+   *
+   * @param e the event the triggers the clear action
+   */
+  @Override
+  protected void clear(ActionEvent e) {}
+
+  /**
+   * Perform the actions required to approve a measurement
+   *
+   * @param e the event the triggers the approve action
+   */
+  @Override
+  protected void approve(ActionEvent e) {}
+
   @Override
   public void updateInterface() {
     if (!this.isVisible()) {
       return;
     }
-    super.updateInterface();
     saveComments.setEnabled(comments_dirty);
     cueManager.draw();
   }
@@ -116,11 +121,11 @@ public class CommentInputPanel extends InputPanel {
   @Override
   public void activeImageChanged(ActiveImageChangeEvent evt) {
     super.activeImageChanged(evt);
-    String img = lastActiveImage.getMostRecentImageName();
+    final String img = lastActiveImage.getMostRecentImageName();
     if (img.equals(LastActiveImage.NO_OPEN_IMAGE)) {
       commentField.setText("");
     } else {
-      String saved_comments =
+      final String saved_comments =
           (String)
               dataStore.get_value(lastActiveImage.getMostRecentImageName(), "MEAS COMMENTS", "");
       commentField.setText(saved_comments);
@@ -129,4 +134,23 @@ public class CommentInputPanel extends InputPanel {
     updateInterface();
   }
 
+  /** Reloads the class's state fields with new values. */
+  @Override
+  public void reload_fields() {}
+
+  /** Custom KeyTyped adapter to update the UI when characters have been typed */
+  private class DirtyAdapter extends KeyAdapter {
+    /**
+     * Invoked when a key has been typed. This event occurs when a key press is followed by a key
+     * release.
+     *
+     * @param e
+     */
+    @Override
+    public void keyTyped(KeyEvent e) {
+      super.keyTyped(e);
+      comments_dirty = true;
+      updateInterface();
+    }
+  }
 }

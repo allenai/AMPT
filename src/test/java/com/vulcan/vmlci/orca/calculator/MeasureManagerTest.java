@@ -64,7 +64,7 @@ public class MeasureManagerTest extends TestCase {
    */
   public void testLoad_data_known_good() {
     load_test_data("/data/sample_full.csv");
-    assertEquals(80, ds.getRowCount());
+    TestCase.assertEquals(80, ds.getRowCount());
   }
 
   /**
@@ -78,7 +78,7 @@ public class MeasureManagerTest extends TestCase {
       this.ds.loadData(test_file);
     } catch (DataFileLoadException e) {
       e.printStackTrace();
-      fail();
+      TestCase.fail();
     }
   }
 
@@ -87,28 +87,28 @@ public class MeasureManagerTest extends TestCase {
     try {
       new MeasurementManager(ds);
     } catch (FileNotFoundException e) {
-      fail(e.getMessage());
+      TestCase.fail(e.getMessage());
     }
     ds.insert_value("foo", "SNDF_x_start", 0.);
     ds.insert_value("foo", "SNDF_y_start", 3.);
     ds.insert_value("foo", "SNDF_x_end", 4.);
     ds.insert_value("foo", "SNDF_y_end", 0.);
-    assertEquals(5., ds.get_value("foo","SNDF"));
+    TestCase.assertEquals(5., ds.get_value("foo","SNDF"));
     ds.insert_value("foo", "SNDF_y_end", null);
-    assertNull(ds.get_value("foo","SNDF"));
+    TestCase.assertNull(ds.get_value("foo","SNDF"));
   }
   public void test_update_point_value_changes() {
     BaseCalculator calculator = null;
     try {
       calculator = new MeasurementManager(ds);
     } catch (FileNotFoundException e) {
-      fail(e.getMessage());
+      TestCase.fail(e.getMessage());
     }
     ds.set_point("foo", "SN", new Point(0,3));
     ds.set_point("foo", "DF", new Point(4,0));
-    assertEquals(5., ds.get_value("foo","SNDF"));
+    TestCase.assertEquals(5., ds.get_value("foo","SNDF"));
     ds.insert_value("foo", "SNDF_y_end", null);
-    assertNull(ds.get_value("foo","SNDF"));
+    TestCase.assertNull(ds.get_value("foo","SNDF"));
   }
 
 }

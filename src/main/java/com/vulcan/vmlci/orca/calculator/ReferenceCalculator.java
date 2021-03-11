@@ -73,7 +73,7 @@ public class ReferenceCalculator extends BaseCalculator {
       Long start_percentage,
       Long end_percentage,
       Long step_size) {
-    return interval_reference_markers_with_base_length(
+    return ReferenceCalculator.interval_reference_markers_with_base_length(
         axis_x_start,
         axis_y_start,
         axis_x_end,
@@ -135,8 +135,8 @@ public class ReferenceCalculator extends BaseCalculator {
 
     // Unitize the deltas
     double axis_length = sqrt(axis_x_delta * axis_x_delta + axis_y_delta * axis_y_delta);
-    axis_x_delta = axis_x_delta / axis_length;
-    axis_y_delta = axis_y_delta / axis_length;
+    axis_x_delta /= axis_length;
+    axis_y_delta /= axis_length;
 
     // Compute the reference length
     double reference_length =
@@ -332,8 +332,8 @@ public class ReferenceCalculator extends BaseCalculator {
     double axis_direction_x = axis_x_end - axis_x_start;
     double axis_direction_y = axis_y_end - axis_y_start;
     double length = sqrt(axis_direction_x * axis_direction_x + axis_direction_y * axis_direction_y);
-    axis_direction_x = axis_direction_x / length;
-    axis_direction_y = axis_direction_y / length;
+    axis_direction_x /= length;
+    axis_direction_y /= length;
 
     // Compute reference point along ref line
     double ref_point_x = ref_line_x_start + (offset / 100.) * (ref_line_x_end - ref_line_x_start);

@@ -33,8 +33,6 @@ package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.Point;
-import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import ij.ImagePlus;
 import ij.gui.PointRoi;
 import ij.gui.Roi;
@@ -47,7 +45,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.event.TableModelEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -58,6 +55,7 @@ import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
+/** Input panel that is used for managing point measurements. */
 public class PointInputPanel extends InputPanel implements RoiListener, ItemListener {
 
   // UI Elements
@@ -78,41 +76,45 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
   private Point savedPosition = null;
   private boolean reviewState = false;
 
+  /**
+   * Constructs a PointInputPanel
+   *
+   * @param dataStore the DataStore that is used to hold the measurement data.
+   * @param cueManager the CueManager that used to render measurement cues.
+   */
   public PointInputPanel(DataStore dataStore, CueManager cueManager) {
     super(dataStore, cueManager);
     PointRoi.addRoiListener(this);
+    reload_fields();
   }
 
+  /**
+   * Handle changes to the active measurement.
+   *
+   * @param e event triggered by switching the active measurement.
+   */
   @Override
   public void itemStateChanged(ItemEvent e) {
-    if (e.getStateChange() == ItemEvent.SELECTED) {
+    if (ItemEvent.SELECTED == e.getStateChange()) {
       cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
       lastActiveImage.getMostRecentImageWindow().deleteRoi();
       reload_fields();
     }
   }
 
+  /** Responsible for populating the user interface components. */
   protected void buildUI() {
-    Vector<String> measurements =
+    final Vector<String> measurements =
         dataStore.descriptors.values().stream() // Give me a stream of descriptors
             .filter( // Grab the relevant descriptors
                 s ->
-                    s.measurement_type.equals("point") // We need points
+                    "point".equals(s.measurement_type) // We need points
                         && s.name.endsWith("_x")) // but only the x coordinate
             .sorted(Comparator.comparingInt(o -> o.index)) // Sort, using index field
             .map(s -> s.name.substring(0, s.name.length() - 2)) // Get part of the descriptor name
             .collect(Collectors.toCollection(Vector::new)); // Make a vector for JComboBox
-
     this.setLayout(new GridBagLayout());
     GridBagConstraints gbc;
-    currentPointX = new JTextField();
-    currentPointX.setColumns(8);
-    currentPointX.setEditable(false);
-    gbc = new GridBagConstraints();
-    gbc.gridx = 4;
-    gbc.gridy = 4;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(currentPointX, gbc);
 
     measurementSelector = new JComboBox<>(measurements);
     controls.add(measurementSelector);
@@ -125,23 +127,32 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(measurementSelector, gbc);
 
-    final JLabel label1 = new JLabel();
-    label1.setHorizontalAlignment(SwingConstants.CENTER);
-    label1.setHorizontalTextPosition(SwingConstants.CENTER);
-    label1.setText("X");
+    final JLabel xColumnLabel = new JLabel();
+    xColumnLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    xColumnLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+    xColumnLabel.setText("X");
     gbc = new GridBagConstraints();
     gbc.gridx = 4;
     gbc.gridy = 3;
-    this.add(label1, gbc);
+    this.add(xColumnLabel, gbc);
 
-    savedPointX = new JTextField();
-    savedPointX.setColumns(8);
-    savedPointX.setEditable(false);
+    final JLabel yColumnLabel = new JLabel();
+    yColumnLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    yColumnLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+    yColumnLabel.setText("Y");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 6;
+    gbc.gridy = 3;
+    this.add(yColumnLabel, gbc);
+
+    currentPointX = new JTextField();
+    currentPointX.setColumns(8);
+    currentPointX.setEditable(false);
     gbc = new GridBagConstraints();
     gbc.gridx = 4;
-    gbc.gridy = 5;
+    gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(savedPointX, gbc);
+    this.add(currentPointX, gbc);
 
     currentPointY = new JTextField();
     currentPointY.setColumns(8);
@@ -152,6 +163,15 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(currentPointY, gbc);
 
+    savedPointX = new JTextField();
+    savedPointX.setColumns(8);
+    savedPointX.setEditable(false);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 4;
+    gbc.gridy = 5;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(savedPointX, gbc);
+
     savedPointY = new JTextField();
     savedPointY.setColumns(8);
     savedPointY.setEditable(false);
@@ -160,14 +180,6 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 5;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(savedPointY, gbc);
-    final JLabel label2 = new JLabel();
-    label2.setHorizontalAlignment(SwingConstants.CENTER);
-    label2.setHorizontalTextPosition(SwingConstants.CENTER);
-    label2.setText("Y");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 6;
-    gbc.gridy = 3;
-    this.add(label2, gbc);
 
     save = new JButton();
     save.setText("Save");
@@ -177,6 +189,15 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(save, gbc);
+
+    clear = new JButton();
+    clear.setText("Clear");
+    controls.add(clear);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 9;
+    gbc.gridy = 4;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.add(clear, gbc);
 
     approveButton = new JButton();
     approveButton.setText("Approve");
@@ -195,15 +216,6 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     gbc.gridy = 5;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(revert, gbc);
-
-    clear = new JButton();
-    clear.setText("Clear");
-    controls.add(clear);
-    gbc = new GridBagConstraints();
-    gbc.gridx = 9;
-    gbc.gridy = 4;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(clear, gbc);
 
     final JLabel label3 = new JLabel();
     label3.setText("Current");
@@ -313,6 +325,7 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     this.add(spacer5, gbc);
   }
 
+  /** Responsible for configuring the event handling. */
   @Override
   protected void wireUI() {
     save.addActionListener(this::save);
@@ -323,50 +336,38 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     enableOverlays.addActionListener(e -> updateInterface());
   }
 
-  @Override
-  public void reload_fields() {
-    savedPosition =
-        dataStore.get_point(
-            lastActiveImage.getMostRecentImageName(),
-            (String) measurementSelector.getSelectedItem());
-    if (savedPosition != null) {
-      currentPosition = (Point) savedPosition.clone();
-    } else {
-      currentPosition = null;
-    }
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    reviewState =
-        dataStore.get_value(
-            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
-
-    updateInterface();
-  }
-
+  /**
+   * Stash the current ROI and set the reviewed flag to false.
+   *
+   * @param e the event the triggers the save action
+   */
   @Override
   protected void save(ActionEvent e) {
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
     dataStore.set_point(
         lastActiveImage.getMostRecentImageName(),
         (String) measurementSelector.getSelectedItem(),
         currentPosition);
     dataStore.insert_value(lastActiveImage.getMostRecentImageName(), reviewColumn, false);
-    savedPosition =
-        dataStore.get_point(
-            lastActiveImage.getMostRecentImageName(),
-            (String) measurementSelector.getSelectedItem());
-    reviewState =
-        dataStore.get_value(
-            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
-    updateInterface();
+    reload_fields();
   }
 
+  /**
+   * Revert the current ROI to the saved ROI.
+   *
+   * @param e the event the triggers the revert action
+   */
   @Override
   protected void revert(ActionEvent e) {
     lastActiveImage.getMostRecentImageWindow().deleteRoi();
-    currentPosition = (Point) savedPosition.clone();
-    updateInterface();
+    reload_fields();
   }
 
+  /**
+   * Clear the current position
+   *
+   * @param e the event the triggers the clear action
+   */
   @Override
   protected void clear(ActionEvent e) {
     currentPosition = null;
@@ -374,9 +375,14 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     updateInterface();
   }
 
+  /**
+   * Approve the saved position.
+   *
+   * @param e the event the triggers the approve action
+   */
   @Override
   protected void approve(ActionEvent e) {
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
     dataStore.insert_value(lastActiveImage.getMostRecentImageName(), reviewColumn, true);
     reviewState =
         dataStore.get_value(
@@ -384,25 +390,23 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     updateInterface();
   }
 
+  /** Rerender the values in the UI. */
   @Override
   public void updateInterface() {
-    if (!this.isVisible()) {
-      return;
-    }
-    if (savedPosition != null) {
-      savedPointX.setText(String.format("%.3f", savedPosition.x));
-      savedPointY.setText(String.format("%.3f", savedPosition.y));
-    } else {
+    if (null == savedPosition) {
       savedPointX.setText("");
       savedPointY.setText("");
+    } else {
+      savedPointX.setText(String.format("%.3f", savedPosition.x));
+      savedPointY.setText(String.format("%.3f", savedPosition.y));
     }
 
-    if (currentPosition != null) {
-      currentPointX.setText(String.format("%.3f", currentPosition.x));
-      currentPointY.setText(String.format("%.3f", currentPosition.y));
-    } else {
+    if (null == currentPosition) {
       currentPointX.setText("");
       currentPointY.setText("");
+    } else {
+      currentPointX.setText(String.format("%.3f", currentPosition.x));
+      currentPointY.setText(String.format("%.3f", currentPosition.y));
     }
 
     if (lastActiveImage.no_images()) {
@@ -413,47 +417,53 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
       statusField.setText(DataStore.UNREVIEWED);
     }
 
-    ImagePlus img = lastActiveImage.getMostRecentImageWindow();
-    if (img == null) {
+    if (!this.isVisible()) {
+      return;
+    }
+    final ImagePlus img = lastActiveImage.getMostRecentImageWindow();
+    if (null == img) {
       return;
     }
 
     cueManager.draw();
-    Roi active_roi = img.getRoi();
-    if (active_roi == null && currentPosition != null) {
+    final Roi active_roi = img.getRoi();
+    if (null == active_roi && null != currentPosition) {
       img.setRoi(new PointRoi(currentPosition.x, currentPosition.y));
     }
   }
 
-  /**
-   * Gives notification that an ImagePlus has taken focus.
-   *
-   * @param evt the ActiveImageChangeEvent
-   */
+  /** Load all of the state data. */
   @Override
-  public void activeImageChanged(ActiveImageChangeEvent evt) {
-    super.activeImageChanged(evt);
-    if (!lastActiveImage.no_images()) {
-      updateInterface();
-    } else {
-      currentPointX.setText("");
-      currentPointY.setText("");
-      savedPointX.setText("");
-      savedPointY.setText("");
-    }
-  }
-
-  /**
-   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
-   * changed.
-   *
-   * @param e
-   */
-  @Override
-  public void tableChanged(TableModelEvent e) {
-    if (e == null) {
+  public void reload_fields() {
+    if (lastActiveImage.no_images()) {
       savedPosition = null;
+      currentPosition = null;
+    } else {
+      savedPosition =
+          dataStore.get_point(
+              lastActiveImage.getMostRecentImageName(),
+              (String) measurementSelector.getSelectedItem());
+
+      // Snag the Roi if defined
+      final Roi roi = lastActiveImage.getMostRecentImageWindow().getRoi();
+      if (null == roi || Roi.POINT != roi.getType()) {
+        if (null == savedPosition) {
+          currentPosition = null;
+        } else {
+          currentPosition = (Point) savedPosition.clone();
+        }
+      } else {
+        final Rectangle2D.Double bounds = roi.getFloatBounds();
+        currentPosition = new Point(bounds.x, bounds.y);
+      }
+
+      final String reviewColumn =
+          String.format("%s_reviewed", measurementSelector.getSelectedItem());
+      reviewState =
+          dataStore.get_value(
+              lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
     }
+    updateInterface();
   }
 
   /**
@@ -463,7 +473,6 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
    * <p>Overrides <code>Component.setVisible</code>.
    *
    * @param aFlag true to make the component visible; false to make it invisible
-   * @beaninfo attribute: visualUpdate true
    */
   @Override
   public void setVisible(boolean aFlag) {
@@ -473,33 +482,27 @@ public class PointInputPanel extends InputPanel implements RoiListener, ItemList
     }
   }
 
-  private void renderLandmark() {
-    ImagePlus img = lastActiveImage.getMostRecentImageWindow();
-    if (currentPointX.getText().isEmpty() || currentPointY.getText().isEmpty()) {
-      img.deleteRoi();
-    } else {
-      img.setRoi(
-          new PointRoi(
-              Double.parseDouble(currentPointX.getText()),
-              Double.parseDouble(currentPointY.getText())));
-    }
-  }
-
+  /**
+   * Manage when the Roi Gets changed.
+   *
+   * @param imp The image the ROI is in.
+   * @param id The thing that happened to the ROI.
+   */
   @Override
   public void roiModified(ImagePlus imp, int id) {
-    if (imp == null || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
+    if (null == imp || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
       return;
     }
 
-    if (id == RoiListener.DELETED) {
+    if (RoiListener.DELETED == id) {
       currentPosition = null;
     } else {
-      Roi roi = imp.getRoi();
+      final Roi roi = imp.getRoi();
       if (!(roi instanceof PointRoi)) {
         return;
       }
-      Rectangle2D.Double bounds = roi.getFloatBounds();
-      if (currentPosition == null) {
+      final Rectangle2D.Double bounds = roi.getFloatBounds();
+      if (null == currentPosition) {
         currentPosition = new Point();
       }
       currentPosition.setLocation(bounds.x, bounds.y);

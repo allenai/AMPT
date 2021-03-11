@@ -63,7 +63,7 @@ public class BaseCalculatorTest extends TestCase {
    */
   public void testLoad_data_known_good() {
     load_test_data("/data/sample_full.csv");
-    assertEquals(80, ds.getRowCount());
+    TestCase.assertEquals(80, ds.getRowCount());
   }
 
   /**
@@ -77,7 +77,7 @@ public class BaseCalculatorTest extends TestCase {
       this.ds.loadData(test_file);
     } catch (DataFileLoadException e) {
       e.printStackTrace();
-      fail();
+      TestCase.fail();
     }
   }
 
@@ -86,9 +86,9 @@ public class BaseCalculatorTest extends TestCase {
     try {
       calculator = new BaseCalculatorTestingAdapter(ds);
     } catch (FileNotFoundException e) {
-      fail(e.getMessage());
+      TestCase.fail(e.getMessage());
     }
-    assertEquals(
+    TestCase.assertEquals(
         "Got a non-zero length from zero length vector",
         0.,
         BaseCalculatorTestingAdapter.length(0., 0., 0., 0.));
@@ -96,7 +96,7 @@ public class BaseCalculatorTest extends TestCase {
     ds.insert_value("foo", "SNDF_y_start", 3.);
     ds.insert_value("foo", "SNDF_x_end", 4.);
     ds.insert_value("foo", "SNDF_y_end", 0.);
-    assertEquals(5., calculator.do_measurement("SNDF", "foo"));
+    TestCase.assertEquals(5., calculator.do_measurement("SNDF", "foo"));
   }
 
   public void test_bad_measurement() {
@@ -104,14 +104,14 @@ public class BaseCalculatorTest extends TestCase {
     try {
       mm = new BaseCalculatorTestingAdapter(ds);
     } catch (FileNotFoundException e) {
-      fail(e.getMessage());
+      TestCase.fail(e.getMessage());
     }
     ds.insert_value("foo", "SNDF_x_start", 0.);
     try {
       mm.do_measurement("BOGUS", "foo");
-      fail();
+      TestCase.fail();
     } catch (IllegalArgumentException e) {
-      assertTrue(e.getMessage().contains("BOGUS"));
+      TestCase.assertTrue(e.getMessage().contains("BOGUS"));
     }
   }
 
@@ -120,14 +120,14 @@ public class BaseCalculatorTest extends TestCase {
     try {
       mm = new BaseCalculatorTestingAdapter(ds);
     } catch (FileNotFoundException e) {
-      fail(e.getMessage());
+      TestCase.fail(e.getMessage());
     }
     ds.insert_value("foo", "SNDF_x_start", 0.);
     try {
       mm.do_measurement("BAD_FUNC", "foo");
-      fail();
+      TestCase.fail();
     } catch (IllegalArgumentException e) {
-      assertTrue(e.getMessage().contains("BAD_FUNC"));
+      TestCase.assertTrue(e.getMessage().contains("BAD_FUNC"));
     }
   }
 

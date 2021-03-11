@@ -48,7 +48,7 @@ import java.beans.PropertyChangeListener;
  *
  * <p>This class emits {@link ActiveImageChangeEvent}s when the front-most ImagePlus window changes.
  */
-public class LastActiveImage implements PropertyChangeListener, ImageListener {
+public final class LastActiveImage implements PropertyChangeListener, ImageListener {
   public static final String NO_OPEN_IMAGE = "No Open Image";
   private static LastActiveImage instance;
   private final EventListenerList listenerList = new EventListenerList();
@@ -60,8 +60,8 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
         KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener("focusedWindow", this);
     ImagePlus.addImageListener(this);
-    if(WindowManager.getImageCount() == 0){
-      most_recent_image = NO_OPEN_IMAGE;
+    if (0 == WindowManager.getImageCount()) {
+      most_recent_image = LastActiveImage.NO_OPEN_IMAGE;
     } else {
       most_recent_image = WindowManager.getCurrentImage().getTitle();
     }
@@ -73,10 +73,10 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
    * @return reference to a LastActiveImage
    */
   public static LastActiveImage getInstance() {
-    if (instance == null) {
-      instance = new LastActiveImage();
+    if (null == LastActiveImage.instance) {
+      LastActiveImage.instance = new LastActiveImage();
     }
-    return instance;
+    return LastActiveImage.instance;
   }
 
   /**
@@ -132,8 +132,8 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
         this.fireImageChange(oldImage, most_recent_image);
       }
     }
-    if (WindowManager.getImageCount() == 0) {
-      most_recent_image = NO_OPEN_IMAGE;
+    if (0 == WindowManager.getImageCount()) {
+      most_recent_image = LastActiveImage.NO_OPEN_IMAGE;
       this.fireImageChange(oldImage, most_recent_image);
     }
   }
@@ -150,7 +150,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
     ActiveImageChangeEvent imageChangeEvent = new ActiveImageChangeEvent(this, oldImage, newImage);
 
     for (int i = 0; i < listeners.length - 1; i += 2) {
-      if (listeners[i] == ActiveImageListener.class) {
+      if (ActiveImageListener.class == listeners[i]) {
         ((ActiveImageListener) listeners[i + 1]).activeImageChanged(imageChangeEvent);
       }
     }
@@ -168,8 +168,8 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
   @Override
   public void imageClosed(ImagePlus imp) {
     String closedImage = imp.getTitle();
-    if (WindowManager.getImageCount() == 0) {
-      most_recent_image = NO_OPEN_IMAGE;
+    if (0 == WindowManager.getImageCount()) {
+      most_recent_image = LastActiveImage.NO_OPEN_IMAGE;
       this.fireImageChange(closedImage, most_recent_image);
     } else {
       fireImageChange(closedImage, WindowManager.getCurrentImage().getTitle());
@@ -179,7 +179,7 @@ public class LastActiveImage implements PropertyChangeListener, ImageListener {
   @Override
   public void imageUpdated(ImagePlus imp) {}
 
-  public boolean no_images(){
-    return (WindowManager.getImageCount() == 0);
+  public boolean no_images() {
+    return (0 == WindowManager.getImageCount());
   }
 }

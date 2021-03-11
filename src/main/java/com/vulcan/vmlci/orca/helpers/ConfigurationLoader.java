@@ -53,7 +53,7 @@ public class ConfigurationLoader {
    * @return The current CONFIG_DIRECTORY
    */
   public static Path getConfigDirectory() {
-    return CONFIG_DIRECTORY;
+    return ConfigurationLoader.CONFIG_DIRECTORY;
   }
 
   /**
@@ -62,7 +62,7 @@ public class ConfigurationLoader {
    * @param configDirectory The new configuration directory.
    */
   public static void setConfigDirectory(String configDirectory) {
-    CONFIG_DIRECTORY = Paths.get(configDirectory);
+    ConfigurationLoader.CONFIG_DIRECTORY = Paths.get(configDirectory);
   }
 
   /**
@@ -71,13 +71,13 @@ public class ConfigurationLoader {
    * @param configDirectory The new configuration directory.
    */
   public static void setConfigDirectory(Path configDirectory) {
-    CONFIG_DIRECTORY = configDirectory;
+    ConfigurationLoader.CONFIG_DIRECTORY = configDirectory;
   }
 
   public static void main(String[] args) throws ConfigurationFileLoadException {
-    System.out.println(getFullConfigPath("foo"));
-    System.out.println(get_csv_file("CSV-Columns.csv"));
-    System.out.println(get_json_file("TestCueConfig.json"));
+    System.out.println(ConfigurationLoader.getFullConfigPath("foo"));
+    System.out.println(ConfigurationLoader.get_csv_file("CSV-Columns.csv"));
+    System.out.println(ConfigurationLoader.get_json_file("TestCueConfig.json"));
   }
 
   /**
@@ -110,7 +110,7 @@ public class ConfigurationLoader {
    */
   public static ArrayList<HashMap<String, String>> get_csv_file(String filename)
       throws ConfigurationFileLoadException {
-    String config_file = getFullConfigPath(filename);
+    String config_file = ConfigurationLoader.getFullConfigPath(filename);
     CSVReader csv_reader = null;
     java.util.ArrayList<java.util.HashMap<String, String>> result;
     try {
@@ -131,7 +131,7 @@ public class ConfigurationLoader {
    */
   public static HashMap<String, Object> get_json_file(String filename)
       throws ConfigurationFileLoadException {
-    String config_file = getFullConfigPath(filename);
+    String config_file = ConfigurationLoader.getFullConfigPath(filename);
     byte[] encoded;
     try {
       encoded = Files.readAllBytes(Paths.get(config_file));

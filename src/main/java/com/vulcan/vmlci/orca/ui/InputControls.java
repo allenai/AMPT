@@ -78,7 +78,7 @@ public class InputControls implements ActiveImageListener {
     tabbedPane.addChangeListener(
         e -> {
           ImagePlus img = LastActiveImage.getInstance().getMostRecentImageWindow();
-          if (img != null) {
+          if (null != img) {
             img.deleteRoi();
           }
           InputPanel active_control =
@@ -93,7 +93,7 @@ public class InputControls implements ActiveImageListener {
               IJ.setTool("line");
               break;
           }
-          if (img != null) {
+          if (null != img) {
             active_control.reload_fields();
           }
         });

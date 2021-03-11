@@ -32,8 +32,6 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.data.Point;
 import ij.ImagePlus;
 import ij.gui.Line;
@@ -47,17 +45,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.event.TableModelEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.geom.Rectangle2D;
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
+/** Input panel that is used for managing length measurements. */
 public class LengthInputPanel extends InputPanel implements ItemListener, RoiListener {
 
   // UI Elements
@@ -72,90 +69,49 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
   private JButton approveButton;
 
   // State Elements
-  private Point[] currentLine = null;
-  private Double currentMagnitude = null;
-  private Point[] savedLine = null;
-  private Double savedMagnitude = null;
-  private boolean reviewState = false;
+  private Point[] currentLine;
+  private Double currentMagnitude;
+  private Point[] savedLine;
+  private Double savedMagnitude;
+  private boolean reviewState;
 
+  /**
+   * Constructs a LengthInputPanel
+   *
+   * @param dataStore the DataStore that is used to hold the measurement data.
+   * @param cueManager the CueManager that used to render measurement cues.
+   */
   public LengthInputPanel(DataStore dataStore, CueManager cueManager) {
     super(dataStore, cueManager);
     Line.addRoiListener(this);
+    reload_fields();
   }
 
   /**
-   * Invoked when an item has been selected or deselected by the user. The code written for this
-   * method performs the operations that need to occur when an item is selected (or deselected).
+   * Handle changes to the active measurement.
    *
    * @param e event that describing the change.
    */
   @Override
   public void itemStateChanged(ItemEvent e) {
-    if (e.getStateChange() == ItemEvent.SELECTED) {
+    if (ItemEvent.SELECTED == e.getStateChange()) {
       cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
       lastActiveImage.getMostRecentImageWindow().deleteRoi();
       reload_fields();
     }
   }
 
-  /**
-   * Makes the component visible or invisible.
-   * Sets the activeCue in CueManager to the selected measurement.
-   * <p>
-   * Overrides <code>Component.setVisible</code>.
-   *
-   * @param aFlag true to make the component visible; false to make it invisible
-   * @beaninfo attribute: visualUpdate true
-   */
-  @Override
-  public void setVisible(boolean aFlag) {
-    super.setVisible(aFlag);
-    if(aFlag){
-      cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
-    }
-  }
-
-  @Override
-  public void reload_fields() {
-    savedMagnitude =
-        (Double)
-            dataStore.get_value(
-                lastActiveImage.getMostRecentImageName(),
-                (String) measurementSelector.getSelectedItem());
-    savedLine =
-        dataStore.getEndpoints(
-            lastActiveImage.getMostRecentImageName(),
-            (String) measurementSelector.getSelectedItem());
-
-    if (savedMagnitude != null) {
-      currentMagnitude = savedMagnitude;
-      if (savedLine != null) {
-        currentLine = savedLine.clone();
-      } else {
-        currentLine = null;
-      }
-    } else {
-      currentMagnitude = null;
-      currentLine = null;
-    }
-
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    reviewState =
-        dataStore.get_value(
-            lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
-    updateInterface();
-  }
-
+  /** Responsible for populating the user interface components. */
   protected void buildUI() {
-    Vector<String> measurements =
+    final Vector<String> measurements =
         dataStore.descriptors.values().stream() // Grab a stream of descriptors
-            .filter(s -> s.measurement_type.equals("length")) // Grab the length descriptors.
+            .filter(s -> "length".equals(s.measurement_type)) // Grab the length descriptors.
             .sorted(Comparator.comparingInt(o -> o.index)) // Sort them by descriptor index
             .map(s -> s.name) // Extract the names
             .collect(Collectors.toCollection(Vector::new)); // Make a vector for JComboBox
 
     GridBagConstraints gbc;
-    this.setLayout(new GridBagLayout());
+    setLayout(new GridBagLayout());
     enableOverlays = new JCheckBox();
     enableOverlays.setModel(cueManager.cueToggle);
     enableOverlays.setText("Cues");
@@ -164,7 +120,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 1;
     gbc.gridy = 0;
     gbc.gridwidth = 8;
-    this.add(enableOverlays, gbc);
+    add(enableOverlays, gbc);
 
     measurementSelector = new JComboBox<>(measurements);
     controls.add(measurementSelector);
@@ -174,7 +130,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridwidth = 8;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(measurementSelector, gbc);
+    add(measurementSelector, gbc);
 
     final JLabel currentLabel = new JLabel();
     currentLabel.setText("Current");
@@ -182,7 +138,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 2;
     gbc.gridy = 3;
     gbc.anchor = GridBagConstraints.WEST;
-    this.add(currentLabel, gbc);
+    add(currentLabel, gbc);
 
     currentLength = new JTextField();
     currentLength.setColumns(8);
@@ -193,7 +149,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridy = 3;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(currentLength, gbc);
+    add(currentLength, gbc);
 
     final JLabel savedLabel = new JLabel();
     savedLabel.setText("Saved");
@@ -201,7 +157,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 2;
     gbc.gridy = 4;
     gbc.anchor = GridBagConstraints.WEST;
-    this.add(savedLabel, gbc);
+    add(savedLabel, gbc);
 
     savedLength = new JTextField();
     savedLength.setColumns(8);
@@ -211,7 +167,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridy = 4;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(savedLength, gbc);
+    add(savedLength, gbc);
 
     saveButton = new JButton();
     saveButton.setText("Save");
@@ -220,7 +176,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 6;
     gbc.gridy = 3;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(saveButton, gbc);
+    add(saveButton, gbc);
 
     revertButton = new JButton();
     revertButton.setText("Revert");
@@ -229,7 +185,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 7;
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(revertButton, gbc);
+    add(revertButton, gbc);
 
     approveButton = new JButton();
     approveButton.setText("Approve");
@@ -238,7 +194,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 6;
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(approveButton, gbc);
+    add(approveButton, gbc);
 
     clearButton = new JButton();
     clearButton.setText("Clear");
@@ -247,7 +203,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 7;
     gbc.gridy = 3;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(clearButton, gbc);
+    add(clearButton, gbc);
 
     final JLabel lengthUnitLabel = new JLabel();
     lengthUnitLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -256,7 +212,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc = new GridBagConstraints();
     gbc.gridx = 4;
     gbc.gridy = 2;
-    this.add(lengthUnitLabel, gbc);
+    add(lengthUnitLabel, gbc);
 
     final JLabel statusLabel = new JLabel();
     statusLabel.setText("Status");
@@ -264,7 +220,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridx = 2;
     gbc.gridy = 5;
     gbc.anchor = GridBagConstraints.WEST;
-    this.add(statusLabel, gbc);
+    add(statusLabel, gbc);
 
     statusField = new JTextField();
     statusField.setColumns(8);
@@ -274,7 +230,7 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridy = 5;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(statusField, gbc);
+    add(statusField, gbc);
 
     // Spacers
     gbc = new GridBagConstraints();
@@ -282,41 +238,42 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.gridy = 3;
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 8;
     gbc.gridy = 3;
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     final JPanel spacer11 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 9;
     gbc.gridy = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 5;
     gbc.gridy = 3;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
     gbc = new GridBagConstraints();
     gbc.gridx = 3;
     gbc.gridy = 3;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
   }
 
+  /** Responsible for configuring the event handling. */
   protected void wireUI() {
     saveButton.addActionListener(this::save);
     revertButton.addActionListener(this::revert);
@@ -326,10 +283,15 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     enableOverlays.addActionListener(e -> updateInterface());
   }
 
+  /**
+   * Stash the current ROI and set the reviewed flag to false.
+   *
+   * @param e the event the triggers the save action
+   */
   @Override
   protected void save(ActionEvent e) {
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
-    if (currentLine != null) { // Save the selected line to the data store
+    final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    if (null != currentLine) { // Save the selected line to the data store
       dataStore.set_endpoints(
           lastActiveImage.getMostRecentImageName(),
           (String) measurementSelector.getSelectedItem(),
@@ -365,27 +327,35 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     updateInterface();
   }
 
+  /**
+   * Revert the current length.
+   *
+   * @param e the event the triggers the revert action
+   */
   @Override
   protected void revert(ActionEvent e) {
-    if (savedMagnitude != null) {
-      lastActiveImage.getMostRecentImageWindow().deleteRoi();
-      currentLine = savedLine.clone();
-      currentMagnitude = savedMagnitude;
-    } else {
-      currentMagnitude = null;
-      currentLine = null;
-    }
-    updateInterface();
+    lastActiveImage.getMostRecentImageWindow().deleteRoi();
+    reload_fields();
   }
 
+  /**
+   * Clear the current length
+   *
+   * @param e the event the triggers the clear action
+   */
   @Override
   protected void clear(ActionEvent e) {
     lastActiveImage.getMostRecentImageWindow().deleteRoi();
   }
 
+  /**
+   * Approve the saved length.
+   *
+   * @param e the event the triggers the approve action
+   */
   @Override
   protected void approve(ActionEvent e) {
-    String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
+    final String reviewColumn = String.format("%s_reviewed", measurementSelector.getSelectedItem());
     dataStore.insert_value(lastActiveImage.getMostRecentImageName(), reviewColumn, true);
     reviewState =
         dataStore.get_value(
@@ -393,23 +363,24 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     updateInterface();
   }
 
+  /** Rerender the values in the UI. */
   @Override
   public void updateInterface() {
-    if(!this.isVisible()){
+    if (!isVisible()) {
       return;
     }
-    Roi roi;
-    if (savedMagnitude != null) {
-      savedLength.setText(String.format("%.3f", savedMagnitude));
-    } else {
+
+    if (null == savedMagnitude) {
       savedLength.setText("");
+    } else {
+      savedLength.setText(String.format("%.3f", savedMagnitude));
     }
 
-    String currMag = "";
-    if (currentMagnitude != null) {
-      currMag = String.format("%.3f", currentMagnitude);
+    if (null == currentMagnitude) {
+      currentLength.setText("");
+    } else {
+      currentLength.setText(String.format("%.3f", currentMagnitude));
     }
-    currentLength.setText(currMag);
 
     if (lastActiveImage.no_images()) {
       statusField.setText("");
@@ -419,74 +390,100 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
       statusField.setText(DataStore.UNREVIEWED);
     }
 
-    ImagePlus img = lastActiveImage.getMostRecentImageWindow();
-    if (img == null) {
+    final ImagePlus img = lastActiveImage.getMostRecentImageWindow();
+    if (null == img) {
       return;
     }
 
     cueManager.draw();
-    Roi active_roi = img.getRoi();
-    if (active_roi == null && currentLine != null) {
+    final Roi active_roi = img.getRoi();
+    if (null == active_roi && null != currentLine) {
       img.setRoi(new Line(currentLine[0].x, currentLine[0].y, currentLine[1].x, currentLine[1].y));
     }
   }
 
-  /**
-   * Gives notification that an ImagePlus has taken focus.
-   *
-   * @param evt the ActiveImageChangeEvent
-   */
+  /** Load all of the state data. */
   @Override
-  public void activeImageChanged(ActiveImageChangeEvent evt) {
-    super.activeImageChanged(evt);
-    boolean measuring = !evt.getNewImage().equals(LastActiveImage.NO_OPEN_IMAGE);
-    if (measuring) {
-      String currentMeasurement = (String) measurementSelector.getSelectedItem();
-      savedLine =
-          dataStore.getEndpoints(lastActiveImage.getMostRecentImageName(), currentMeasurement);
+  public void reload_fields() {
+    if (lastActiveImage.no_images()) {
+      savedMagnitude = null;
+      currentMagnitude = null;
+      savedLine = null;
+      currentLine = null;
+    } else {
       savedMagnitude =
           (Double)
-              dataStore.get_value(lastActiveImage.getMostRecentImageName(), currentMeasurement);
+              dataStore.get_value(
+                  lastActiveImage.getMostRecentImageName(),
+                  (String) measurementSelector.getSelectedItem());
+      savedLine =
+          dataStore.getEndpoints(
+              lastActiveImage.getMostRecentImageName(),
+              (String) measurementSelector.getSelectedItem());
+
+      if (null != savedMagnitude && null != savedLine) {
+        currentMagnitude = savedMagnitude;
+        currentLine = savedLine.clone();
+      } else {
+        currentMagnitude = null;
+        currentLine = null;
+      }
+
+      final String reviewColumn =
+          String.format("%s_reviewed", measurementSelector.getSelectedItem());
+      reviewState =
+          dataStore.get_value(
+              lastActiveImage.getMostRecentImageName(), reviewColumn, Boolean.class, false);
     }
     updateInterface();
   }
 
   /**
-   * This fine grain notification tells listeners the exact range of cells, rows, or columns that
-   * changed.
+   * Makes the component visible or invisible. Sets the activeCue in CueManager to the selected
+   * measurement.
    *
-   * @param e event describing the change
+   * <p>Overrides <code>Component.setVisible</code>.
+   *
+   * @param aFlag true to make the component visible; false to make it invisible
    */
   @Override
-  public void tableChanged(TableModelEvent e) {
-    super.tableChanged(e);
+  public void setVisible(boolean aFlag) {
+    super.setVisible(aFlag);
+    if (aFlag) {
+      cueManager.setActiveCue((String) measurementSelector.getSelectedItem());
+    }
   }
 
+  /**
+   * Invoked when the region of interest is changed.
+   *
+   * @param imp the image whose ROI has changed.
+   * @param id the action that happened.
+   */
   @Override
   public void roiModified(ImagePlus imp, int id) {
-    if (imp == null || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
+    if (null == imp || !imp.getTitle().equals(lastActiveImage.getMostRecentImageName())) {
       return;
     }
 
-    if (id == RoiListener.DELETED) {
+    if (RoiListener.DELETED == id) {
       currentLine = null;
       currentMagnitude = null;
     } else {
-      Roi raw_roi = imp.getRoi();
-      if (!(raw_roi instanceof Line)) {
+      final Roi raw_roi = imp.getRoi();
+      if (Roi.LINE != raw_roi.getType()) {
         return;
       }
-      Line roi = (Line) raw_roi;
 
-      Rectangle2D.Double bounds = roi.getFloatBounds();
-      if (currentLine == null) {
-        currentLine = new Point[2];
-        currentLine[0] = new Point();
-        currentLine[1] = new Point();
+      final Line lineRoi = (Line) raw_roi;
+      if (null == currentLine) {
+        currentLine =
+            new Point[] {new Point(lineRoi.x1d, lineRoi.y1d), new Point(lineRoi.x2d, lineRoi.y2d)};
+      } else {
+        currentLine[0].setLocation(lineRoi.x1d, lineRoi.y1d);
+        currentLine[1].setLocation(lineRoi.x2d, lineRoi.y2d);
       }
-      currentLine[0].setLocation(roi.x1d, roi.y1d);
-      currentLine[1].setLocation(roi.x2d, roi.y2d);
-      currentMagnitude = roi.getLength();
+      currentMagnitude = lineRoi.getLength();
     }
     updateInterface();
   }

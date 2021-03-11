@@ -163,7 +163,8 @@ public class CueManager {
       guideline = (HashMap<String, Point[]>) referenceCalculator.do_measurement(cue, image_name);
       for (String label : guideline.keySet()) {
         Point[] endpoints = guideline.get(label);
-        if (label.equals("axis")) {
+        if ("axis".equals(label)) {
+          //noinspection AssignmentToForLoopParameter
           label = "";
         }
         Roi marker = null;
@@ -175,7 +176,7 @@ public class CueManager {
             marker = new Line(endpoints[0].x, endpoints[0].y, endpoints[1].x, endpoints[1].y);
             break;
         }
-        if (marker != null) {
+        if (null != marker) {
           marker.setName(label);
           overlay.add(marker, label);
         }
@@ -193,7 +194,7 @@ public class CueManager {
     for (String conditionLine : conditionLines) {
       HashMap<String, Point[]> guideline;
       Point[] endpoints = dataStore.getEndpoints(image_name, conditionLine);
-      if (endpoints != null) {
+      if (null != endpoints) {
         overlay.add(new Line(endpoints[0].x, endpoints[0].y, endpoints[1].x, endpoints[1].y));
       }
     }
