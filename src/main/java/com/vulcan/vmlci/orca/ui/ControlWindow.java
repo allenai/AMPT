@@ -49,11 +49,12 @@ import javax.swing.event.TableModelListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.FileNotFoundException;
+import org.scijava.Context;
 
 /**
  * The <code>ControlWindow</code> class is the main UI for the Aquatic Mammal Photogrammetry Tool.
  */
-public class ControlWindow implements ActiveImageListener, TableModelListener {
+public class ControlWindow extends JFrame implements ActiveImageListener, TableModelListener {
   private final JPanel metadata = null;
   private final JPanel input = null;
   private final JPanel length_measurements = null;
@@ -65,7 +66,8 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
   private InputControls inputControls;
   private String active_image;
 
-  public ControlWindow() {
+  public ControlWindow(final Context ctx) {
+    ctx.inject(this);
     try {
       ds = DataStore.createDataStore();
     } catch (ConfigurationFileLoadException | DataFileLoadException e) {
@@ -131,12 +133,12 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     gbc.fill = GridBagConstraints.HORIZONTAL;
     toplevel.add(csv_controls, gbc);
 
-    this.application_frame = new JFrame();
+    this.application_frame = this; /* new JFrame(); */
     this.application_frame.setTitle("Test Window");
-    this.application_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//    this.application_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.application_frame.add(toplevel);
     this.application_frame.pack();
-    this.application_frame.setVisible(true);
+//    this.application_frame.setVisible(true);
 
     this.active_image = lastActiveImage.getMostRecentImageName();
     lastActiveImage.addActiveImageListener(this);
