@@ -32,9 +32,9 @@
 package com.vulcan.vmlci.orca.ui;
 
 import com.vulcan.vmlci.orca.data.DataStore;
-import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 import com.vulcan.vmlci.orca.event.ActiveImageChangeEvent;
 import com.vulcan.vmlci.orca.event.ActiveImageListener;
+import com.vulcan.vmlci.orca.helpers.LastActiveImage;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -61,7 +61,7 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
   private boolean dirty = false;
 
   public MetadataControl(DataStore dataStore, CueManager cueManager) {
-    super(dataStore,cueManager);
+    super(dataStore, cueManager);
   }
 
   @Override
@@ -178,44 +178,15 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
                       updateInterface();
                     }));
 
-    whaleIDField.addKeyListener(
-        new KeyAdapter() {
-          /**
-           * Invoked when a key has been typed. This event occurs when a key press is followed by a
-           * key release.
-           *
-           * @param e
-           */
-          @Override
-          public void keyTyped(KeyEvent e) {
-            super.keyTyped(e);
-            dirty = true;
-            updateInterface();
-          }
-        });
-
-    positionField.addKeyListener(
-        new KeyAdapter() {
-          /**
-           * Invoked when a key has been typed. This event occurs when a key press is followed by a
-           * key release.
-           *
-           * @param e
-           */
-          @Override
-          public void keyTyped(KeyEvent e) {
-            super.keyTyped(e);
-            dirty = true;
-            updateInterface();
-          }
-        });
+    final DirtyMetadata dirtyMetadata = new DirtyMetadata();
+    whaleIDField.addKeyListener(dirtyMetadata);
+    positionField.addKeyListener(dirtyMetadata);
 
     updateMetadata.addActionListener(this::save);
   }
 
   @Override
   protected void save(ActionEvent e) {
-    super.save(e);
     String filename = lastActiveImage.getMostRecentImageName();
     String whaleID = whaleIDField.getText();
     String position = positionField.getText();
@@ -228,7 +199,7 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
       position = null;
     }
     dataStore.insert_value(filename, "Position", position);
-    if (selection == null) {
+    if (null == selection) {
       dataStore.insert_value(filename, "UNDERWATER", null);
     } else {
       dataStore.insert_value(filename, "UNDERWATER", selection.getActionCommand());
@@ -237,9 +208,38 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
     updateInterface();
   }
 
+  /**
+   * Perform the actions required to revert a measurement
+   *
+   * @param e the event the triggers the revert action
+   */
+  @Override
+  protected void revert(ActionEvent e) {
+
+  }
+
+  /**
+   * Perform the actions required to clear a measurement
+   *
+   * @param e the event the triggers the clear action
+   */
+  @Override
+  protected void clear(ActionEvent e) {
+
+  }
+
+  /**
+   * Perform the actions required to approve a measurement
+   *
+   * @param e the event the triggers the approve action
+   */
+  @Override
+  protected void approve(ActionEvent e) {
+
+  }
+
   @Override
   public void updateInterface() {
-    super.updateInterface();
     updateMetadata.setEnabled(dirty);
   }
 
@@ -263,5 +263,28 @@ public class MetadataControl extends InputPanel implements ActiveImageListener {
     }
     dirty = false;
     updateInterface();
+  }
+
+  /**
+   * Reloads the class's state fields with new values.
+   */
+  @Override
+  public void reload_fields() {
+
+  }
+
+  private class DirtyMetadata extends KeyAdapter {
+    /**
+     * Invoked when a key has been typed. This event occurs when a key press is followed by a key
+     * release.
+     *
+     * @param e
+     */
+    @Override
+    public void keyTyped(KeyEvent e) {
+      super.keyTyped(e);
+      dirty = true;
+      updateInterface();
+    }
   }
 }

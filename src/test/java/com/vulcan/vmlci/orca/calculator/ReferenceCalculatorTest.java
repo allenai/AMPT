@@ -68,7 +68,7 @@ public class ReferenceCalculatorTest extends TestCase {
    */
   public void testLoad_data_known_good() {
     load_test_data("/data/sample_full.csv");
-    assertEquals(80, ds.getRowCount());
+    TestCase.assertEquals(80, ds.getRowCount());
   }
 
   /**
@@ -82,7 +82,7 @@ public class ReferenceCalculatorTest extends TestCase {
       this.ds.loadData(test_file);
     } catch (DataFileLoadException e) {
       e.printStackTrace();
-      fail();
+      TestCase.fail();
     }
   }
 
@@ -91,15 +91,15 @@ public class ReferenceCalculatorTest extends TestCase {
     ds.set_point("foo", "DF", new Point(101, 551));
     ds.set_point("foo", "RIGHT EYEPATCH TOP", new Point(52, 865));
     ds.set_point("foo", "RIGHT EYEPATCH BOTTOM", new Point(39, 772));
-    assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
+    TestCase.assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
     HashMap<String, Point[]> result;
     result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
-    assertNotNull(result);
+    TestCase.assertNotNull(result);
     // Retrieve the 75% reference endpoints
     Point[] meas_endpoints = result.get(String.format("%.0f%% measurement", 0.75 * 100.));
 
-    assertEquals(100., (meas_endpoints[0].x + meas_endpoints[1].x) / 2.0, 0.5);
-    assertEquals(795., (meas_endpoints[0].y + meas_endpoints[1].y) / 2.0, 0.5);
+    TestCase.assertEquals(100., (meas_endpoints[0].x + meas_endpoints[1].x) / 2.0, 0.5);
+    TestCase.assertEquals(795., (meas_endpoints[0].y + meas_endpoints[1].y) / 2.0, 0.5);
   }
 
   public void test_compute_offset_reference_reversed_axis() {
@@ -107,15 +107,15 @@ public class ReferenceCalculatorTest extends TestCase {
     ds.set_point("foo", "SN", new Point(101, 551));
     ds.set_point("foo", "RIGHT EYEPATCH TOP", new Point(52, 865));
     ds.set_point("foo", "RIGHT EYEPATCH BOTTOM", new Point(39, 772));
-    assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
+    TestCase.assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
     HashMap<String, Point[]> result;
     result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
-    assertNotNull(result);
+    TestCase.assertNotNull(result);
     // Retrieve the 75% reference endpoints
     Point[] meas_endpoints = result.get(String.format("%d%% measurement", 75));
 
-    assertEquals(100., ((meas_endpoints[0].x + meas_endpoints[1].x) / 2.0), 0.5);
-    assertEquals(795., ((meas_endpoints[0].y + meas_endpoints[1].y) / 2.0), 0.5);
+    TestCase.assertEquals(100., ((meas_endpoints[0].x + meas_endpoints[1].x) / 2.0), 0.5);
+    TestCase.assertEquals(795., ((meas_endpoints[0].y + meas_endpoints[1].y) / 2.0), 0.5);
   }
 
   public void test_update_point_value_changes() {
@@ -123,12 +123,12 @@ public class ReferenceCalculatorTest extends TestCase {
     try {
       calculator = new MeasurementManager(ds);
     } catch (FileNotFoundException e) {
-      fail(e.getMessage());
+      TestCase.fail(e.getMessage());
     }
     ds.set_point("foo", "SN", new Point(0, 3));
     ds.set_point("foo", "DF", new Point(4, 0));
-    assertEquals(5., ds.get_value("foo", "SNDF"));
+    TestCase.assertEquals(5., ds.get_value("foo", "SNDF"));
     ds.insert_value("foo", "SNDF_y_end", null);
-    assertNull(ds.get_value("foo", "SNDF"));
+    TestCase.assertNull(ds.get_value("foo", "SNDF"));
   }
 }
