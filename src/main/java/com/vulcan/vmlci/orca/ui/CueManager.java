@@ -44,31 +44,29 @@ import ij.gui.PointRoi;
 import ij.gui.Roi;
 
 import javax.swing.JToggleButton;
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Vector;
 
 public class CueManager {
   public final JToggleButton.ToggleButtonModel cueToggle;
   public final JToggleButton.ToggleButtonModel overlayToggle;
   private final DataStore dataStore;
   private final LastActiveImage lastActiveImage;
-  private final HashMap<String, Vector<String>> cue_lookup;
+  private final HashMap<String, ArrayList<String>> cue_lookup;
   private final ReferenceCalculator referenceCalculator;
   private final HashSet<String> conditionLines = new HashSet<>();
   /** The measurement cue selected for rendering */
   private String activeCue;
 
-  public CueManager(DataStore dataStore)
-      throws FileNotFoundException, ConfigurationFileLoadException {
+  public CueManager(DataStore dataStore) throws ConfigurationFileLoadException {
     this.dataStore = dataStore;
     referenceCalculator = new ReferenceCalculator(dataStore);
     lastActiveImage = LastActiveImage.getInstance();
     cue_lookup = new HashMap<>();
 
-    this.cueToggle = new JToggleButton.ToggleButtonModel();
-    this.overlayToggle = new JToggleButton.ToggleButtonModel();
+    cueToggle = new JToggleButton.ToggleButtonModel();
+    overlayToggle = new JToggleButton.ToggleButtonModel();
 
     load_configuration();
 
@@ -88,11 +86,11 @@ public class CueManager {
   }
 
   private void load_configuration() throws ConfigurationFileLoadException {
-    String CONFIG_FILE = "CueConfig.json";
-    HashMap<String, Object> cue_options = ConfigurationLoader.get_json_file(CONFIG_FILE);
-    for (String cue_name : cue_options.keySet()) {
-      for (Object cue_option : (Object[]) cue_options.get(cue_name)) {
-        cue_lookup.putIfAbsent((String) cue_option, new Vector<>());
+    final String CONFIG_FILE = "CueConfig.json";
+    final HashMap<String, Object> cue_options = ConfigurationLoader.get_json_file(CONFIG_FILE);
+    for (final String cue_name : cue_options.keySet()) {
+      for (final Object cue_option : (Object[]) cue_options.get(cue_name)) {
+        cue_lookup.putIfAbsent((String) cue_option, new ArrayList<>());
         cue_lookup.get(cue_option).add(cue_name);
       }
     }
@@ -133,8 +131,8 @@ public class CueManager {
     if (lastActiveImage.no_images()) {
       return;
     }
-    String image_name = lastActiveImage.getMostRecentImageName();
-    ImagePlus img = lastActiveImage.getMostRecentImageWindow();
+    final String image_name = lastActiveImage.getMostRecentImageName();
+    final ImagePlus img = lastActiveImage.getMostRecentImageWindow();
 
     if (cueToggle.isSelected()) {
       img.setOverlay(draw_cue(image_name));
@@ -154,15 +152,15 @@ public class CueManager {
     if (!cue_lookup.containsKey(activeCue)) {
       return null;
     }
-    Overlay overlay = new Overlay();
+    final Overlay overlay = new Overlay();
     overlay.drawNames(true);
     overlay.drawLabels(true);
     overlay.setLabelFontSize(16, "");
-    for (String cue : cue_lookup.get(activeCue)) {
-      HashMap<String, Point[]> guideline;
+    for (final String cue : cue_lookup.get(activeCue)) {
+      final HashMap<String, Point[]> guideline;
       guideline = (HashMap<String, Point[]>) referenceCalculator.do_measurement(cue, image_name);
       for (String label : guideline.keySet()) {
-        Point[] endpoints = guideline.get(label);
+        final Point[] endpoints = guideline.get(label);
         if ("axis".equals(label)) {
           //noinspection AssignmentToForLoopParameter
           label = "";
@@ -190,10 +188,10 @@ public class CueManager {
     if (conditionLines.isEmpty()) {
       return null;
     }
-    Overlay overlay = new Overlay();
-    for (String conditionLine : conditionLines) {
+    final Overlay overlay = new Overlay();
+    for (final String conditionLine : conditionLines) {
       HashMap<String, Point[]> guideline;
-      Point[] endpoints = dataStore.getEndpoints(image_name, conditionLine);
+      final Point[] endpoints = dataStore.getEndpoints(image_name, conditionLine);
       if (null != endpoints) {
         overlay.add(new Line(endpoints[0].x, endpoints[0].y, endpoints[1].x, endpoints[1].y));
       }
