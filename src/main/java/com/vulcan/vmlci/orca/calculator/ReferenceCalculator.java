@@ -33,8 +33,8 @@ package com.vulcan.vmlci.orca.calculator;
 
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.Point;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 import static java.lang.Math.sqrt;
@@ -44,9 +44,9 @@ public class ReferenceCalculator extends BaseCalculator {
    * Construct a
    *
    * @param ds the <code>DataStore</code> that the Calculator will operate on.
-   * @throws FileNotFoundException when the configuration file is not present.
+   * @throws ConfigurationFileLoadException when the configuration file is not present.
    */
-  public ReferenceCalculator(DataStore ds) throws FileNotFoundException {
+  public ReferenceCalculator(DataStore ds) throws ConfigurationFileLoadException {
     super(ds);
   }
 
@@ -73,7 +73,7 @@ public class ReferenceCalculator extends BaseCalculator {
       Long start_percentage,
       Long end_percentage,
       Long step_size) {
-    return ReferenceCalculator.interval_reference_markers_with_base_length(
+    return interval_reference_markers_with_base_length(
         axis_x_start,
         axis_y_start,
         axis_x_end,
@@ -130,21 +130,21 @@ public class ReferenceCalculator extends BaseCalculator {
     double axis_y_delta = axis_y_end - axis_y_start;
 
     // Compute the marker offsets.
-    double marker_x_offset = -axis_y_delta * 0.025;
-    double marker_y_offset = axis_x_delta * 0.025;
+    final double marker_x_offset = -axis_y_delta * 0.025;
+    final double marker_y_offset = axis_x_delta * 0.025;
 
     // Unitize the deltas
-    double axis_length = sqrt(axis_x_delta * axis_x_delta + axis_y_delta * axis_y_delta);
+    final double axis_length = sqrt(axis_x_delta * axis_x_delta + axis_y_delta * axis_y_delta);
     axis_x_delta /= axis_length;
     axis_y_delta /= axis_length;
 
     // Compute the reference length
-    double reference_length =
+    final double reference_length =
         sqrt(
             (ref_x_end - ref_x_start) * (ref_x_end - ref_x_start)
                 + (ref_y_end - ref_y_start) * (ref_y_end - ref_y_start));
 
-    HashMap<String, Point[]> result = new HashMap<>();
+    final HashMap<String, Point[]> result = new HashMap<>();
 
     for (double percentage = start_percentage;
         percentage <= end_percentage;
@@ -178,7 +178,7 @@ public class ReferenceCalculator extends BaseCalculator {
    * @param ref_line_x_end the x coordinate of the end of the line
    * @param ref_line_y_end the y coordinate of the end of the line
    * @param offset The percentage offset from start along the line. Note the 1% resolution.
-   * @return
+   * @return a reference line with a point at offset% along the line.
    */
   public static HashMap<String, Point[]> draw_ref_along_line(
       Double ref_line_x_start,
@@ -187,10 +187,12 @@ public class ReferenceCalculator extends BaseCalculator {
       Double ref_line_y_end,
       Long offset) {
     // Compute reference point along ref line
-    double ref_point_x = ref_line_x_start + (offset / 100.) * (ref_line_x_end - ref_line_x_start);
-    double ref_point_y = ref_line_y_start + (offset / 100.) * (ref_line_y_end - ref_line_y_start);
+    final double ref_point_x =
+        ref_line_x_start + (offset / 100.) * (ref_line_x_end - ref_line_x_start);
+    final double ref_point_y =
+        ref_line_y_start + (offset / 100.) * (ref_line_y_end - ref_line_y_start);
 
-    HashMap<String, Point[]> result = new HashMap<>();
+    final HashMap<String, Point[]> result = new HashMap<>();
     result.put(
         "",
         new Point[] {
@@ -215,7 +217,7 @@ public class ReferenceCalculator extends BaseCalculator {
    * @param ref_line_y_end the y coordinate of the end of the line being projected from
    * @param offset The percentage offset from start along the line being projected from. Note the 1%
    *     resolution.
-   * @return
+   * @return return a reference line with offset markers along the long.
    */
   public static HashMap<String, Point[]> compute_offset_reference_markers(
       Double axis_x_start,
@@ -227,8 +229,8 @@ public class ReferenceCalculator extends BaseCalculator {
       Double ref_line_x_end,
       Double ref_line_y_end,
       Long offset) {
-    Point top =
-        ReferenceCalculator.compute_offset_reference(
+    final Point top =
+        compute_offset_reference(
             axis_x_start,
             axis_y_start,
             axis_x_end,
@@ -239,8 +241,8 @@ public class ReferenceCalculator extends BaseCalculator {
             ref_line_y_end,
             0L);
 
-    Point bot =
-        ReferenceCalculator.compute_offset_reference(
+    final Point bot =
+        compute_offset_reference(
             axis_x_start,
             axis_y_start,
             axis_x_end,
@@ -251,8 +253,8 @@ public class ReferenceCalculator extends BaseCalculator {
             ref_line_y_end,
             100L);
 
-    Point ref =
-        ReferenceCalculator.compute_offset_reference(
+    final Point ref =
+        compute_offset_reference(
             axis_x_start,
             axis_y_start,
             axis_x_end,
@@ -263,9 +265,9 @@ public class ReferenceCalculator extends BaseCalculator {
             ref_line_y_end,
             offset);
     // generated deltas for reference line. Rotate axis by 90 degrees
-    double d_x = (axis_y_start - axis_y_end) * 0.025;
-    double d_y = (axis_x_end - axis_x_start) * 0.025;
-    HashMap<String, Point[]> result = new HashMap<>();
+    final double d_x = (axis_y_start - axis_y_end) * 0.025;
+    final double d_y = (axis_x_end - axis_x_start) * 0.025;
+    final HashMap<String, Point[]> result = new HashMap<>();
     result.put(
         "axis",
         new Point[] {new Point(axis_x_start, axis_y_start), new Point(axis_x_end, axis_y_end)});
@@ -278,13 +280,6 @@ public class ReferenceCalculator extends BaseCalculator {
     result.put(
         "ref bottom",
         new Point[] {new Point(bot.x - d_x, bot.y - d_y), new Point(bot.x + d_x, bot.y + d_y)});
-    //    result.put(
-    //        "reference line",
-    //        new Point[] {
-    //          new Point(ref_line_x_start, ref_line_y_start), new Point(ref_line_x_end,
-    // ref_line_y_end)
-    //        });
-
     return result;
   }
 
@@ -331,20 +326,23 @@ public class ReferenceCalculator extends BaseCalculator {
     // Compute direction vector for main axis
     double axis_direction_x = axis_x_end - axis_x_start;
     double axis_direction_y = axis_y_end - axis_y_start;
-    double length = sqrt(axis_direction_x * axis_direction_x + axis_direction_y * axis_direction_y);
+    final double length =
+        sqrt(axis_direction_x * axis_direction_x + axis_direction_y * axis_direction_y);
     axis_direction_x /= length;
     axis_direction_y /= length;
 
     // Compute reference point along ref line
-    double ref_point_x = ref_line_x_start + (offset / 100.) * (ref_line_x_end - ref_line_x_start);
-    double ref_point_y = ref_line_y_start + (offset / 100.) * (ref_line_y_end - ref_line_y_start);
+    final double ref_point_x =
+        ref_line_x_start + (offset / 100.) * (ref_line_x_end - ref_line_x_start);
+    final double ref_point_y =
+        ref_line_y_start + (offset / 100.) * (ref_line_y_end - ref_line_y_start);
 
     // Compute vector from axis start to reference point
-    double c_x = ref_point_x - axis_x_start;
-    double c_y = ref_point_y - axis_y_start;
+    final double c_x = ref_point_x - axis_x_start;
+    final double c_y = ref_point_y - axis_y_start;
 
     // Compute projection of vector (c_x, c_y) onto axis.
-    double distance_along_axis = (c_x * axis_direction_x + c_y * axis_direction_y);
+    final double distance_along_axis = (c_x * axis_direction_x + c_y * axis_direction_y);
 
     // Compute the location of the projection of the ref_point onto the axis.
     return new Point(
@@ -359,7 +357,7 @@ public class ReferenceCalculator extends BaseCalculator {
    * @return A HashMap containing the landmark rendering instructions.
    */
   public static HashMap<String, Point[]> render_landmark(String label, Double x, Double y) {
-    HashMap<String, Point[]> result = new HashMap<>();
+    final HashMap<String, Point[]> result = new HashMap<>();
     result.put(label, new Point[] {new Point(x, y)});
     return result;
   }
