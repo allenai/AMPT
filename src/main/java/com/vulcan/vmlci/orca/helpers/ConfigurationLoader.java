@@ -36,16 +36,23 @@ import com.opencsv.CSVReader;
 import ij.Prefs;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /** Helpers for loading configuration files from os-dependent preference location. */
-public class ConfigurationLoader {
-  private static Path CONFIG_DIRECTORY = Paths.get("measurement-tool-config");
+@SuppressWarnings({"FinalClass", "UtilityClass", "UtilityClassCanBeEnum"})
+public final class ConfigurationLoader {
+
+  private static Path CONFIG_DIRECTORY = Paths.get("AMPT_configuration");
+
+  private ConfigurationLoader() {
+  }
 
   /**
    * Get the configuration directory for our tool.
@@ -53,7 +60,7 @@ public class ConfigurationLoader {
    * @return The current CONFIG_DIRECTORY
    */
   public static Path getConfigDirectory() {
-    return ConfigurationLoader.CONFIG_DIRECTORY;
+    return CONFIG_DIRECTORY;
   }
 
   /**
@@ -62,7 +69,7 @@ public class ConfigurationLoader {
    * @param configDirectory The new configuration directory.
    */
   public static void setConfigDirectory(String configDirectory) {
-    ConfigurationLoader.CONFIG_DIRECTORY = Paths.get(configDirectory);
+    CONFIG_DIRECTORY = Paths.get(configDirectory);
   }
 
   /**
@@ -71,33 +78,7 @@ public class ConfigurationLoader {
    * @param configDirectory The new configuration directory.
    */
   public static void setConfigDirectory(Path configDirectory) {
-    ConfigurationLoader.CONFIG_DIRECTORY = configDirectory;
-  }
-
-  public static void main(String[] args) throws ConfigurationFileLoadException {
-    System.out.println(ConfigurationLoader.getFullConfigPath("foo"));
-    System.out.println(ConfigurationLoader.get_csv_file("CSV-Columns.csv"));
-    System.out.println(ConfigurationLoader.get_json_file("TestCueConfig.json"));
-  }
-
-  /**
-   * Return the os dependent path to a configuration file.
-   *
-   * <p>If ConfigurationLoader.CONFIG_DIRECTORY is absolute simply return that value, otherwise
-   * return ConfigurationLoader.CONFIG_DIRECTORY inside the os dependent configuration location.
-   *
-   * @param filename The name of the configuration file.
-   * @return a string representation of the fill path to the config file named <code>filename</code>
-   *     .
-   */
-  public static String getFullConfigPath(String filename) {
-    if (ConfigurationLoader.CONFIG_DIRECTORY.isAbsolute()) {
-      return Paths.get(ConfigurationLoader.CONFIG_DIRECTORY.toString(), filename).toString();
-    }
-    String config_location = Prefs.getPrefsDir();
-    Path file_path =
-        Paths.get(config_location, ConfigurationLoader.CONFIG_DIRECTORY.toString(), filename);
-    return file_path.toString();
+    CONFIG_DIRECTORY = configDirectory;
   }
 
   /**
@@ -110,15 +91,66 @@ public class ConfigurationLoader {
    */
   public static ArrayList<HashMap<String, String>> get_csv_file(String filename)
       throws ConfigurationFileLoadException {
-    String config_file = ConfigurationLoader.getFullConfigPath(filename);
-    CSVReader csv_reader = null;
-    java.util.ArrayList<java.util.HashMap<String, String>> result;
+    final String config_file = getFullConfigPath(filename);
+    final CSVReader csv_reader = null;
+    final java.util.ArrayList<java.util.HashMap<String, String>> result;
     try {
       result = Utilities.loadCSVAsMap(config_file);
-    } catch (CSVFileLoadException e) {
+    } catch (final CSVFileLoadException e) {
       throw new ConfigurationFileLoadException(String.format("Couldn't load %s", filename), e);
     }
     return result;
+  }
+
+  /**
+   * Return the os dependent path to a configuration file.
+   *
+   * <p>If ConfigurationLoader.CONFIG_DIRECTORY is absolute simply return that value, otherwise
+   * return ConfigurationLoader.CONFIG_DIRECTORY inside the os dependent configuration location.
+   *
+   * @param filename The name of the configuration file.
+   * @return a string representation of the fill path to the config file named <code>filename</code>
+   *     .
+   */
+  public static String getFullConfigPath(String filename) throws ConfigurationFileLoadException {
+    final Path configurationFile;
+    if (CONFIG_DIRECTORY.isAbsolute()) {
+      configurationFile = Paths.get(CONFIG_DIRECTORY.toString(), filename);
+    } else {
+      configurationFile = Paths.get(Prefs.getPrefsDir(), CONFIG_DIRECTORY.toString(), filename);
+    }
+
+    // If the file doesn't exist, try to grab a copy from defaults
+    if (!Files.exists(configurationFile)) {
+      final Path target_dir = configurationFile.getParent();
+
+      createPreferenceDirectory(target_dir);
+
+      final URL resource =
+          ConfigurationLoader.class.getResource(String.format("/default_config/%s", filename));
+      if (null == resource) {
+        throw new ConfigurationFileLoadException(
+            String.format("Unknown configuration file '%s'", filename), null);
+      }
+      try {
+        Files.copy(resource.openStream(), configurationFile, StandardCopyOption.REPLACE_EXISTING);
+      } catch (final IOException e) {
+        throw new ConfigurationFileLoadException(
+            String.format("Couldn't copy config file %s", resource), e);
+      }
+    }
+    return configurationFile.toString();
+  }
+
+  private static void createPreferenceDirectory(Path target_dir)
+      throws ConfigurationFileLoadException {
+    if (!Files.exists(target_dir)) {
+      try {
+        Files.createDirectories(target_dir);
+      } catch (final IOException e) {
+        throw new ConfigurationFileLoadException("Could not create config dir", e);
+      }
+    }
   }
 
   /**
@@ -131,18 +163,19 @@ public class ConfigurationLoader {
    */
   public static HashMap<String, Object> get_json_file(String filename)
       throws ConfigurationFileLoadException {
-    String config_file = ConfigurationLoader.getFullConfigPath(filename);
-    byte[] encoded;
+    final String config_file = getFullConfigPath(filename);
+    final byte[] encoded;
     try {
       encoded = Files.readAllBytes(Paths.get(config_file));
-    } catch (IOException e) {
+    } catch (final IOException e) {
       throw new ConfigurationFileLoadException(
           String.format("IO problem encountered loading '%s'", config_file), e);
     }
-    String json = new String(encoded, StandardCharsets.UTF_8);
-    HashMap<String, Object> params = new HashMap<>();
+    final String json = new String(encoded, StandardCharsets.UTF_8);
+    final HashMap<String, Object> params = new HashMap<>();
     params.put(JsonReader.USE_MAPS, true);
-    Object obj = JsonReader.jsonToJava(json, params);
+    final Object obj = JsonReader.jsonToJava(json, params);
+    //noinspection unchecked
     return (HashMap<String, Object>) obj;
   }
 }
