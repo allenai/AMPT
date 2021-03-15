@@ -32,10 +32,10 @@
 package com.vulcan.vmlci.orca.calculator;
 
 import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -43,9 +43,9 @@ import java.util.LinkedList;
 public class MeasurementManager extends BaseCalculator implements TableModelListener {
   /**
    * @param ds the <code>DataStore</code> that the Calculator will operate on.
-   * @throws FileNotFoundException when the configuration file is not present.
+   * @throws ConfigurationFileLoadException when the configuration file is not present.
    */
-  public MeasurementManager(DataStore ds) throws FileNotFoundException {
+  public MeasurementManager(DataStore ds) throws ConfigurationFileLoadException {
     super(ds);
     ds.addTableModelListener(this);
   }
@@ -67,12 +67,12 @@ public class MeasurementManager extends BaseCalculator implements TableModelList
    */
   @Override
   public void tableChanged(TableModelEvent event) {
-    int column = event.getColumn();
+    final int column = event.getColumn();
     if (TableModelEvent.ALL_COLUMNS != column) {
-      String column_name = dataStore.getColumnName(column);
+      final String column_name = dataStore.getColumnName(column);
       if (!"Filename".equals(column_name)) {
         for (int row = event.getFirstRow(); row <= event.getLastRow(); row++) {
-          String row_name = dataStore.getRowName(row);
+          final String row_name = dataStore.getRowName(row);
           update(row_name, column_name);
         }
       }
@@ -89,11 +89,11 @@ public class MeasurementManager extends BaseCalculator implements TableModelList
    * @param column_base the base name of the column being updated.
    */
   private void update(String title, String column_base) {
-    LinkedList<String> available_measurement =
+    final LinkedList<String> available_measurement =
         new LinkedList<>(possible_measurements.getOrDefault(column_base, new ArrayList<>()));
-    while (0 < available_measurement.size()) {
-      String measure = available_measurement.removeFirst();
-      Object measurement_result = do_measurement(measure, title);
+    while (!available_measurement.isEmpty()) {
+      final String measure = available_measurement.removeFirst();
+      final Object measurement_result = do_measurement(measure, title);
       dataStore.insert_value(title, measure, measurement_result);
       available_measurement.addAll(possible_measurements.getOrDefault(measure, new ArrayList<>()));
     }
