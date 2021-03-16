@@ -115,6 +115,7 @@
         <dependency>
             <groupId>net.imagej</groupId>
             <artifactId>imagej</artifactId>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>com.miglayout</groupId>
@@ -125,6 +126,7 @@
         <dependency>
             <groupId>net.imglib2</groupId>
             <artifactId>imglib2-ij</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <!-- NB: For ImageJ 1.x overlay visualization. -->
@@ -136,6 +138,7 @@
                     <artifactId>miglayout</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -148,6 +151,7 @@
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>3.9</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.cedarsoftware</groupId>
