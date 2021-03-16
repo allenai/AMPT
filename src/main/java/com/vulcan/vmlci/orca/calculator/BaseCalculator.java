@@ -31,11 +31,11 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
-import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
+import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
-import org.scijava.plugin.Parameter;
 
 import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandle;
@@ -53,7 +53,7 @@ public abstract class BaseCalculator {
   public HashMap<String, MethodHandle> measurement_funcs;
   protected CalculatorConfig measurement_dependencies;
   protected HashMap<String, ArrayList<String>> possible_measurements;
-  @Parameter Logger logger;
+  Logger logger;
 
   /**
    * Default constructor.
@@ -69,9 +69,9 @@ public abstract class BaseCalculator {
 
   /**
    * @param ds the <code>DataStore</code> that the Calculator will operate on.
-   * @throws FileNotFoundException when the configuration file is not present.
+   * @throws ConfigurationFileLoadException when the configuration file is not present.
    */
-  public BaseCalculator(DataStore ds) throws FileNotFoundException {
+  public BaseCalculator(DataStore ds) throws ConfigurationFileLoadException {
     logger = new StderrLogService();
     dataStore = ds;
     loadMethods();
@@ -95,18 +95,18 @@ public abstract class BaseCalculator {
    * </ol>
    */
   private void loadMethods() {
-    MethodHandles.Lookup lookup = MethodHandles.publicLookup();
+    final MethodHandles.Lookup lookup = MethodHandles.publicLookup();
     measurement_funcs = new HashMap<>();
-    for (Method method : this.getClass().getMethods()) {
+    for (final Method method : getClass().getMethods()) {
       if (Modifier.isStatic(method.getModifiers())) {
-        MethodType methodType =
+        final MethodType methodType =
             MethodType.methodType(method.getReturnType(), method.getParameterTypes());
         try {
-          MethodHandle mh =
+          final MethodHandle mh =
               lookup.findStatic(method.getDeclaringClass(), method.getName(), methodType);
           measurement_funcs.put(method.getName(), mh);
-        } catch (NoSuchMethodException | IllegalAccessException e) {
-          e.printStackTrace();
+        } catch (final NoSuchMethodException | IllegalAccessException e) {
+          logger.error(e);
         }
       }
     }
@@ -122,17 +122,16 @@ public abstract class BaseCalculator {
    *
    * @throws FileNotFoundException when the configuration file can't be found.
    */
-  private void loadConfiguration() throws FileNotFoundException {
-
+  private void loadConfiguration() throws ConfigurationFileLoadException {
     measurement_dependencies =
         new CalculatorConfig(ConfigurationLoader.getFullConfigPath(getConfigurationFile()));
     possible_measurements = new HashMap<>();
-    for (CalculatorConfigItem item : measurement_dependencies.values()) {
-      for (Object raw_parameter : item.parameters) {
+    for (final CalculatorConfigItem item : measurement_dependencies.values()) {
+      for (final Object raw_parameter : item.parameters) {
         if (!(raw_parameter instanceof String)) {
           continue;
         }
-        String parameter = (String) raw_parameter;
+        final String parameter = (String) raw_parameter;
         if (!possible_measurements.containsKey(parameter)) {
           possible_measurements.put(parameter, new ArrayList<>());
         }
@@ -155,10 +154,10 @@ public abstract class BaseCalculator {
    *     otherwise.
    */
   public static Double length(Number x_start, Number y_start, Number x_end, Number y_end) {
-//    System.err.println("BaseCalculator.length");
+    //    System.err.println("BaseCalculator.length");
     if (!(null == x_start || null == y_start || null == x_end || null == y_end)) {
-      double delta_x = x_start.doubleValue() - x_end.doubleValue();
-      double delta_y = y_start.doubleValue() - y_end.doubleValue();
+      final double delta_x = x_start.doubleValue() - x_end.doubleValue();
+      final double delta_y = y_start.doubleValue() - y_end.doubleValue();
       return sqrt(delta_x * delta_x + delta_y * delta_y);
     }
     return null;
@@ -199,7 +198,7 @@ public abstract class BaseCalculator {
    * @return the interpolated value
    */
   public static Double parametric_point(Double start, Double end, Double distance) {
-//    System.err.println("BaseCalculator.parametric_point");
+    //    System.err.println("BaseCalculator.parametric_point");
     if (!(null == start || null == end || null == distance)) {
       return start + (end - start) * distance;
     }
@@ -214,11 +213,11 @@ public abstract class BaseCalculator {
    * @return true iff all non-literal parameters have a non-null value.
    */
   public boolean preflight_measurement(String measure, String title) {
-    for (Object parameter : measurement_dependencies.get(measure).parameters) {
+    for (final Object parameter : measurement_dependencies.get(measure).parameters) {
       if (!(parameter instanceof String)) {
         continue;
       }
-      if(((String) parameter).contains("\"")){
+      if (((String) parameter).contains("\"")) {
         continue;
       }
       if (null == dataStore.get_value(title, (String) parameter)) {
@@ -238,30 +237,30 @@ public abstract class BaseCalculator {
    */
   public Object do_measurement(String measure, String title) {
     if (!measurement_dependencies.containsKey(measure)) {
-      final String message = String.format("'%s' is not a known measurement", measure);
-      IllegalArgumentException err = new IllegalArgumentException(message);
+      final String message = "'" + measure + "' is not a known measurement";
+      final IllegalArgumentException err = new IllegalArgumentException(message);
       logger.error(err);
       throw err;
     }
-    CalculatorConfigItem measurement_def = measurement_dependencies.get(measure);
+    final CalculatorConfigItem measurement_def = measurement_dependencies.get(measure);
     final String function = measurement_def.function;
 
     if (!measurement_funcs.containsKey(function)) {
-      String message = String.format("'%s' is not a known function", function);
-      IllegalArgumentException err = new IllegalArgumentException(message);
+      final String message = "'" + function + "' is not a known function";
+      final IllegalArgumentException err = new IllegalArgumentException(message);
       logger.error(err);
       throw err;
     }
 
     // Unmarshalling
-    Object[] arguments = gatherArguments(title, measurement_def);
+    final Object[] arguments = gatherArguments(title, measurement_def);
 
     // Execution
-    MethodHandle mh = measurement_funcs.get(function);
+    final MethodHandle mh = measurement_funcs.get(function);
     Object measurement_result = null;
     try {
       measurement_result = mh.invokeWithArguments(arguments);
-    } catch (Throwable throwable) {
+    } catch (final Throwable throwable) {
       logger.error(throwable);
     }
     return measurement_result;
@@ -275,9 +274,9 @@ public abstract class BaseCalculator {
    * @return an array of arguments
    */
   private Object[] gatherArguments(String title, CalculatorConfigItem measurement_def) {
-    Object[] parameters = measurement_def.parameters;
-    int nArgs = parameters.length;
-    Object[] arguments = new Object[nArgs];
+    final Object[] parameters = measurement_def.parameters;
+    final int nArgs = parameters.length;
+    final Object[] arguments = new Object[nArgs];
     for (int i = 0; i < nArgs; i++) {
       arguments[i] = retrieve_scalar_argument(title, parameters[i]);
     }
@@ -292,10 +291,10 @@ public abstract class BaseCalculator {
    * @return The value of the parameter.
    */
   Object retrieve_scalar_argument(String title, Object param) {
-    Object value;
+    final Object value;
     if (param instanceof String) {
-      if(((String) param).contains("\"")){ // Extract a string literal
-        value = ((String) param).substring(1,((String) param).length()-1);
+      if (((String) param).contains("\"")) { // Extract a string literal
+        value = ((String) param).substring(1, ((String) param).length() - 1);
       } else {
         value = dataStore.get_value(title, (String) param);
       }

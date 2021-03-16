@@ -32,9 +32,6 @@
 package com.vulcan.vmlci.orca.helpers;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
-import com.opencsv.exceptions.CsvValidationException;
-import com.vulcan.vmlci.orca.helpers.CSVFileLoadException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -44,7 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /** Helper functions. */
-public class Utilities {
+public enum Utilities {
+  ;
 
   /**
    * Loads a CSV file into an ArrayList of Maps.
@@ -55,36 +53,30 @@ public class Utilities {
    */
   public static ArrayList<HashMap<String, String>> loadCSVAsMap(String targetFile)
       throws CSVFileLoadException {
-    CSVReader csv_reader;
-    ArrayList<HashMap<String, String>> result = new ArrayList<>();
+    final CSVReader csv_reader;
+    final ArrayList<HashMap<String, String>> result = new ArrayList<>();
     try {
       csv_reader = new CSVReader(new FileReader(targetFile));
-    } catch (FileNotFoundException e) {
-      throw new CSVFileLoadException(
-          String.format("IO problem encountered " + "loading '%s'", targetFile), e);
+    } catch (final FileNotFoundException e) {
+      throw new CSVFileLoadException("IO problem encountered loading '" + targetFile + "'", e);
     }
-    String[] headers;
+    final String[] headers;
     try {
       headers = csv_reader.readNext();
-    } catch (IOException e) {
-      throw new CSVFileLoadException(
-          String.format("IO problem encountered loading '%s'", targetFile), e);
-    } catch (CsvValidationException e) {
-      throw new CSVFileLoadException(String.format("Malformed CSV header in '%s'", targetFile), e);
+    } catch (final IOException e) {
+      throw new CSVFileLoadException("IO problem encountered loading '" + targetFile + "'", e);
     }
-    List<String[]> values;
+
+    final List<String[]> values;
     try {
       values = csv_reader.readAll();
-    } catch (IOException e) {
-      throw new CSVFileLoadException(
-          String.format("IO problem encountered loading '%s'", targetFile), e);
-    } catch (CsvException e) {
-      throw new CSVFileLoadException(String.format("Malformed CSV row in '%s'", targetFile), e);
+    } catch (final IOException e) {
+      throw new CSVFileLoadException("IO problem encountered loading '" + targetFile + "'", e);
     }
 
     final int n_cols = headers.length;
     for (final String[] nextLine : values) {
-      HashMap<String, String> record = new HashMap<>();
+      final HashMap<String, String> record = new HashMap<>();
       for (int i = 0; i < n_cols; i++) {
         record.put(headers[i], nextLine[i]);
       }
