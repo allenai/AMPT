@@ -38,6 +38,7 @@ import com.vulcan.vmlci.orca.event.ActiveImageListener;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
+import org.scijava.Context;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 
@@ -54,7 +55,7 @@ import java.awt.GridBagLayout;
 /**
  * The <code>ControlWindow</code> class is the main UI for the Aquatic Mammal Photogrammetry Tool.
  */
-public class ControlWindow implements ActiveImageListener, TableModelListener {
+public class ControlWindow extends JFrame implements ActiveImageListener, TableModelListener {
   private final JPanel metadata = null;
   private final JPanel input = null;
   private final JPanel length_measurements = null;
@@ -66,8 +67,9 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
   private InputControls inputControls;
   private String active_image;
 
-  public ControlWindow() {
+  public ControlWindow(Context ctx){
     final Logger logger = new StderrLogService();
+    ctx.inject(this);
     try {
       ds = DataStore.createDataStore();
     } catch (final ConfigurationFileLoadException | DataFileLoadException e) {
@@ -133,7 +135,7 @@ public class ControlWindow implements ActiveImageListener, TableModelListener {
     gbc.fill = GridBagConstraints.HORIZONTAL;
     toplevel.add(csv_controls, gbc);
 
-    application_frame = new JFrame();
+    application_frame = this;
     application_frame.setTitle("Test Window");
     application_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     application_frame.add(toplevel);
