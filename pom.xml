@@ -147,7 +147,7 @@
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>5.3</version>
+            <version>3.9</version>
         </dependency>
         <dependency>
             <groupId>com.cedarsoftware</groupId>

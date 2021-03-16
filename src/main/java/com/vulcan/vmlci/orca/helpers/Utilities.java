@@ -32,8 +32,6 @@
 package com.vulcan.vmlci.orca.helpers;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
-import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -65,14 +63,14 @@ public enum Utilities {
     final String[] headers;
     try {
       headers = csv_reader.readNext();
-    } catch (final CsvValidationException | IOException e) {
+    } catch (final IOException e) {
       throw new CSVFileLoadException("IO problem encountered loading '" + targetFile + "'", e);
     }
 
     final List<String[]> values;
     try {
       values = csv_reader.readAll();
-    } catch (final IOException | CsvException e) {
+    } catch (final IOException e) {
       throw new CSVFileLoadException("IO problem encountered loading '" + targetFile + "'", e);
     }
 
