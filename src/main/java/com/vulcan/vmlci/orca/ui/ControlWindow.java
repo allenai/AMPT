@@ -38,6 +38,8 @@ import com.vulcan.vmlci.orca.event.ActiveImageListener;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
+import org.scijava.log.Logger;
+import org.scijava.log.StderrLogService;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -48,53 +50,51 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.FileNotFoundException;
-import org.scijava.Context;
 
 /**
  * The <code>ControlWindow</code> class is the main UI for the Aquatic Mammal Photogrammetry Tool.
  */
-public class ControlWindow extends JFrame implements ActiveImageListener, TableModelListener {
+public class ControlWindow implements ActiveImageListener, TableModelListener {
   private final JPanel metadata = null;
   private final JPanel input = null;
   private final JPanel length_measurements = null;
   private final JPanel body_profiles = null;
-  private JFrame application_frame = null;
+  private JFrame application_frame;
   private DataStore ds;
   private CueManager cueManager;
   private MetadataControl metadataControl;
   private InputControls inputControls;
   private String active_image;
 
-  public ControlWindow(final Context ctx) {
-    ctx.inject(this);
+  public ControlWindow() {
+    final Logger logger = new StderrLogService();
     try {
       ds = DataStore.createDataStore();
-    } catch (ConfigurationFileLoadException | DataFileLoadException e) {
-      e.printStackTrace();
+    } catch (final ConfigurationFileLoadException | DataFileLoadException e) {
+      logger.error(e);
     }
     try {
       cueManager = new CueManager(ds);
-    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
-      e.printStackTrace();
+    } catch (final ConfigurationFileLoadException e) {
+      logger.error(e);
     }
 
     SwingUtilities.invokeLater(this::build_ui);
     ds.addTableModelListener(this);
     try {
-      MeasurementManager measurementManager = new MeasurementManager(ds);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      final MeasurementManager measurementManager = new MeasurementManager(ds);
+    } catch (final ConfigurationFileLoadException e) {
+      logger.error(e);
     }
   }
 
   /** Layout the user interface */
   private void build_ui() {
-    LastActiveImage lastActiveImage = LastActiveImage.getInstance();
+    final LastActiveImage lastActiveImage = LastActiveImage.getInstance();
     metadataControl = new MetadataControl(ds, cueManager);
     inputControls = new InputControls(ds, cueManager);
-    GridBagConstraints c = new GridBagConstraints();
-    JPanel toplevel = new JPanel();
+    final GridBagConstraints c = new GridBagConstraints();
+    final JPanel toplevel = new JPanel();
     toplevel.setLayout(new GridBagLayout());
 
     GridBagConstraints gbc;
@@ -109,7 +109,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     gbc.fill = GridBagConstraints.HORIZONTAL;
 
     // Branding
-    JPanel branding = new Branding();
+    final JPanel branding = new Branding();
     toplevel.add(branding, gbc);
 
     // Center Space
@@ -123,7 +123,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     toplevel.add(build_accordion(), gbc);
 
     // Data Controls
-    JPanel csv_controls = new DataControls(ds);
+    final JPanel csv_controls = new DataControls(ds);
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 2;
@@ -133,22 +133,22 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     gbc.fill = GridBagConstraints.HORIZONTAL;
     toplevel.add(csv_controls, gbc);
 
-    this.application_frame = this; /* new JFrame(); */
-    this.application_frame.setTitle("Test Window");
-//    this.application_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    this.application_frame.add(toplevel);
-    this.application_frame.pack();
-//    this.application_frame.setVisible(true);
+    application_frame = new JFrame();
+    application_frame.setTitle("Test Window");
+    application_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    application_frame.add(toplevel);
+    application_frame.pack();
+    application_frame.setVisible(true);
 
-    this.active_image = lastActiveImage.getMostRecentImageName();
+    active_image = lastActiveImage.getMostRecentImageName();
     lastActiveImage.addActiveImageListener(this);
-    this.setTitle();
+    setTitle();
   }
 
   private JComponent build_accordion() {
 
-    JPanel frame = new JPanel();
-    JScrollPane scrollPane = new JScrollPane(frame);
+    final JPanel frame = new JPanel();
+    final JScrollPane scrollPane = new JScrollPane(frame);
     GridBagConstraints gbc = new GridBagConstraints();
     frame.setLayout(new GridBagLayout());
 
@@ -158,7 +158,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 0;
-    AccordionPanel metadata = new AccordionPanel("Metadata", true);
+    final AccordionPanel metadata = new AccordionPanel("Metadata", true);
     frame.add(metadata, gbc);
 
     gbc = new GridBagConstraints();
@@ -170,7 +170,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 1;
-    AccordionPanel demo2 = new AccordionPanel("Input", true);
+    final AccordionPanel demo2 = new AccordionPanel("Input", true);
     demo2.setContent_panel(inputControls.inputPanel);
     frame.add(demo2, gbc);
 
@@ -178,8 +178,8 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 2;
-    AccordionPanel measurements = new AccordionPanel("Length Measurements", true);
-    JPanel lengthMeasurements =
+    final AccordionPanel measurements = new AccordionPanel("Length Measurements", true);
+    final JPanel lengthMeasurements =
         new LengthDisplay(
             ds, s -> s.measurement_type.contains("length") && !s.name.contains("%"), cueManager);
     measurements.setContent_panel(lengthMeasurements);
@@ -189,8 +189,8 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 3;
-    AccordionPanel bodyProfiles = new AccordionPanel("Body Profiles", true);
-    JPanel profileMeasurements =
+    final AccordionPanel bodyProfiles = new AccordionPanel("Body Profiles", true);
+    final JPanel profileMeasurements =
         new LengthDisplay(
             ds, s -> s.measurement_type.contains("length") && s.name.contains("%"), cueManager);
     bodyProfiles.setContent_panel(profileMeasurements);
@@ -210,7 +210,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
    * dirty state of the dataStore.
    */
   private void setTitle() {
-    String saved_state;
+    final String saved_state;
     if (ds.dirty()) {
       saved_state = "CSV Unsaved";
     } else {
@@ -229,7 +229,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
   /**
    * The event handler supports updating the title to reflect the dirty status of the dataStore.
    *
-   * @param e
+   * @param e Event containing the details of the table change.
    */
   @Override
   public void tableChanged(TableModelEvent e) {

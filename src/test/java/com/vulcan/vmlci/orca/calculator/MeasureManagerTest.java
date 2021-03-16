@@ -32,6 +32,7 @@
 package com.vulcan.vmlci.orca.calculator;
 
 import com.vulcan.vmlci.orca.data.Point;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.DataStoreTest;
@@ -86,7 +87,7 @@ public class MeasureManagerTest extends TestCase {
 
     try {
       new MeasurementManager(ds);
-    } catch (FileNotFoundException e) {
+    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
       TestCase.fail(e.getMessage());
     }
     ds.insert_value("foo", "SNDF_x_start", 0.);
@@ -101,7 +102,7 @@ public class MeasureManagerTest extends TestCase {
     BaseCalculator calculator = null;
     try {
       calculator = new MeasurementManager(ds);
-    } catch (FileNotFoundException e) {
+    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
       TestCase.fail(e.getMessage());
     }
     ds.set_point("foo", "SN", new Point(0,3));

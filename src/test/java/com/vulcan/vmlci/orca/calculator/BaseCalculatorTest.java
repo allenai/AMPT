@@ -31,6 +31,7 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
+import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.DataStoreTest;
@@ -85,7 +86,7 @@ public class BaseCalculatorTest extends TestCase {
     BaseCalculator calculator = null;
     try {
       calculator = new BaseCalculatorTestingAdapter(ds);
-    } catch (FileNotFoundException e) {
+    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
       TestCase.fail(e.getMessage());
     }
     TestCase.assertEquals(
@@ -103,7 +104,7 @@ public class BaseCalculatorTest extends TestCase {
     BaseCalculator mm = null;
     try {
       mm = new BaseCalculatorTestingAdapter(ds);
-    } catch (FileNotFoundException e) {
+    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
       TestCase.fail(e.getMessage());
     }
     ds.insert_value("foo", "SNDF_x_start", 0.);
@@ -119,7 +120,7 @@ public class BaseCalculatorTest extends TestCase {
     BaseCalculator mm = null;
     try {
       mm = new BaseCalculatorTestingAdapter(ds);
-    } catch (FileNotFoundException e) {
+    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
       TestCase.fail(e.getMessage());
     }
     ds.insert_value("foo", "SNDF_x_start", 0.);
@@ -133,7 +134,7 @@ public class BaseCalculatorTest extends TestCase {
 
   private static class BaseCalculatorTestingAdapter extends BaseCalculator {
 
-    public BaseCalculatorTestingAdapter(DataStore ds) throws FileNotFoundException {
+    public BaseCalculatorTestingAdapter(DataStore ds) throws FileNotFoundException, ConfigurationFileLoadException {
       super(ds);
     }
 

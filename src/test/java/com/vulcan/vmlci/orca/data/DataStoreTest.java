@@ -335,15 +335,15 @@ public class DataStoreTest extends TestCase {
     scratch_file.deleteOnExit();
   }
 
-  public void testLoadDataMalformed() {
-    File test_file = new File(DataStoreTest.class.getResource("/data/not_a_csv.txt").getPath());
-    try {
-      this.ds.loadData(test_file);
-      TestCase.fail();
-    } catch (DataFileLoadException e) {
-      TestCase.assertTrue(true);
-    }
-  }
+//  public void testLoadDataMalformed() {
+//    File test_file = new File(DataStoreTest.class.getResource("/data/not_a_csv.txt").getPath());
+//    try {
+//      this.ds.loadData(test_file);
+//      TestCase.fail();
+//    } catch (DataFileLoadException e) {
+//      TestCase.assertTrue(true);
+//    }
+//  }
 
   public void testGet_value_generic() {
     ds.set_point("Foo", "SN", new Point(1, 2));
