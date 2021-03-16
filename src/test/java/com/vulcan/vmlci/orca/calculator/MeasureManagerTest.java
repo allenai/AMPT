@@ -87,7 +87,7 @@ public class MeasureManagerTest extends TestCase {
 
     try {
       new MeasurementManager(ds);
-    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
+    } catch (ConfigurationFileLoadException e) {
       TestCase.fail(e.getMessage());
     }
     ds.insert_value("foo", "SNDF_x_start", 0.);
@@ -102,7 +102,7 @@ public class MeasureManagerTest extends TestCase {
     BaseCalculator calculator = null;
     try {
       calculator = new MeasurementManager(ds);
-    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
+    } catch (ConfigurationFileLoadException e) {
       TestCase.fail(e.getMessage());
     }
     ds.set_point("foo", "SN", new Point(0,3));

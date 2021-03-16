@@ -123,7 +123,7 @@ public class ReferenceCalculatorTest extends TestCase {
     BaseCalculator calculator = null;
     try {
       calculator = new MeasurementManager(ds);
-    } catch (FileNotFoundException | ConfigurationFileLoadException e) {
+    } catch (ConfigurationFileLoadException e) {
       TestCase.fail(e.getMessage());
     }
     ds.set_point("foo", "SN", new Point(0, 3));
