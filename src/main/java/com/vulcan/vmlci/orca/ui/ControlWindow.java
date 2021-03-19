@@ -51,6 +51,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 
 /**
  * The <code>ControlWindow</code> class is the main UI for the Aquatic Mammal Photogrammetry Tool.
@@ -67,7 +69,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
   private InputControls inputControls;
   private String active_image;
 
-  public ControlWindow(Context ctx){
+  public ControlWindow(Context ctx) {
     final Logger logger = new StderrLogService();
     ctx.inject(this);
     try {
@@ -145,6 +147,16 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     active_image = lastActiveImage.getMostRecentImageName();
     lastActiveImage.addActiveImageListener(this);
     setTitle();
+    this.addWindowFocusListener(
+        new WindowFocusListener() {
+          @Override
+          public void windowGainedFocus(WindowEvent e) {
+            ((JFrame) e.getSource()).setMenuBar(ij.Menus.getMenuBar());
+          }
+
+          @Override
+          public void windowLostFocus(WindowEvent e) {}
+        });
   }
 
   private JComponent build_accordion() {
