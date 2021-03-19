@@ -42,7 +42,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -188,7 +187,7 @@ public class About extends JDialog {
     String license = About.COPYRIGHT_2021_VULCAN_INC;
     ;
     ClassLoader classLoader = getClass().getClassLoader();
-    final InputStream licenseInput = classLoader.getResourceAsStream("license.html");
+    final InputStream licenseInput = classLoader.getResourceAsStream("documentation/license.html");
     if (null != licenseInput) {
       try (final BufferedReader licenseReader =
           new BufferedReader(new InputStreamReader(licenseInput))) {
