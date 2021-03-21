@@ -94,16 +94,15 @@ public class Branding extends JPanel {
     JMenuItem menuItem = new JMenuItem("About");
     menuItem.addActionListener(
         e -> {
-          About dialog = new About((Frame) this.getTopLevelAncestor());
+          final About dialog = new About((Frame) getTopLevelAncestor());
           dialog.setLocationByPlatform(true);
-          dialog.setLocationRelativeTo(this.getTopLevelAncestor());
+          dialog.setLocationRelativeTo(getTopLevelAncestor());
           dialog.setVisible(true);
         });
     menu.add(menuItem);
     menuItem = new JMenuItem("User Guide");
     menu.add(menuItem);
-    menuItem = new JMenuItem("Preferences");
-    menu.add(menuItem);
+    menuItem.addActionListener(e->new HelpLauncher((JFrame) getTopLevelAncestor()));
     return menu;
   }
 }
