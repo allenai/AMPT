@@ -51,8 +51,7 @@ public final class ConfigurationLoader {
 
   private static Path CONFIG_DIRECTORY = Paths.get("AMPT_configuration");
 
-  private ConfigurationLoader() {
-  }
+  private ConfigurationLoader() {}
 
   /**
    * Get the configuration directory for our tool.
@@ -114,11 +113,7 @@ public final class ConfigurationLoader {
    */
   public static String getFullConfigPath(String filename) throws ConfigurationFileLoadException {
     final Path configurationFile;
-    if (CONFIG_DIRECTORY.isAbsolute()) {
-      configurationFile = Paths.get(CONFIG_DIRECTORY.toString(), filename);
-    } else {
-      configurationFile = Paths.get(Prefs.getPrefsDir(), CONFIG_DIRECTORY.toString(), filename);
-    }
+    configurationFile = getAbsoluteConfigurationPath(filename);
 
     // If the file doesn't exist, try to grab a copy from defaults
     if (!Files.exists(configurationFile)) {
@@ -140,6 +135,22 @@ public final class ConfigurationLoader {
       }
     }
     return configurationFile.toString();
+  }
+
+  /**
+   * Generate an absolute path to filename within the configuration directory.
+   *
+   * @param filename the configuration file name
+   * @return the absolute path to the configuration file.
+   */
+  public static Path getAbsoluteConfigurationPath(String filename) {
+    final Path configurationFile;
+    if (CONFIG_DIRECTORY.isAbsolute()) {
+      configurationFile = Paths.get(CONFIG_DIRECTORY.toString(), filename);
+    } else {
+      configurationFile = Paths.get(Prefs.getPrefsDir(), CONFIG_DIRECTORY.toString(), filename);
+    }
+    return configurationFile;
   }
 
   private static void createPreferenceDirectory(Path target_dir)
