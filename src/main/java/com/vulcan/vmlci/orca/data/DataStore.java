@@ -61,7 +61,6 @@ public final class DataStore extends AbstractTableModel {
   private static final String Y_START_LENGTH = "%s_y_start";
   private static final String X_END_LENGTH = "%s_x_end";
   private static final String Y_END_LENGTH = "%s_y_end";
-  private static DataStore datastore_instance = null;
   /** Metadata about each column. */
   public final HashMap<String, ColumnDescriptor> descriptors = new java.util.HashMap<>();
 
@@ -132,10 +131,8 @@ public final class DataStore extends AbstractTableModel {
 
   public static DataStore createDataStore(File dataFile)
       throws ConfigurationFileLoadException, DataFileLoadException {
-    if (null == DataStore.datastore_instance) {
-      DataStore.datastore_instance = new DataStore(dataFile);
-    }
-    return DataStore.datastore_instance;
+
+    return new DataStore(dataFile);
   }
 
   /**
@@ -800,5 +797,14 @@ public final class DataStore extends AbstractTableModel {
 
   public File getCsvFile() {
     return csvFile;
+  }
+
+  /**
+   * Allows for marking the dataStore as explicitly clean or dirty.
+   *
+   * @param dirty the new dirty state.
+   */
+  public void setDirty(final boolean dirty) {
+    this.dataDirty = dirty;
   }
 }
