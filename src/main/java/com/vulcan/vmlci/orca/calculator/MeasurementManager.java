@@ -31,7 +31,9 @@
 
 package com.vulcan.vmlci.orca.calculator;
 
+import com.vulcan.vmlci.orca.data.ColumnDescriptor;
 import com.vulcan.vmlci.orca.data.DataStore;
+import com.vulcan.vmlci.orca.data.Point;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 
 import javax.swing.event.TableModelEvent;
@@ -76,6 +78,41 @@ public class MeasurementManager extends BaseCalculator implements TableModelList
           update(row_name, column_name);
         }
       }
+    } else if (event.getFirstRow() != event.getLastRow()){
+      // scan through all endpointColumns are endpoints and update their associated calculations.
+      final ArrayList<String> endpointColumns = new ArrayList<>();
+      final ArrayList<String> lengthColumns = new ArrayList<>();
+      for (final ColumnDescriptor descriptor : dataStore.descriptors.values()) {
+        if (descriptor.name.endsWith("_x")
+            || descriptor.name.endsWith("_x_start")
+            || descriptor.name.endsWith("_y")
+            || descriptor.name.endsWith("_y_start")) {
+          endpointColumns.add(descriptor.name);
+        }
+        if (descriptor.measurement_type.equals("length")) {
+          lengthColumns.add(descriptor.name);
+        }
+      }
+      final int nRows = dataStore.getRowCount();
+      for (int i = 0; i < nRows; i++) {
+        final String rowName = dataStore.getRowName(i);
+        for (final String columnName : endpointColumns) {
+          update(rowName, columnName);
+        }
+        for (final String columnName : lengthColumns) {
+          final Point[] endpoints = dataStore.getEndpoints(rowName, columnName);
+          if (null != endpoints) {
+            final Double measuredLength =
+                MeasurementManager.length(
+                    endpoints[0].x, endpoints[0].y, endpoints[1].x, endpoints[1].y);
+            if (null != measuredLength) {
+              dataStore.insert_value(rowName, columnName, measuredLength);
+            }
+          }
+        }
+      }
+
+      dataStore.setDirty(false);
     }
   }
 
