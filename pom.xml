@@ -14,7 +14,7 @@
 
     <groupId>vulcan.fiji</groupId>
     <artifactId>AMPT</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 
     <name>Aquatic Mammal Photogrammetry Tool</name>
     <description>ImageJ plugin to perform photogrammetry on aquatic mammals.</description>
@@ -28,8 +28,8 @@
 
     <licenses>
         <license>
-            <name>BSD 3-Clause "New" or "Revised" License</name>
-            <url>https://spdx.org/licenses/BSD-3-Clause.html</url>
+            <name>Apache 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
