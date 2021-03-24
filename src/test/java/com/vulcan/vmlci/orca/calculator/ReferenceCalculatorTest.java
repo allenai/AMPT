@@ -92,9 +92,9 @@ public class ReferenceCalculatorTest extends TestCase {
     ds.set_point("foo", "DF", new Point(101, 551));
     ds.set_point("foo", "REFLINE TOP", new Point(52, 865));
     ds.set_point("foo", "REFLINE BOTTOM", new Point(39, 772));
-    TestCase.assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
+    TestCase.assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Line Refs", "foo"));
     HashMap<String, Point[]> result;
-    result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
+    result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Line Refs", "foo");
     TestCase.assertNotNull(result);
     // Retrieve the 75% reference endpoints
     Point[] meas_endpoints = result.get(String.format("%.0f%% measurement", 0.75 * 100.));
@@ -108,9 +108,9 @@ public class ReferenceCalculatorTest extends TestCase {
     ds.set_point("foo", "SN", new Point(101, 551));
     ds.set_point("foo", "REFLINE TOP", new Point(52, 865));
     ds.set_point("foo", "REFLINE BOTTOM", new Point(39, 772));
-    TestCase.assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
+    TestCase.assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Line Refs", "foo"));
     HashMap<String, Point[]> result;
-    result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
+    result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Line Refs", "foo");
     TestCase.assertNotNull(result);
     // Retrieve the 75% reference endpoints
     Point[] meas_endpoints = result.get(String.format("%d%% measurement", 75));
