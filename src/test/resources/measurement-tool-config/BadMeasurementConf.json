@@ -154,33 +154,33 @@
   {
     "target": "REPGuide_x_start",
     "parameters": [
-      "RIGHT EYEPATCH TOP_x"
+      "REFLINE TOP_x"
     ],
     "function": "copy"
   },
   {
     "target": "REPGuide_y_start",
     "parameters": [
-      "RIGHT EYEPATCH TOP_y"
+      "REFLINE TOP_y"
     ],
     "function": "copy"
   },
   {
     "target": "REPGuide_x_end",
     "parameters": [
-      "RIGHT EYEPATCH BOTTOM_x"
+      "REFLINE BOTTOM_x"
     ],
     "function": "copy"
   },
   {
     "target": "REPGuide_y_end",
     "parameters": [
-      "RIGHT EYEPATCH BOTTOM_y"
+      "REFLINE BOTTOM_y"
     ],
     "function": "copy"
   },
   {
-    "target": "EP BOTTOM REFERENCE_x",
+    "target": "REF BOTTOM REFERENCE_x",
     "parameters": [
       "REPGuide_x_start",
       "REPGuide_x_end",
@@ -189,7 +189,7 @@
     "function": "parametric_point"
   },
   {
-    "target": "EP BOTTOM REFERENCE_y",
+    "target": "REF BOTTOM REFERENCE_y",
     "parameters": [
       "REPGuide_y_start",
       "REPGuide_y_end",

@@ -90,8 +90,8 @@ public class ReferenceCalculatorTest extends TestCase {
   public void test_compute_offset_reference_normal() {
     ds.set_point("foo", "SN", new Point(100, 928));
     ds.set_point("foo", "DF", new Point(101, 551));
-    ds.set_point("foo", "RIGHT EYEPATCH TOP", new Point(52, 865));
-    ds.set_point("foo", "RIGHT EYEPATCH BOTTOM", new Point(39, 772));
+    ds.set_point("foo", "REFLINE TOP", new Point(52, 865));
+    ds.set_point("foo", "REFLINE BOTTOM", new Point(39, 772));
     TestCase.assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
     HashMap<String, Point[]> result;
     result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
@@ -106,8 +106,8 @@ public class ReferenceCalculatorTest extends TestCase {
   public void test_compute_offset_reference_reversed_axis() {
     ds.set_point("foo", "DF", new Point(100, 928));
     ds.set_point("foo", "SN", new Point(101, 551));
-    ds.set_point("foo", "RIGHT EYEPATCH TOP", new Point(52, 865));
-    ds.set_point("foo", "RIGHT EYEPATCH BOTTOM", new Point(39, 772));
+    ds.set_point("foo", "REFLINE TOP", new Point(52, 865));
+    ds.set_point("foo", "REFLINE BOTTOM", new Point(39, 772));
     TestCase.assertTrue("Preflight failed", referenceCalculator.preflight_measurement("Eye Refs", "foo"));
     HashMap<String, Point[]> result;
     result = (HashMap<String, Point[]>) referenceCalculator.do_measurement("Eye Refs", "foo");
