@@ -1,0 +1,81 @@
+[
+  {
+    "target": "Body Profile",
+    "parameters": [
+      "SNDF_x_start",
+      "SNDF_y_start",
+      "SNDF_x_end",
+      "SNDF_y_end",
+      5,
+      100,
+      5
+    ],
+    "function": "interval_reference_markers"
+  },
+  {
+    "target": "Body Profile 225",
+    "parameters": [
+      "DFFL_x_start",
+      "DFFL_y_start",
+      "DFFL_x_end",
+      "DFFL_y_end",
+      "SNDF_x_start",
+      "SNDF_y_start",
+      "SNDF_x_end",
+      "SNDF_y_end",
+      5,
+      125,
+      5,
+      100
+    ],
+    "function": "interval_reference_markers_with_base_length"
+  },
+  {
+    "target": "Head Width",
+    "parameters": [
+      "BHDF_x_start",
+      "BHDF_y_start",
+      "BHDF_x_end",
+      "BHDF_y_end",
+      15,
+      15,
+      10
+    ],
+    "function": "interval_reference_markers"
+  },
+  {
+    "target": "BH",
+    "parameters": [
+      "\"BH\"",
+      "BH_x",
+      "BH_y"
+    ],
+    "function": "render_landmark"
+  },
+  {
+    "target": "SN",
+    "parameters": [
+      "\"SN\"",
+      "SN_x",
+      "SN_y"
+    ],
+    "function": "render_landmark"
+  },
+  {
+    "target": "DF",
+    "parameters": [
+      "\"DF\"",
+      "DF_x",
+      "DF_y"
+    ],
+    "function": "render_landmark"
+  },
+  {
+    "target": "FL",
+    "parameters": [
+      "\"FL\"",
+      "FL_x",
+      "FL_y"
+    ],
+    "function": "render_landmark"
+  }]
