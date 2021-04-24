@@ -1,5 +1,5 @@
 ---
-title: CSV-Columns.csv Format
+title: CSV Column Configuration
 summary: A brief overview of the pieces parts
 authors:
     - Jenna James
@@ -13,15 +13,15 @@ This is an example of the `CVS-Columns.csv` configuration file. The file has a m
 
 ## Headers
 
-| Header Column      | Description                                                                     |
-|--------------------|---------------------------------------------------------------------------------|
-| `column_name`      | The name of the column, must be unique. May contain embedded spaces.            |
-| `description`      | A human-readable description of the column's content.                           |
-| `units`            | The measurement units. See [units](#units) table below.                         |
-| `measurement_type` | The type of measurement. See [measurement type](#measurement-type) table below. |
-| `export`           | True if the column is exported for analysis outside of AMPT.                    |
-| `editable`         | True if the column can be edited directly in the tool.                          |
-| `is_metadata`      | True if the column is image metadata.                                           |
+| Header Column      | Description                                                                      |
+|--------------------|----------------------------------------------------------------------------------|
+| `column_name`      | The name of the column, must be unique. May contain embedded spaces.             |
+| `description`      | A human-readable description of the column's content. Not currently used by AMPT.|
+| `units`            | The measurement units. See [units](#units) table below.                          |
+| `measurement_type` | The type of measurement. See [measurement type](#measurement-type) table below.  |
+| `export`           | True if the column is exported for analysis outside of AMPT.                     |
+| `editable`         | True if the column can be edited directly in the tool.                           | 
+| `is_metadata`      | True if the column is image metadata.                                            |
 
 
 ## Units
@@ -33,7 +33,7 @@ This is an example of the `CVS-Columns.csv` configuration file. The file has a m
 | fractional pixels  | Double precision floating point. |
 | meters             | Double precision floating point. |
 | millimeters        | Double precision floating point. |
-| pixels             | Integer.                         |
+| pixels             | Double precision floating point. |
 | text               | Free text.                       |
 | timestamp          | Free text.                       |
 
@@ -49,6 +49,19 @@ This is an example of the `CVS-Columns.csv` configuration file. The file has a m
 | manual      | Entered manually.                                                                 |
 | point       | Point set by user.                                                                |
 | selection   | May be free text, or drawn from collection of existing values.                    |
+
+
+## Required Rows
+In order for AMPT to work correctly, there are a few mandatory rows in the configuration file. The mandatory rows are data sources and sinks fo different parts of the tool. The mandatory rows along with their usage are listed below, the names are case sensitive:
+
+| Required Row     | Usage                                                                                                                         |
+|------------------|-------------------------------------------------------------------------------------------------------------------------------|
+|Filename          | This is the key for the measurements, must be unique for session. Linked to the "[Filename](metadata.md)" field.                                              |
+|WhaleID           | This is the identifier for the animal being measured. Linked to the "[Animal ID](metadata.md)" field.                                        |
+|Position          | This indicates where the animal is in the image. Linked to the "[Position](metadata.md)" field.                                              |
+|UNDERWATER        | This indicates the depth of the animal 0 = On surface, 1 = Underwater, 2 =  Deep underwater. Linked to the "[Underwater](metadata.md)" field.|
+|MEAS&nbsp;COMMENTS| This field holds free text comments from the user. Linked to the "[Comments](input.md#comments)" input panel.                                      |
+
 
 ## Default `CSV-Columns.csv`
 ```
@@ -67,7 +80,7 @@ CameraModel,Model of camera,text,manual,True,False,True
 FocalLength,Camera focal length,millimeters,manual,True,False,True
 Comment,EXIF Field,text,manual,True,False,True
 MEAS COMMENTS,Free text from scientist,editable text,free text,True,True,True
-UNDERWATER,"Animal underwater, 0=No, 1=Yes",editable text,manual,True,True,True
+UNDERWATER,"Animal underwater, 0=No, 1=Yes, 2=Deep",editable text,manual,True,True,True
 GIRTH,breadth at anterior insertion of the dorsal fin (same as 100% measure in profile),fractional pixels,auto length,True,True,False
 HEAD,breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),fractional pixels,length,True,True,False
 SNDF,tip of rostrum to anterior insertion of dorsal fin,fractional pixels,auto length,True,False,False
