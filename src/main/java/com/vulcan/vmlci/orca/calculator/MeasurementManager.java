@@ -19,6 +19,7 @@ package com.vulcan.vmlci.orca.calculator;
 import com.vulcan.vmlci.orca.data.ColumnDescriptor;
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.Point;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFile;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 
 import javax.swing.event.TableModelEvent;
@@ -40,7 +41,7 @@ public class MeasurementManager extends BaseCalculator implements TableModelList
   /** @return The name of the configuration file required for this calculator. */
   @Override
   protected String getConfigurationFile() {
-    return "MeasurementConf.json";
+    return ConfigurationFile.MEASUREMENT_CONFIG.getFilename();
   }
 
   /**

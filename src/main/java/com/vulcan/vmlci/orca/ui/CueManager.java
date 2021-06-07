@@ -19,6 +19,7 @@ package com.vulcan.vmlci.orca.ui;
 import com.vulcan.vmlci.orca.calculator.ReferenceCalculator;
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.Point;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFile;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.ConfigurationLoader;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
@@ -71,8 +72,8 @@ public class CueManager {
   }
 
   private void load_configuration() throws ConfigurationFileLoadException {
-    final String CONFIG_FILE = "CueConfig.json";
-    final HashMap<String, Object> cue_options = ConfigurationLoader.get_json_file(CONFIG_FILE);
+    final HashMap<String, Object> cue_options =
+        ConfigurationLoader.getJsonFileAsMap(ConfigurationFile.CUE_CONFIG.getFilename());
     for (final String cue_name : cue_options.keySet()) {
       for (final Object cue_option : (Object[]) cue_options.get(cue_name)) {
         cue_lookup.putIfAbsent((String) cue_option, new ArrayList<>());

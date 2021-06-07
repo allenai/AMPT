@@ -68,7 +68,7 @@ public final class ConfigurationLoader {
   /**
    * Load a CSV configuration file. The CSV file <b>must</b> have a header and be comma separated.
    *
-   * @param filename The name of a JSON configuration file in the preferences directory.
+   * @param filename The name of a CSV configuration file in the preferences directory.
    * @return A list of HashMaps containing the rows keyed by column name.
    * @throws ConfigurationFileLoadException If there are issues opening or reading the configuration
    *     file.
@@ -157,8 +157,7 @@ public final class ConfigurationLoader {
    * @throws ConfigurationFileLoadException If there are issues opening or reading the configuration
    *     file.
    */
-  public static HashMap<String, Object> get_json_file(String filename)
-      throws ConfigurationFileLoadException {
+  public static Object getJsonFile(String filename) throws ConfigurationFileLoadException {
     final String config_file = getFullConfigPath(filename);
     final byte[] encoded;
     try {
@@ -170,8 +169,20 @@ public final class ConfigurationLoader {
     final String json = new String(encoded, StandardCharsets.UTF_8);
     final HashMap<String, Object> params = new HashMap<>();
     params.put(JsonReader.USE_MAPS, true);
-    final Object obj = JsonReader.jsonToJava(json, params);
+    return JsonReader.jsonToJava(json, params);
+  }
+
+  /**
+   * Load a JSON configuration file as a map of objects.
+   *
+   * @param filename - The name of a JSON configuration file in the preferences directory.
+   * @return A map of objects representation of a JSON file.
+   * @throws ConfigurationFileLoadException If there are issues opening or reading the configuration
+   *     file.
+   */
+  public static HashMap<String, Object> getJsonFileAsMap(String filename)
+      throws ConfigurationFileLoadException {
     //noinspection unchecked
-    return (HashMap<String, Object>) obj;
+    return (HashMap<String, Object>) getJsonFile(filename);
   }
 }
