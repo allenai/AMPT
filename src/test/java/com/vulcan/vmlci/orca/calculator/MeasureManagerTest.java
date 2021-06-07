@@ -27,6 +27,7 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @SuppressWarnings("UnusedAssignment")
 public class MeasureManagerTest extends TestCase {
@@ -38,7 +39,7 @@ public class MeasureManagerTest extends TestCase {
     super.setUp();
     this.originalConfigPath = ConfigurationLoader.getConfigDirectory();
     String testingConfigPath =
-        DataStoreTest.class.getResource("/measurement-tool-config/").getPath();
+        Paths.get(DataStoreTest.class.getResource("/measurement-tool-config/").toURI()).toString();
     ConfigurationLoader.setConfigDirectory(testingConfigPath);
     this.ds = DataStore.createDataStore();
   }
