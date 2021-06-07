@@ -287,7 +287,6 @@ public class DataStoreTest extends TestCase {
 
   public void testSave_as_csv() throws Exception {
     File scratch_file = File.createTempFile("test_dump", "csv");
-    scratch_file.deleteOnExit();
     this.load_test_data("/data/sample_full.csv");
     try {
       this.ds.save_as_csv(scratch_file);
