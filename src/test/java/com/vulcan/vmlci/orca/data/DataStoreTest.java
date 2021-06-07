@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Date;
+import java.nio.file.Paths;
 
 public class DataStoreTest extends TestCase {
   final String[] SAMPLE_SHORT_FILES = {
@@ -37,7 +37,7 @@ public class DataStoreTest extends TestCase {
     super.setUp();
     this.originalConfigPath = ConfigurationLoader.getConfigDirectory();
     String testingConfigPath =
-        DataStoreTest.class.getResource("/measurement-tool-config/").getPath();
+        Paths.get(DataStoreTest.class.getResource("/measurement-tool-config/").toURI()).toString();
     ConfigurationLoader.setConfigDirectory(testingConfigPath);
     this.ds = DataStore.createDataStore();
     this.ds.loadData(null);
@@ -59,15 +59,18 @@ public class DataStoreTest extends TestCase {
   }
 
   public void testTEXT_UNITS() {
-    TestCase.assertEquals("Failure - set cardinality for TEXT_UNITS incorrect", 4, ds.TEXT_UNITS.size());
+    TestCase.assertEquals(
+        "Failure - set cardinality for TEXT_UNITS incorrect", 4, ds.TEXT_UNITS.size());
   }
 
   public void testFLOAT_UNITS() {
-    TestCase.assertEquals("Failure - set cardinality for FLOAT_UNITS incorrect", 5, ds.FLOAT_UNITS.size());
+    TestCase.assertEquals(
+        "Failure - set cardinality for FLOAT_UNITS incorrect", 5, ds.FLOAT_UNITS.size());
   }
 
   public void testEDITABLE() {
-    TestCase.assertEquals("Failure - set cardinality for EDITABLE incorrect", 1, ds.EDITABLE.size());
+    TestCase.assertEquals(
+        "Failure - set cardinality for EDITABLE incorrect", 1, ds.EDITABLE.size());
   }
 
   public void testFETCHABLE_LENGTHS() {
@@ -81,7 +84,7 @@ public class DataStoreTest extends TestCase {
     TestCase.assertEquals(
         "Failure - set cardinality for FETCHABLE_POINTS incorrect", 2, ds.FETCHABLE_POINTS.size());
   }
-  
+
   public void testFind_row() {
     final String test_csv = "/data/test_blankrow.csv";
     load_test_data(test_csv);
@@ -248,9 +251,9 @@ public class DataStoreTest extends TestCase {
     TestCase.assertNull(result);
   }
 
-  public void testInsertIncorrectType(){
+  public void testInsertIncorrectType() {
     this.load_test_data("/data/sample_short.csv");
-    try{
+    try {
       this.ds.insert_value(SAMPLE_SHORT_FILES[0], "SNDF_x_start", 1);
       TestCase.fail();
     } catch (ClassCastException e) {
@@ -282,9 +285,8 @@ public class DataStoreTest extends TestCase {
     TestCase.assertEquals(2, result.length);
   }
 
-  public void testSave_as_csv() {
-    Date when = new Date();
-    File scratch_file = new File(String.format("/tmp/test_dump_%d.csv", when.getTime()));
+  public void testSave_as_csv() throws Exception {
+    File scratch_file = File.createTempFile("test_dump", "csv");
     this.load_test_data("/data/sample_full.csv");
     try {
       this.ds.save_as_csv(scratch_file);

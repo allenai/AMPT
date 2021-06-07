@@ -27,6 +27,7 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 @SuppressWarnings("UnusedAssignment")
@@ -40,7 +41,7 @@ public class ReferenceCalculatorTest extends TestCase {
     super.setUp();
     originalConfigPath = ConfigurationLoader.getConfigDirectory();
     String testingConfigPath =
-        DataStoreTest.class.getResource("/measurement-tool-config/").getPath();
+        Paths.get(DataStoreTest.class.getResource("/measurement-tool-config/").toURI()).toString();
     ConfigurationLoader.setConfigDirectory(testingConfigPath);
     ds = DataStore.createDataStore();
     new MeasurementManager(ds);
