@@ -1,8 +1,25 @@
 {
   "format_version": "FooBar",
-  "Body Profile": [
-    "100%", "GIRTH"
-  ],
-  "Line Refs": ["REF TOP", "REF BOTTOM"],
-  "Head Width": ["HEAD"]
+  "configuration": [
+    {
+      "cue": "Body Profile",
+      "measurements": [
+        "100%",
+        "GIRTH"
+      ]
+    },
+    {
+      "cue": "Line Refs",
+      "measurements": [
+        "REF TOP",
+        "REF BOTTOM"
+      ]
+    },
+    {
+      "cue": "Head Width",
+      "measurements": [
+        "HEAD"
+      ]
+    }
+  ]
 }
