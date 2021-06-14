@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": "FooBar",
   "Body Profile": [
     "100%", "GIRTH"
   ],

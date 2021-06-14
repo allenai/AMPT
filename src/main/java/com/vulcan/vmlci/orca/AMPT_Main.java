@@ -16,6 +16,7 @@
 
 package com.vulcan.vmlci.orca;
 
+import com.vulcan.vmlci.orca.helpers.ConfigurationManager;
 import com.vulcan.vmlci.orca.ui.ControlWindow;
 import org.scijava.Context;
 import org.scijava.command.Command;
@@ -31,8 +32,7 @@ public class AMPT_Main implements Command {
 
   @Parameter Logger logger;
 
-  @Parameter
-  private Context ctx;
+  @Parameter private Context ctx;
 
   private static ControlWindow controlWindow = null;
 
@@ -41,6 +41,9 @@ public class AMPT_Main implements Command {
     logger.info("Starting AMPT");
     SwingUtilities.invokeLater(
         () -> {
+          if (!ConfigurationManager.checkFormatVersions()) {
+            return;
+          }
           if (null == AMPT_Main.controlWindow) {
             AMPT_Main.controlWindow = new ControlWindow(ctx);
           }

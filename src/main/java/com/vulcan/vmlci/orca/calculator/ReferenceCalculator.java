@@ -18,6 +18,7 @@ package com.vulcan.vmlci.orca.calculator;
 
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.Point;
+import com.vulcan.vmlci.orca.helpers.ConfigurationFile;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 
 import java.util.HashMap;
@@ -350,7 +351,7 @@ public class ReferenceCalculator extends BaseCalculator {
   /** @return The name of the configuration file required for this calculator. */
   @Override
   protected String getConfigurationFile() {
-    return "ReferenceConf.json";
+    return ConfigurationFile.REFERENCE_CONFIG.getFilename();
   }
 
   /**
