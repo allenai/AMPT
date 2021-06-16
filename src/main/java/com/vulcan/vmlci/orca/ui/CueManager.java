@@ -16,6 +16,7 @@
 
 package com.vulcan.vmlci.orca.ui;
 
+import com.cedarsoftware.util.io.JsonObject;
 import com.vulcan.vmlci.orca.calculator.ReferenceCalculator;
 import com.vulcan.vmlci.orca.data.DataStore;
 import com.vulcan.vmlci.orca.data.Point;
@@ -72,12 +73,24 @@ public class CueManager {
   }
 
   private void load_configuration() throws ConfigurationFileLoadException {
-    final HashMap<String, Object> cue_options =
+    final HashMap<String, Object> cue_config =
         ConfigurationLoader.getJsonFileAsMap(ConfigurationFile.CUE_CONFIG.getFilename());
-    for (final String cue_name : cue_options.keySet()) {
-      for (final Object cue_option : (Object[]) cue_options.get(cue_name)) {
-        cue_lookup.putIfAbsent((String) cue_option, new ArrayList<>());
-        cue_lookup.get(cue_option).add(cue_name);
+    final String configuration_name = "configuration";
+    if (!cue_config.containsKey(configuration_name)) {
+      throw new ConfigurationFileLoadException(
+          String.format(
+              "%s is missing required field: \"%s\"",
+              ConfigurationFile.CUE_CONFIG.getFilename(), configuration_name));
+    }
+    final Object[] loaded_items = (Object[]) cue_config.get(configuration_name);
+    for (final Object raw_item : loaded_items) {
+      final JsonObject<String, Object> json_item = (JsonObject<String, Object>) raw_item;
+      final String cue = (String) json_item.get("cue");
+      final Object[] measurements = (Object[]) json_item.get("measurements");
+      for (Object raw_measurement : measurements) {
+        final String measurement = (String) raw_measurement;
+        cue_lookup.putIfAbsent(measurement, new ArrayList<>());
+        cue_lookup.get(measurement).add(cue);
       }
     }
   }

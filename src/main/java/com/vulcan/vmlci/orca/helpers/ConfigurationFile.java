@@ -18,7 +18,7 @@ package com.vulcan.vmlci.orca.helpers;
 
 /** Existing configuration files and their properties. */
 public enum ConfigurationFile {
-  CUE_CONFIG("CueConfig.json", 0),
+  CUE_CONFIG("CueConfig.json", 1),
   MEASUREMENT_CONFIG("MeasurementConf.json", 0),
   REFERENCE_CONFIG("ReferenceConf.json", 0);
 
