@@ -16,6 +16,8 @@
 
 package com.vulcan.vmlci.orca.helpers;
 
+import com.vulcan.vmlci.orca.validator.JsonConfigValidator;
+import com.vulcan.vmlci.orca.validator.JsonValidationException;
 import org.apache.commons.io.FilenameUtils;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
@@ -34,6 +36,8 @@ import java.util.Set;
 /** Helpers for managing configuration files. */
 @SuppressWarnings({"FinalClass", "UtilityClass", "UtilityClassCanBeEnum"})
 public final class ConfigurationManager {
+  private static final Logger logger = new StderrLogService();
+
   private static final String FORMAT_VERSION_NAME = "format_version";
 
   private static final String DIALOG_MESSAGE =
@@ -43,6 +47,22 @@ public final class ConfigurationManager {
           + "Would you like to proceed?";
 
   private ConfigurationManager() {}
+
+  /**
+   * Validates the configuration files in the user's preferences directory.
+   *
+   * @return True if all configs are valid, false otherwise.
+   */
+  public static boolean validateConfigs() {
+    try {
+      JsonConfigValidator jsonConfigValidator = new JsonConfigValidator();
+      jsonConfigValidator.validateAllConfigs();
+      return true;
+    } catch (JsonValidationException e) {
+      logger.error(e);
+      return false;
+    }
+  }
 
   /**
    * Checks if the format versions of all existing configuration files are up to date.
@@ -55,8 +75,6 @@ public final class ConfigurationManager {
    *     replace the previous outdated configuration files.
    */
   public static boolean checkFormatVersions() {
-    final Logger logger = new StderrLogService();
-
     final Set<ConfigurationFile> outdatedConfigs;
     try {
       outdatedConfigs = getOutdatedConfigFiles();

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Cue Configuration",
+  "description": "A configuration file containing cues and the measurements for which they will be drawn.",
+  "type": "object",
+  "properties": {
+    "format_version": {
+      "description": "The format version of the configuration file.",
+      "type": "integer"
+    },
+    "configuration": {
+      "description": "The list of cue configurations.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "cue": {
+            "description": "A cue, which is a visual marker to be drawn.",
+            "type": "string"
+          },
+          "measurements": {
+            "description": "The list of measurements for which the cue will be drawn.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

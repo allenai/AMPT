@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Reference Configuration",
+  "description": "A configuration file containing a list of reference markers and the functions + parameters used to calculate them.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "target": {
+        "description": "The reference marker name.",
+        "type": "string"
+      },
+      "parameters": {
+        "description": "The parameters passed to the function used to calculate the reference marker.",
+        "type": "array",
+        "items": "object"
+      },
+      "function": {
+        "description": "The function used to calculate the reference marker.",
+        "type": "string"
+      }
+    }
+  }
+}
