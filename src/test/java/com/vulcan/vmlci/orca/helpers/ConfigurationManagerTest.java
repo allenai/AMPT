@@ -16,7 +16,6 @@
 
 package com.vulcan.vmlci.orca.helpers;
 
-import com.vulcan.vmlci.orca.data.DataStoreTest;
 import junit.framework.TestCase;
 
 import java.nio.file.Files;
@@ -32,7 +31,8 @@ public class ConfigurationManagerTest extends TestCase {
     super.setUp();
     originalConfigPath = ConfigurationLoader.getConfigDirectory();
     final String testingConfigPath =
-        Paths.get(DataStoreTest.class.getResource("/measurement-tool-config/").toURI()).toString();
+        Paths.get(ConfigurationManagerTest.class.getResource("/measurement-tool-config/").toURI())
+            .toString();
     ConfigurationLoader.setConfigDirectory(testingConfigPath);
   }
 

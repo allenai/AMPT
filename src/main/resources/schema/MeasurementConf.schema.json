@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Measurement Configuration",
+  "description": "A configuration file containing a list of measurements and the functions + parameters used to calculate them.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "target": {
+        "description": "The measurement name.",
+        "type": "string"
+      },
+      "parameters": {
+        "description": "The parameters passed to the function used to calculate the measurement.",
+        "type": "array",
+        "items": "object"
+      },
+      "function": {
+        "description": "The function used to calculate the measurement.",
+        "type": "string"
+      }
+    }
+  }
+}

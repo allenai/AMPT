@@ -41,7 +41,8 @@ public class AMPT_Main implements Command {
     logger.info("Starting AMPT");
     SwingUtilities.invokeLater(
         () -> {
-          if (!ConfigurationManager.checkFormatVersions()) {
+          if (!ConfigurationManager.validateConfigs()
+              || !ConfigurationManager.checkFormatVersions()) {
             return;
           }
           if (null == AMPT_Main.controlWindow) {
