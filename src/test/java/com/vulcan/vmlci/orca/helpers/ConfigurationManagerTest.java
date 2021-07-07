@@ -16,12 +16,21 @@
 
 package com.vulcan.vmlci.orca.helpers;
 
+import com.vulcan.vmlci.orca.validator.JsonValidationException;
 import junit.framework.TestCase;
+import org.apache.commons.io.FileUtils;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class ConfigurationManagerTest extends TestCase {
   private Path originalConfigPath;
@@ -87,5 +96,182 @@ public class ConfigurationManagerTest extends TestCase {
 
   public void test_original_reference_conf_format() throws Exception {
     TestCase.assertTrue(ConfigurationManager.isAtLeastVersion("ReferenceConf.json", 0));
+  }
+
+  public void test_copy_new_configs_from_directory() throws Exception {
+    final Path tempDirectory = Files.createTempDirectory("scratch");
+    ConfigurationLoader.setConfigDirectory(tempDirectory);
+    final File testingConfigDirectory =
+        new File(ConfigurationManagerTest.class.getResource("/measurement-tool-config/").toURI());
+    ConfigurationManager.copyNewConfigsToPreferencesDirectory(testingConfigDirectory);
+    for (ConfigurationFile configFile : ConfigurationFile.values()) {
+      TestCase.assertTrue(
+          FileUtils.contentEquals(
+              new File(testingConfigDirectory, configFile.getFilename()),
+              new File(tempDirectory.toFile(), configFile.getFilename())));
+    }
+    tempDirectory.toFile().deleteOnExit();
+  }
+
+  public void test_copy_new_configs_from_zip_file() throws Exception {
+    final Path tempDirectory = Files.createTempDirectory("scratch");
+    final File tempZipFile = Files.createTempFile("scratch", ".zip").toFile();
+    ConfigurationLoader.setConfigDirectory(tempDirectory);
+    final File testingConfigDirectory =
+        new File(ConfigurationManagerTest.class.getResource("/measurement-tool-config/").toURI());
+    // Create a zip file containing the config files.
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(tempZipFile))) {
+      for (ConfigurationFile configFile : ConfigurationFile.values()) {
+        zipOutputStream.putNextEntry(new ZipEntry(configFile.getFilename()));
+        zipOutputStream.write(
+            Files.readAllBytes(
+                Paths.get(testingConfigDirectory.getAbsolutePath(), configFile.getFilename())));
+        zipOutputStream.closeEntry();
+      }
+    }
+    ConfigurationManager.copyNewConfigsToPreferencesDirectory(tempZipFile);
+    for (ConfigurationFile configFile : ConfigurationFile.values()) {
+      TestCase.assertTrue(
+          FileUtils.contentEquals(
+              new File(testingConfigDirectory, configFile.getFilename()),
+              new File(tempDirectory.toFile(), configFile.getFilename())));
+    }
+    tempDirectory.toFile().deleteOnExit();
+    tempZipFile.deleteOnExit();
+  }
+
+  public void test_copy_new_configs_from_invalid_file() throws Exception {
+    final File tempFile = Files.createTempFile("scratch", ".txt").toFile();
+    try {
+      // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
+      ConfigurationManager.copyNewConfigsToPreferencesDirectory(tempFile);
+      TestCase.fail("Expected to fail");
+    } catch (IllegalArgumentException e) {
+      MatcherAssert.assertThat(
+          e.getMessage(), CoreMatchers.containsString("Invalid config input location"));
+    }
+    tempFile.deleteOnExit();
+  }
+
+  public void test_copy_new_configs_from_empty_directory() throws Exception {
+    final Path inputDirectory = Files.createTempDirectory("input");
+    final Path outputDirectory = Files.createTempDirectory("output");
+    ConfigurationLoader.setConfigDirectory(outputDirectory);
+    try {
+      // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
+      ConfigurationManager.copyNewConfigsToPreferencesDirectory(inputDirectory.toFile());
+      TestCase.fail("Expected to fail");
+    } catch (IllegalArgumentException e) {
+      MatcherAssert.assertThat(
+          e.getMessage(), CoreMatchers.containsString("Missing required configuration file(s)"));
+    }
+    inputDirectory.toFile().deleteOnExit();
+    outputDirectory.toFile().deleteOnExit();
+  }
+
+  public void test_copy_new_configs_from_invalid_zip_file() throws Exception {
+    final Path tempDirectory = Files.createTempDirectory("scratch");
+    final File tempZipFile = Files.createTempFile("scratch", ".zip").toFile();
+    ConfigurationLoader.setConfigDirectory(tempDirectory);
+    // Create a dummy, but valid zip file.
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(tempZipFile))) {
+      zipOutputStream.putNextEntry(new ZipEntry("foo"));
+      zipOutputStream.write("bar".getBytes(StandardCharsets.UTF_8));
+      zipOutputStream.closeEntry();
+    }
+    try {
+      // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
+      ConfigurationManager.copyNewConfigsToPreferencesDirectory(tempZipFile);
+      TestCase.fail("Expected to fail");
+    } catch (IllegalArgumentException e) {
+      MatcherAssert.assertThat(
+          e.getMessage(), CoreMatchers.containsString("Missing required configuration file(s)"));
+    }
+    tempDirectory.toFile().deleteOnExit();
+    tempZipFile.deleteOnExit();
+  }
+
+  public void test_copy_new_invalid_config_from_directory() throws Exception {
+    final Path inputDirectory = Files.createTempDirectory("input");
+    final Path outputDirectory = Files.createTempDirectory("output");
+    ConfigurationLoader.setConfigDirectory(outputDirectory);
+    final File testingConfigDirectory =
+        new File(ConfigurationManagerTest.class.getResource("/measurement-tool-config/").toURI());
+    for (ConfigurationFile configFile : ConfigurationFile.values()) {
+      Files.copy(
+          new File(testingConfigDirectory, configFile.getFilename()).toPath(),
+          new File(inputDirectory.toFile(), configFile.getFilename()).toPath(),
+          StandardCopyOption.REPLACE_EXISTING);
+    }
+    // Use an invalid config file, i.e. one that won't pass JSON validation.
+    Files.copy(
+        new File(testingConfigDirectory, "CueConfig-InvalidFormatVersion.json").toPath(),
+        new File(inputDirectory.toFile(), ConfigurationFile.CUE_CONFIG.getFilename()).toPath(),
+        StandardCopyOption.REPLACE_EXISTING);
+    try {
+      // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
+      ConfigurationManager.copyNewConfigsToPreferencesDirectory(inputDirectory.toFile());
+      TestCase.fail("Expected to fail");
+    } catch (JsonValidationException e) {
+    }
+    inputDirectory.toFile().deleteOnExit();
+    outputDirectory.toFile().deleteOnExit();
+  }
+
+  public void test_copy_new_invalid_config_from_zip_file() throws Exception {
+    final Path inputDirectory = Files.createTempDirectory("input");
+    final Path outputDirectory = Files.createTempDirectory("output");
+    final File tempZipFile = Files.createTempFile("scratch", ".zip").toFile();
+    ConfigurationLoader.setConfigDirectory(outputDirectory);
+    final File testingConfigDirectory =
+        new File(ConfigurationManagerTest.class.getResource("/measurement-tool-config/").toURI());
+    for (ConfigurationFile configFile : ConfigurationFile.values()) {
+      Files.copy(
+          new File(testingConfigDirectory, configFile.getFilename()).toPath(),
+          new File(inputDirectory.toFile(), configFile.getFilename()).toPath(),
+          StandardCopyOption.REPLACE_EXISTING);
+    }
+    // Use an invalid config file, i.e. one that won't pass JSON validation.
+    Files.copy(
+        new File(testingConfigDirectory, "CueConfig-InvalidFormatVersion.json").toPath(),
+        new File(inputDirectory.toFile(), ConfigurationFile.CUE_CONFIG.getFilename()).toPath(),
+        StandardCopyOption.REPLACE_EXISTING);
+    // Create a zip file containing the config files.
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(tempZipFile))) {
+      for (ConfigurationFile configFile : ConfigurationFile.values()) {
+        zipOutputStream.putNextEntry(new ZipEntry(configFile.getFilename()));
+        zipOutputStream.write(
+            Files.readAllBytes(Paths.get(inputDirectory.toString(), configFile.getFilename())));
+        zipOutputStream.closeEntry();
+      }
+    }
+    try {
+      // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
+      ConfigurationManager.copyNewConfigsToPreferencesDirectory(inputDirectory.toFile());
+      TestCase.fail("Expected to fail");
+    } catch (JsonValidationException e) {
+    }
+    inputDirectory.toFile().deleteOnExit();
+    outputDirectory.toFile().deleteOnExit();
+    tempZipFile.deleteOnExit();
+  }
+
+  public void test_copy_default_configs() throws Exception {
+    final Path tempDirectory = Files.createTempDirectory("scratch");
+    ConfigurationLoader.setConfigDirectory(tempDirectory);
+    ConfigurationManager.copyDefaultConfigsToPreferencesDirectory();
+    final File defaultConfigDirectory =
+        new File(ConfigurationLoader.class.getResource("/default_config/").toURI());
+    for (ConfigurationFile configFile : ConfigurationFile.values()) {
+      TestCase.assertTrue(
+          FileUtils.contentEquals(
+              new File(defaultConfigDirectory, configFile.getFilename()),
+              new File(tempDirectory.toFile(), configFile.getFilename())));
+    }
+    TestCase.assertTrue(
+        FileUtils.contentEquals(
+            new File(defaultConfigDirectory, "CSV-Columns.csv"),
+            new File(tempDirectory.toFile(), "CSV-Columns.csv")));
+    tempDirectory.toFile().deleteOnExit();
   }
 }

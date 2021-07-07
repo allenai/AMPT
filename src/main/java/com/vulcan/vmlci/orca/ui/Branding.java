@@ -19,20 +19,18 @@ package com.vulcan.vmlci.orca.ui;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 /**
- * The <code>Branding</code> class is part of the UI that identifies the plug and manages the about
- * an help menus.
+ * The <code>Branding</code> class is part of the UI that identifies the plugin and manages the
+ * hamburger menus.
  */
 public class Branding extends JPanel {
 
@@ -87,7 +85,16 @@ public class Branding extends JPanel {
     menu.add(menuItem);
     menuItem = new JMenuItem("User Guide");
     menu.add(menuItem);
-    menuItem.addActionListener(e->new HelpLauncher((JFrame) getTopLevelAncestor()));
+    menuItem.addActionListener(e -> new HelpLauncher((JFrame) getTopLevelAncestor()));
+    menu.addSeparator();
+    menuItem = new JMenuItem("Import Configuration");
+    menu.add(menuItem);
+    menuItem.addActionListener(
+        e -> new ConfigurationImportLauncher((JFrame) getTopLevelAncestor()));
+    menuItem = new JMenuItem("Restore Default Configuration");
+    menu.add(menuItem);
+    menuItem.addActionListener(
+        e -> new ConfigurationRestoreLauncher((JFrame) getTopLevelAncestor()));
     return menu;
   }
 }

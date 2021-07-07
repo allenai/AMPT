@@ -105,21 +105,34 @@ public final class ConfigurationLoader {
       final Path target_dir = configurationFile.getParent();
 
       createPreferenceDirectory(target_dir);
-
-      final URL resource =
-          ConfigurationLoader.class.getResource(String.format("/default_config/%s", filename));
-      if (null == resource) {
-        throw new ConfigurationFileLoadException(
-            String.format("Unknown configuration file '%s'", filename), null);
-      }
-      try {
-        Files.copy(resource.openStream(), configurationFile, StandardCopyOption.REPLACE_EXISTING);
-      } catch (final IOException e) {
-        throw new ConfigurationFileLoadException(
-            String.format("Couldn't copy config file %s", resource), e);
-      }
+      copyDefaultConfigToPath(filename, configurationFile);
     }
     return configurationFile.toString();
+  }
+
+  /**
+   * Copies the default config for the given file name to the specified path.
+   *
+   * <p>The file name must match that of a default config.
+   *
+   * @param filename The name of the default config file to copy.
+   * @param configurationFile The destination location for the default config file.
+   * @throws ConfigurationFileLoadException If there are any errors copying the config file.
+   */
+  public static void copyDefaultConfigToPath(String filename, Path configurationFile)
+      throws ConfigurationFileLoadException {
+    final URL resource =
+        ConfigurationLoader.class.getResource(String.format("/default_config/%s", filename));
+    if (null == resource) {
+      throw new ConfigurationFileLoadException(
+          String.format("Unknown configuration file '%s'", filename), null);
+    }
+    try {
+      Files.copy(resource.openStream(), configurationFile, StandardCopyOption.REPLACE_EXISTING);
+    } catch (final IOException e) {
+      throw new ConfigurationFileLoadException(
+          String.format("Couldn't copy config file %s", resource), e);
+    }
   }
 
   /**
