@@ -17,7 +17,9 @@
 package com.vulcan.vmlci.orca.helpers;
 
 import junit.framework.TestCase;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,6 +36,25 @@ public class ConfigurationManagerTest extends TestCase {
         Paths.get(ConfigurationManagerTest.class.getResource("/measurement-tool-config/").toURI())
             .toString();
     ConfigurationLoader.setConfigDirectory(testingConfigPath);
+  }
+
+  public void test_initialize_configs() throws Exception {
+    final Path tempDirectory = Files.createTempDirectory("scratch");
+    ConfigurationLoader.setConfigDirectory(tempDirectory);
+    ConfigurationManager.initializeConfigs();
+    final String defaultConfigDirectory =
+        Paths.get(
+                ConfigurationLoader.class
+                    .getResource(ConfigurationLoader.getDefaultConfigDirectory())
+                    .toURI())
+            .toString();
+    for (ConfigurationFile configFile : ConfigurationFile.values()) {
+      TestCase.assertTrue(
+          FileUtils.contentEquals(
+              new File(defaultConfigDirectory, configFile.getFilename()),
+              new File(tempDirectory.toFile(), configFile.getFilename())));
+    }
+    tempDirectory.toFile().deleteOnExit();
   }
 
   public void test_backup_config() throws Exception {
