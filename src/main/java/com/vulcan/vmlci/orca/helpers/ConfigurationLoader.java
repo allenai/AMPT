@@ -20,11 +20,7 @@ import com.cedarsoftware.util.io.JsonReader;
 import com.opencsv.CSVReader;
 import ij.Prefs;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -110,37 +106,33 @@ public final class ConfigurationLoader {
 
       createPreferenceDirectory(target_dir);
 
-      final File defaultConfigFile = new File(getDefaultConfigDirectory().toString(), filename);
-      try (final InputStream inputStream = new FileInputStream(defaultConfigFile)) {
-        Files.copy(inputStream, configurationFile, StandardCopyOption.REPLACE_EXISTING);
+      final URL resource =
+          ConfigurationLoader.class.getResource(
+              Paths.get(getDefaultConfigDirectory(), filename).toString());
+      if (null == resource) {
+        throw new ConfigurationFileLoadException(
+            String.format("Unknown configuration file '%s'", filename), null);
+      }
+      try {
+        Files.copy(resource.openStream(), configurationFile, StandardCopyOption.REPLACE_EXISTING);
       } catch (final IOException e) {
         throw new ConfigurationFileLoadException(
-            String.format("Couldn't copy config file %s", defaultConfigFile), e);
+            String.format("Couldn't copy config file %s", resource), e);
       }
     }
     return configurationFile.toString();
   }
 
   /**
-   * Return a path to the directory that contains the default configuration files.
+   * Returns the path to the default config directory.
    *
    * <p>In other words, this is the resources directory storing the default configs that are
    * packaged with the executable. Note that these files are read-only.
    *
    * @return A path to the directory that contains the default configuration files.
-   * @throws ConfigurationFileLoadException If there are any errors finding the default config
-   *     directory.
    */
-  public static Path getDefaultConfigDirectory() throws ConfigurationFileLoadException {
-    final URL resource = ConfigurationLoader.class.getResource("/default_config");
-    if (null == resource) {
-      throw new ConfigurationFileLoadException("Unknown default config directory");
-    }
-    try {
-      return Paths.get(resource.toURI());
-    } catch (URISyntaxException e) {
-      throw new ConfigurationFileLoadException("Invalid default config directory", e);
-    }
+  public static String getDefaultConfigDirectory() {
+    return "/default_config";
   }
 
   /**

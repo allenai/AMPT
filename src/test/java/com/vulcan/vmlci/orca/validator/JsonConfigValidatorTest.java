@@ -40,7 +40,11 @@ public class JsonConfigValidatorTest extends TestCase {
 
   public void test_validate_all_default_configs() throws Exception {
     final JsonConfigValidator jsonConfigValidator = new JsonConfigValidator();
-    ConfigurationLoader.setConfigDirectory(ConfigurationLoader.getDefaultConfigDirectory());
+    ConfigurationLoader.setConfigDirectory(
+        Paths.get(
+            ConfigurationLoader.class
+                .getResource(ConfigurationLoader.getDefaultConfigDirectory())
+                .toURI()));
     jsonConfigValidator.validateAllConfigs();
     // No assertions needed. Simply not throwing an exception is sufficient for testing.
   }
