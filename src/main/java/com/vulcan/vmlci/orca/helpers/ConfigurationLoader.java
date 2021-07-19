@@ -122,7 +122,7 @@ public final class ConfigurationLoader {
   public static void copyDefaultConfigToPath(String filename, Path configurationFile)
       throws ConfigurationFileLoadException {
     final URL resource =
-        ConfigurationLoader.class.getResource(String.format("/default_config/%s", filename));
+        ConfigurationLoader.class.getResource(Paths.get(getDefaultConfigDirectory(), filename).toString());
     if (null == resource) {
       throw new ConfigurationFileLoadException(
           String.format("Unknown configuration file '%s'", filename), null);
@@ -133,6 +133,18 @@ public final class ConfigurationLoader {
       throw new ConfigurationFileLoadException(
           String.format("Couldn't copy config file %s", resource), e);
     }
+  }
+
+  /**
+   * Returns the path to the default config directory.
+   *
+   * <p>In other words, this is the resources directory storing the default configs that are
+   * packaged with the executable. Note that these files are read-only.
+   *
+   * @return A path to the directory that contains the default configuration files.
+   */
+  public static String getDefaultConfigDirectory() {
+    return "/default_config";
   }
 
   /**

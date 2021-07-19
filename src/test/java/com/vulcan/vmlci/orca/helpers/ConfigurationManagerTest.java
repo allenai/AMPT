@@ -45,6 +45,25 @@ public class ConfigurationManagerTest extends TestCase {
     ConfigurationLoader.setConfigDirectory(testingConfigPath);
   }
 
+  public void test_initialize_configs() throws Exception {
+    final Path tempDirectory = Files.createTempDirectory("scratch");
+    ConfigurationLoader.setConfigDirectory(tempDirectory);
+    ConfigurationManager.initializeConfigs();
+    final String defaultConfigDirectory =
+        Paths.get(
+                ConfigurationLoader.class
+                    .getResource(ConfigurationLoader.getDefaultConfigDirectory())
+                    .toURI())
+            .toString();
+    for (ConfigurationFile configFile : ConfigurationFile.values()) {
+      TestCase.assertTrue(
+          FileUtils.contentEquals(
+              new File(defaultConfigDirectory, configFile.getFilename()),
+              new File(tempDirectory.toFile(), configFile.getFilename())));
+    }
+    tempDirectory.toFile().deleteOnExit();
+  }
+
   public void test_backup_config() throws Exception {
     final String configFilename = "MeasurementConf.json";
     final Path existingConfig = ConfigurationLoader.getAbsoluteConfigurationPath(configFilename);
@@ -169,7 +188,7 @@ public class ConfigurationManagerTest extends TestCase {
     outputDirectory.toFile().deleteOnExit();
   }
 
-  public void test_copy_new_configs_from_invalid_zip_file() throws Exception {
+  public void test_copy_new_configs_from_zip_file_missing_configs() throws Exception {
     final Path tempDirectory = Files.createTempDirectory("scratch");
     final File tempZipFile = Files.createTempFile("scratch", ".zip").toFile();
     ConfigurationLoader.setConfigDirectory(tempDirectory);

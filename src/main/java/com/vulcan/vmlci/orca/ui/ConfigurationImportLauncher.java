@@ -52,7 +52,7 @@ public class ConfigurationImportLauncher {
         new MessageDialog(
             owner,
             "Please restart AMPT",
-            "New configs successfully imported.\nAMPT must be restarted for the new configuration to take effect.");
+            "New configuration successfully imported.\nAMPT must be restarted for the new configuration to take effect.");
     doneDialog.escapePressed();
   }
 

@@ -58,7 +58,7 @@ public class ConfigurationRestoreLauncher {
         new MessageDialog(
             owner,
             "Please restart AMPT",
-            "Default configs successfully restored.\nAMPT must be restarted for the new configuration to take effect.");
+            "Default configuration successfully restored.\nAMPT must be restarted for the new configuration to take effect.");
     doneDialog.escapePressed();
   }
 }

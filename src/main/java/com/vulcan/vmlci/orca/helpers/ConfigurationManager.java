@@ -62,6 +62,19 @@ public final class ConfigurationManager {
 
   private ConfigurationManager() {}
 
+  /** Initializes all configuration files, copying over the default configs if necessary. */
+  public static void initializeConfigs() {
+    try {
+      for (ConfigurationFile configurationFile : ConfigurationFile.values()) {
+        // Retrieving the full config path will create the preferences directory and copy over the
+        // default configs as necessary.
+        ConfigurationLoader.getFullConfigPath(configurationFile.getFilename());
+      }
+    } catch (ConfigurationFileLoadException e) {
+      logger.error(e);
+    }
+  }
+
   /**
    * Validates the configuration files in the user's preferences directory.
    *
