@@ -22,6 +22,8 @@ import junit.framework.TestCase;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -66,6 +68,29 @@ public class JsonConfigValidatorTest extends TestCase {
       // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
       jsonConfigValidator.validateConfig(
           configFilePath, ConfigurationFile.CUE_CONFIG.getSchemaFilename());
+      TestCase.fail("Expected to fail");
+    } catch (JsonValidationException e) {
+      // This is potentially brittle because error messages can change and aren't subject to a spec,
+      // but this is a fairly generic and minimal message so that isn't a large concern and it's
+      // valuable to ensure that the error is happening for the expected reason. Apologies in
+      // advance if this breaks and you have to fix it!
+      MatcherAssert.assertThat(
+          e.getMessage(),
+          CoreMatchers.containsString("format_version: string found, integer expected"));
+    }
+  }
+
+  public void test_validate_invalid_config_input_stream() throws Exception {
+    final JsonConfigValidator jsonConfigValidator = new JsonConfigValidator();
+    final Path configFilePath =
+        Paths.get(
+            JsonConfigValidatorTest.class
+                .getResource("/measurement-tool-config/CueConfig-InvalidFormatVersion.json")
+                .toURI());
+    try (InputStream configInputStream = new FileInputStream(configFilePath.toFile())) {
+      // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
+      jsonConfigValidator.validateConfig(
+          configInputStream, ConfigurationFile.CUE_CONFIG.getSchemaFilename());
       TestCase.fail("Expected to fail");
     } catch (JsonValidationException e) {
       // This is potentially brittle because error messages can change and aren't subject to a spec,

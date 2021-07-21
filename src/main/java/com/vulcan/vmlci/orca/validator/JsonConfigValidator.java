@@ -76,15 +76,7 @@ public class JsonConfigValidator {
       throws JsonValidationException {
     logger.info("Validating config: " + configPath);
 
-    final JsonSchema schema;
-    try (InputStream schemaInputStream =
-        JsonConfigValidator.class.getResourceAsStream(
-            String.format("/schema/%s", schemaFileName))) {
-      schema = jsonSchemaFactory.getSchema(schemaInputStream);
-    } catch (IOException e) {
-      throw new JsonValidationException("Failed to open schema file: " + schemaFileName, e);
-    }
-
+    final JsonSchema schema = createSchema(schemaFileName);
     final JsonNode node;
     try {
       node = mapper.readTree(configPath.toFile());
@@ -92,6 +84,54 @@ public class JsonConfigValidator {
       throw new JsonValidationException("Unable to read config file: " + configPath, e);
     }
 
+    validateConfig(node, schema);
+  }
+
+  /**
+   * Validates a given configuration input stream against a given schema.
+   *
+   * @param configInputStream The configuration input stream to validate.
+   * @param schemaFileName The schema file name (last part of the path) to use.
+   * @throws JsonValidationException If any validation errors occur.
+   */
+  public void validateConfig(InputStream configInputStream, String schemaFileName)
+      throws JsonValidationException {
+    final JsonSchema schema = createSchema(schemaFileName);
+    final JsonNode node;
+    try {
+      node = mapper.readTree(configInputStream);
+    } catch (IOException e) {
+      throw new JsonValidationException("Unable to read config from input stream", e);
+    }
+
+    validateConfig(node, schema);
+  }
+
+  /**
+   * Creates a {@link JsonSchema} object from the given schema file name.
+   *
+   * @param schemaFileName The schema file name (last par5t of the path) to use.
+   * @return A schema object for the given schema file name.
+   * @throws JsonValidationException If the schema file cannot be opened properly.
+   */
+  private JsonSchema createSchema(String schemaFileName) throws JsonValidationException {
+    try (InputStream schemaInputStream =
+        JsonConfigValidator.class.getResourceAsStream(
+            String.format("/schema/%s", schemaFileName))) {
+      return jsonSchemaFactory.getSchema(schemaInputStream);
+    } catch (IOException e) {
+      throw new JsonValidationException("Failed to open schema file: " + schemaFileName, e);
+    }
+  }
+
+  /**
+   * Validates the given {@link JsonNode} against the the given {@link JsonSchema}.
+   *
+   * @param node The node to validate.
+   * @param schema The schema to use for validation.
+   * @throws JsonValidationException If any validation errors occur.
+   */
+  private void validateConfig(JsonNode node, JsonSchema schema) throws JsonValidationException {
     final Set<ValidationMessage> errors = schema.validate(node);
     if (!errors.isEmpty()) {
       final String errorMessage =

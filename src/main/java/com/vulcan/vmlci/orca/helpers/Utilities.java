@@ -18,12 +18,15 @@ package com.vulcan.vmlci.orca.helpers;
 
 import com.opencsv.CSVReader;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 /** Helper functions. */
 public enum Utilities {
@@ -68,5 +71,21 @@ public enum Utilities {
       result.add(record);
     }
     return result;
+  }
+
+  /**
+   * Returns whether the given {@link File} object represents a Zip archive.
+   *
+   * @param file The file to check.
+   * @return Whether the file is a Zip archive.
+   * @throws IOException If any I/O errors occur.
+   */
+  public static boolean isZipFile(File file) throws IOException {
+    try {
+      new ZipFile(file);
+      return true;
+    } catch (ZipException e) {
+      return false;
+    }
   }
 }
