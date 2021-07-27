@@ -23,6 +23,7 @@ import org.scijava.log.StderrLogService;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class ConfigurationExportLauncher {
 
   public ConfigurationExportLauncher(JFrame owner) {
     fileChooser = new JFileChooser();
-    final int result = openDialog(owner);
+    final int result = saveDialog(owner);
     final Optional<File> file = getSelectedFile(result);
     if (!file.isPresent()) {
       return;
@@ -52,7 +53,8 @@ public class ConfigurationExportLauncher {
     doneDialog.escapePressed();
   }
 
-  private int openDialog(JFrame owner) {
+  private int saveDialog(JFrame owner) {
+    fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Zip File", "zip"));
     return fileChooser.showSaveDialog(owner);
   }
 
