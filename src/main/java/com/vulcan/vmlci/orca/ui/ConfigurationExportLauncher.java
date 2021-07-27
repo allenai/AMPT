@@ -23,6 +23,7 @@ import org.scijava.log.StderrLogService;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +55,11 @@ public class ConfigurationExportLauncher {
   }
 
   private int saveDialog(JFrame owner) {
+    // This will keep "All Files" as a file type filter option but make "Zip File" the default.
+    FileFilter acceptAll = fileChooser.getAcceptAllFileFilter();
+    fileChooser.setAcceptAllFileFilterUsed(false);
     fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Zip File", "zip"));
+    fileChooser.addChoosableFileFilter(acceptAll);
     return fileChooser.showSaveDialog(owner);
   }
 
