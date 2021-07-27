@@ -19,17 +19,23 @@ package com.vulcan.vmlci.orca.helpers;
 import com.vulcan.vmlci.orca.validator.JsonValidationException;
 import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class ConfigurationManagerTest extends TestCase {
@@ -292,5 +298,33 @@ public class ConfigurationManagerTest extends TestCase {
             new File(defaultConfigDirectory, "CSV-Columns.csv"),
             new File(tempDirectory.toFile(), "CSV-Columns.csv")));
     tempDirectory.toFile().deleteOnExit();
+  }
+
+  public void test_export_configs_from_preferences_directory() throws Exception {
+    final File tempZipFile = Files.createTempFile("scratch", ".zip").toFile();
+    ConfigurationManager.exportConfigsFromPreferencesDirectory(tempZipFile);
+    try (final ZipFile zipFile = new ZipFile(tempZipFile)) {
+      final Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+      final Map<String, ZipEntry> fileNameToZipEntry = new HashMap<>();
+      while (zipEntries.hasMoreElements()) {
+        final ZipEntry zipEntry = zipEntries.nextElement();
+        fileNameToZipEntry.put(Paths.get(zipEntry.getName()).getFileName().toString(), zipEntry);
+      }
+      for (ConfigurationFile configFile : ConfigurationFile.values()) {
+        TestCase.assertTrue(
+            IOUtils.contentEquals(
+                new FileInputStream(
+                    new File(
+                        ConfigurationLoader.getConfigDirectory().toFile(),
+                        configFile.getFilename())),
+                zipFile.getInputStream(fileNameToZipEntry.get(configFile.getFilename()))));
+      }
+      TestCase.assertTrue(
+          IOUtils.contentEquals(
+              new FileInputStream(
+                  new File(ConfigurationLoader.getConfigDirectory().toFile(), "CSV-Columns.csv")),
+              zipFile.getInputStream(fileNameToZipEntry.get("CSV-Columns.csv"))));
+    }
+    tempZipFile.deleteOnExit();
   }
 }

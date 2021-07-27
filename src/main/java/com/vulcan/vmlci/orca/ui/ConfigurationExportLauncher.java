@@ -16,13 +16,21 @@
 
 package com.vulcan.vmlci.orca.ui;
 
+import com.vulcan.vmlci.orca.helpers.ConfigurationManager;
+import ij.gui.MessageDialog;
+import org.scijava.log.Logger;
+import org.scijava.log.StderrLogService;
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
+/** Launches and executes the control flow for exporting configuration files. */
 public class ConfigurationExportLauncher {
   private final JFileChooser fileChooser;
+  private final Logger logger = new StderrLogService();
 
   public ConfigurationExportLauncher(JFrame owner) {
     fileChooser = new JFileChooser();
@@ -31,6 +39,17 @@ public class ConfigurationExportLauncher {
     if (!file.isPresent()) {
       return;
     }
+
+    try {
+      ConfigurationManager.exportConfigsFromPreferencesDirectory(file.get());
+    } catch (IOException e) {
+      logger.error("Problem encountered copying new configuration files", e);
+      return;
+    }
+
+    final MessageDialog doneDialog =
+        new MessageDialog(owner, "Configs exported", "Configuration successfully exported.");
+    doneDialog.escapePressed();
   }
 
   private int openDialog(JFrame owner) {
