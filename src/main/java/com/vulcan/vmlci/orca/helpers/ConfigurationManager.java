@@ -355,9 +355,12 @@ public final class ConfigurationManager {
    * @throws IOException If any I/O errors occur.
    */
   public static void exportConfigsFromPreferencesDirectory(File file) throws IOException {
+    final String directoryName = "AMPT_configuration";
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(file))) {
+      zipOutputStream.putNextEntry(new ZipEntry(String.format("%s/", directoryName)));
       for (ConfigurationFile configFile : ConfigurationFile.values()) {
-        zipOutputStream.putNextEntry(new ZipEntry(configFile.getFilename()));
+        zipOutputStream.putNextEntry(
+            new ZipEntry(String.format("%s/%s", directoryName, configFile.getFilename())));
         zipOutputStream.write(
             Files.readAllBytes(
                 ConfigurationLoader.getAbsoluteConfigurationPath(configFile.getFilename())));
@@ -367,7 +370,8 @@ public final class ConfigurationManager {
       // The CSV columns configuration should also be exported. This is somewhat of an outlier
       // because it's not (yet) in JSON format and doesn't have an entry in the ConfigurationFile
       // enumeration.
-      zipOutputStream.putNextEntry(new ZipEntry(CSV_COLUMNS_CONFIG_FILENAME));
+      zipOutputStream.putNextEntry(
+          new ZipEntry(String.format("%s/%s", directoryName, CSV_COLUMNS_CONFIG_FILENAME)));
       zipOutputStream.write(
           Files.readAllBytes(
               ConfigurationLoader.getAbsoluteConfigurationPath(CSV_COLUMNS_CONFIG_FILENAME)));
