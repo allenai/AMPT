@@ -94,7 +94,7 @@ public class Branding extends JPanel {
     menuItem = new JMenuItem("Export Configuration");
     menu.add(menuItem);
     menuItem.addActionListener(
-        e -> new ConfigurationExportLauncher((JFrame) getTopLevelAncestor()));
+        e -> new ConfigurationExportWorkflow((JFrame) getTopLevelAncestor()));
     menuItem = new JMenuItem("Restore Default Configuration");
     menu.add(menuItem);
     menuItem.addActionListener(

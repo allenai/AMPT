@@ -29,12 +29,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-/** Launches and executes the control flow for exporting configuration files. */
-public class ConfigurationExportLauncher {
+/** Executes the workflow for exporting configuration files. */
+public class ConfigurationExportWorkflow {
   private final JFileChooser fileChooser;
   private final Logger logger = new StderrLogService();
 
-  public ConfigurationExportLauncher(JFrame owner) {
+  public ConfigurationExportWorkflow(JFrame owner) {
     fileChooser = new JFileChooser();
     final int result = saveDialog(owner);
     final Optional<File> file = getSelectedFile(result);
