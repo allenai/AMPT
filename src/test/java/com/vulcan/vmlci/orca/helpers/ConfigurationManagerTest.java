@@ -67,7 +67,7 @@ public class ConfigurationManagerTest extends TestCase {
               new File(defaultConfigDirectory, configFile.getFilename()),
               new File(tempDirectory.toFile(), configFile.getFilename())));
     }
-    tempDirectory.toFile().deleteOnExit();
+    FileUtils.deleteDirectory(tempDirectory.toFile());
   }
 
   public void test_backup_config() throws Exception {
@@ -87,7 +87,7 @@ public class ConfigurationManagerTest extends TestCase {
     TestCase.assertEquals(1, files.length);
     TestCase.assertTrue(files[0].matches("^MeasurementConf-.*\\.json\\.bak$"));
 
-    tempDirectory.toFile().deleteOnExit();
+    FileUtils.deleteDirectory(tempDirectory.toFile());
   }
 
   public void test_backup_nonexistent_config() throws Exception {
@@ -135,7 +135,7 @@ public class ConfigurationManagerTest extends TestCase {
               new File(testingConfigDirectory, configFile.getFilename()),
               new File(tempDirectory.toFile(), configFile.getFilename())));
     }
-    tempDirectory.toFile().deleteOnExit();
+    FileUtils.deleteDirectory(tempDirectory.toFile());
   }
 
   public void test_copy_new_configs_from_zip_file() throws Exception {
@@ -161,7 +161,7 @@ public class ConfigurationManagerTest extends TestCase {
               new File(testingConfigDirectory, configFile.getFilename()),
               new File(tempDirectory.toFile(), configFile.getFilename())));
     }
-    tempDirectory.toFile().deleteOnExit();
+    FileUtils.deleteDirectory(tempDirectory.toFile());
     tempZipFile.deleteOnExit();
   }
 
@@ -190,8 +190,8 @@ public class ConfigurationManagerTest extends TestCase {
       MatcherAssert.assertThat(
           e.getMessage(), CoreMatchers.containsString("Missing required configuration file(s)"));
     }
-    inputDirectory.toFile().deleteOnExit();
-    outputDirectory.toFile().deleteOnExit();
+    FileUtils.deleteDirectory(inputDirectory.toFile());
+    FileUtils.deleteDirectory(outputDirectory.toFile());
   }
 
   public void test_copy_new_configs_from_zip_file_missing_configs() throws Exception {
@@ -212,7 +212,7 @@ public class ConfigurationManagerTest extends TestCase {
       MatcherAssert.assertThat(
           e.getMessage(), CoreMatchers.containsString("Missing required configuration file(s)"));
     }
-    tempDirectory.toFile().deleteOnExit();
+    FileUtils.deleteDirectory(tempDirectory.toFile());
     tempZipFile.deleteOnExit();
   }
 
@@ -239,8 +239,8 @@ public class ConfigurationManagerTest extends TestCase {
       TestCase.fail("Expected to fail");
     } catch (JsonValidationException e) {
     }
-    inputDirectory.toFile().deleteOnExit();
-    outputDirectory.toFile().deleteOnExit();
+    FileUtils.deleteDirectory(inputDirectory.toFile());
+    FileUtils.deleteDirectory(outputDirectory.toFile());
   }
 
   public void test_copy_new_invalid_config_from_zip_file() throws Exception {
@@ -276,8 +276,8 @@ public class ConfigurationManagerTest extends TestCase {
       TestCase.fail("Expected to fail");
     } catch (JsonValidationException e) {
     }
-    inputDirectory.toFile().deleteOnExit();
-    outputDirectory.toFile().deleteOnExit();
+    FileUtils.deleteDirectory(inputDirectory.toFile());
+    FileUtils.deleteDirectory(outputDirectory.toFile());
     tempZipFile.deleteOnExit();
   }
 
@@ -297,7 +297,7 @@ public class ConfigurationManagerTest extends TestCase {
         FileUtils.contentEquals(
             new File(defaultConfigDirectory, "CSV-Columns.csv"),
             new File(tempDirectory.toFile(), "CSV-Columns.csv")));
-    tempDirectory.toFile().deleteOnExit();
+    FileUtils.deleteDirectory(tempDirectory.toFile());
   }
 
   public void test_export_configs_from_preferences_directory() throws Exception {
