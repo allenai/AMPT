@@ -102,7 +102,7 @@ public class Branding extends JPanel {
     menuItem = new JMenuItem("Show Configuration Location");
     menu.add(menuItem);
     menuItem.addActionListener(
-        e -> new ConfigurationDisplayLauncher((JFrame) getTopLevelAncestor()));
+        e -> new ConfigurationLocationDialog((JFrame) getTopLevelAncestor()));
     return menu;
   }
 }

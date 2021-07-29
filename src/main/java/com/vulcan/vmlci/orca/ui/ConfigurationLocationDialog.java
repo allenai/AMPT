@@ -22,13 +22,13 @@ import ij.gui.MessageDialog;
 import javax.swing.JFrame;
 
 /** Launches the informational dialog for showing the configuration file location. */
-public class ConfigurationDisplayLauncher {
-  public ConfigurationDisplayLauncher(JFrame owner) {
-    final MessageDialog textDialog =
+public class ConfigurationLocationDialog {
+  public ConfigurationLocationDialog(JFrame owner) {
+    final MessageDialog messageDialog =
         new MessageDialog(
             owner,
             "Configuration location",
             ConfigurationLoader.getAbsoluteConfigurationPath("").toString());
-    textDialog.escapePressed();
+    messageDialog.escapePressed();
   }
 }
