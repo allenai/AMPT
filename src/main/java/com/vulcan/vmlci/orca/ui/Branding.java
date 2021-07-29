@@ -90,7 +90,7 @@ public class Branding extends JPanel {
     menuItem = new JMenuItem("Import Configuration");
     menu.add(menuItem);
     menuItem.addActionListener(
-        e -> new ConfigurationImportLauncher((JFrame) getTopLevelAncestor()));
+        e -> new ConfigurationImportWorkflow((JFrame) getTopLevelAncestor()));
     menuItem = new JMenuItem("Export Configuration");
     menu.add(menuItem);
     menuItem.addActionListener(
@@ -98,7 +98,7 @@ public class Branding extends JPanel {
     menuItem = new JMenuItem("Restore Default Configuration");
     menu.add(menuItem);
     menuItem.addActionListener(
-        e -> new ConfigurationRestoreLauncher((JFrame) getTopLevelAncestor()));
+        e -> new ConfigurationRestoreWorkflow((JFrame) getTopLevelAncestor()));
     menuItem = new JMenuItem("Show Configuration Location");
     menu.add(menuItem);
     menuItem.addActionListener(

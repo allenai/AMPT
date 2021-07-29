@@ -26,18 +26,18 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.io.IOException;
 
-/** Launches and executes the control flow for restoring default configuration files. */
-public class ConfigurationRestoreLauncher {
+/** Executes the workflow for restoring default configuration files. */
+public class ConfigurationRestoreWorkflow {
   private static final String CONFIRM_OVERWRITE_MESSAGE =
       "This will overwrite your existing configurations with the defaults\n\n"
           + "Do you want to proceed?";
   private final Logger logger = new StderrLogService();
 
-  public ConfigurationRestoreLauncher(JFrame owner) {
+  public ConfigurationRestoreWorkflow(JFrame owner) {
     final int result =
         JOptionPane.showConfirmDialog(
             owner,
-            ConfigurationRestoreLauncher.CONFIRM_OVERWRITE_MESSAGE,
+            ConfigurationRestoreWorkflow.CONFIRM_OVERWRITE_MESSAGE,
             "Restore Default Configuration",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE);
