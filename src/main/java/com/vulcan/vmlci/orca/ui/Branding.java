@@ -95,6 +95,10 @@ public class Branding extends JPanel {
     menu.add(menuItem);
     menuItem.addActionListener(
         e -> new ConfigurationRestoreLauncher((JFrame) getTopLevelAncestor()));
+    menuItem = new JMenuItem("Show Configuration Location");
+    menu.add(menuItem);
+    menuItem.addActionListener(
+        e -> new ConfigurationDisplayLauncher((JFrame) getTopLevelAncestor()));
     return menu;
   }
 }
