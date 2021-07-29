@@ -28,12 +28,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-/** Launches and executes the control flow for importing configuration files. */
-public class ConfigurationImportLauncher {
+/** Executes the workflow for importing configuration files. */
+public class ConfigurationImportWorkflow {
   private final JFileChooser fileChooser;
   private final Logger logger = new StderrLogService();
 
-  public ConfigurationImportLauncher(JFrame owner) {
+  public ConfigurationImportWorkflow(JFrame owner) {
     fileChooser = new JFileChooser();
     final int result = openDialog(owner);
     final Optional<File> file = getSelectedFile(result);
