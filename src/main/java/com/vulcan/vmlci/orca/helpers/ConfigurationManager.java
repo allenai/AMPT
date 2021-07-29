@@ -26,6 +26,7 @@ import org.scijava.log.StderrLogService;
 
 import javax.swing.JOptionPane;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -44,6 +45,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 /** Helpers for managing configuration files. */
 @SuppressWarnings({"FinalClass", "UtilityClass", "UtilityClassCanBeEnum"})
@@ -344,5 +346,36 @@ public final class ConfigurationManager {
       throws IOException {
     final Path configurationFile = ConfigurationLoader.getAbsoluteConfigurationPath(fileName);
     FileUtils.copyInputStreamToFile(inputStream, configurationFile.toFile());
+  }
+
+  /**
+   * Exports the existing configs in the user's preferences directory to the provided zip file.
+   *
+   * @param file A zip file to which configs should be exported.
+   * @throws IOException If any I/O errors occur.
+   */
+  public static void exportConfigsFromPreferencesDirectory(File file) throws IOException {
+    final String directoryName = "AMPT_configuration";
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(file))) {
+      zipOutputStream.putNextEntry(new ZipEntry(String.format("%s/", directoryName)));
+      for (ConfigurationFile configFile : ConfigurationFile.values()) {
+        zipOutputStream.putNextEntry(
+            new ZipEntry(String.format("%s/%s", directoryName, configFile.getFilename())));
+        zipOutputStream.write(
+            Files.readAllBytes(
+                ConfigurationLoader.getAbsoluteConfigurationPath(configFile.getFilename())));
+        zipOutputStream.closeEntry();
+      }
+
+      // The CSV columns configuration should also be exported. This is somewhat of an outlier
+      // because it's not (yet) in JSON format and doesn't have an entry in the ConfigurationFile
+      // enumeration.
+      zipOutputStream.putNextEntry(
+          new ZipEntry(String.format("%s/%s", directoryName, CSV_COLUMNS_CONFIG_FILENAME)));
+      zipOutputStream.write(
+          Files.readAllBytes(
+              ConfigurationLoader.getAbsoluteConfigurationPath(CSV_COLUMNS_CONFIG_FILENAME)));
+      zipOutputStream.closeEntry();
+    }
   }
 }
