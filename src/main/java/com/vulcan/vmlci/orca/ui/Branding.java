@@ -99,6 +99,10 @@ public class Branding extends JPanel {
     menu.add(menuItem);
     menuItem.addActionListener(
         e -> new ConfigurationRestoreWorkflow((JFrame) getTopLevelAncestor()));
+    menuItem = new JMenuItem("Show Configuration Location");
+    menu.add(menuItem);
+    menuItem.addActionListener(
+        e -> new ConfigurationLocationDialog((JFrame) getTopLevelAncestor()));
     return menu;
   }
 }
