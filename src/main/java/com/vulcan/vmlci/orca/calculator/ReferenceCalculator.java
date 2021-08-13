@@ -189,9 +189,14 @@ public class ReferenceCalculator extends BaseCalculator {
   }
 
   /**
-   * Draws a reference along axis, two reference points pne the line. The first reference point is
-   * the projection of the ref line start onto the axis, the second is the offset point along ref
-   * line on the axis.
+   * Computes a set of offset reference markers along an axis. The markers are returned in a HashMap
+   * The axis, defined by the line segment from (axis_x_start, axis_y_start) to (axis_x_end,
+   * axis_y_end) is keyed by 'axis'. Two line segments orthogonal to the 'axis' line segment, 'ref
+   * top' and 'ref bottom', would intersect the points (ref_line_x_start, ref_line_y_start) and
+   * (ref_line_x_end, ref_line_y_end) respectively. A third line segment orthogonal to 'axis', keyed
+   * by '&lt;offest&gt;% measurement', would intersect the point that is offset% along the line
+   * segment defined from (ref_line_x_start, ref_line_y_start) to (ref_line_x_end, ref_line_y_end).
+   * The lengths of the reference lines are 5% of the length of axis.
    *
    * @param axis_x_start the x coordinate of the start of the line being projected onto
    * @param axis_y_start the y coordinate of the start of the line being projected onto
