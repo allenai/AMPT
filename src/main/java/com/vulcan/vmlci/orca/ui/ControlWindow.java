@@ -23,19 +23,18 @@ import com.vulcan.vmlci.orca.event.ActiveImageListener;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
+import ij.IJ;
+import ij.ImageJ;
 import org.scijava.Context;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
@@ -112,7 +111,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     toplevel.add(build_accordion(), gbc);
 
     // Data Controls
-    final JPanel csv_controls = new DataControls(ds);
+    final DataControls csv_controls = new DataControls(ds);
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 2;
@@ -141,6 +140,17 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
 
           @Override
           public void windowLostFocus(WindowEvent e) {}
+        });
+    this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    this.addWindowListener(
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent e) {
+            // Present a save option to the user if the current state is dirty.
+            if (csv_controls.save(false, false)) {
+              ControlWindow.this.dispose();
+            }
+          }
         });
   }
 

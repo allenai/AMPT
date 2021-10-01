@@ -161,7 +161,17 @@ public class DataControls extends JPanel {
     controls[EXPORT].addActionListener(e -> save(true, true));
   }
 
-  private boolean save(boolean ignore_dirty, boolean export) {
+  /**
+   * Presents a dialog to save results to a CSV file.
+   *
+   * @param ignore_dirty Whether to ignore the dirty state, i.e. if true then the save dialog will
+   *     always be shown.
+   * @param export If true only saves columns marked for export in the CSV-Columns config.
+   * @return True if the save operation completed successfully, the user chose to discard changes,
+   *     or no save was required (no-op); false if an error was encountered during save or the user
+   *     chose not to discard changes.
+   */
+  public boolean save(boolean ignore_dirty, boolean export) {
     if (ignore_dirty || ds.dirty()) {
       File csvFile = ds.getCsvFile();
       SaveDialog saveDialog;
