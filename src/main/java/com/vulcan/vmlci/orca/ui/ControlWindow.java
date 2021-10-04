@@ -23,8 +23,8 @@ import com.vulcan.vmlci.orca.event.ActiveImageListener;
 import com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException;
 import com.vulcan.vmlci.orca.helpers.DataFileLoadException;
 import com.vulcan.vmlci.orca.helpers.LastActiveImage;
-import ij.IJ;
-import ij.ImageJ;
+import ij.CommandListener;
+import ij.Executer;
 import org.scijava.Context;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
@@ -32,8 +32,7 @@ import org.scijava.log.StderrLogService;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -41,7 +40,8 @@ import java.awt.event.WindowFocusListener;
 /**
  * The <code>ControlWindow</code> class is the main UI for the Aquatic Mammal Photogrammetry Tool.
  */
-public class ControlWindow extends JFrame implements ActiveImageListener, TableModelListener {
+public class ControlWindow extends JFrame
+    implements ActiveImageListener, CommandListener, TableModelListener {
   private final JPanel metadata = null;
   private final JPanel input = null;
   private final JPanel length_measurements = null;
@@ -51,6 +51,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
   private CueManager cueManager;
   private MetadataControl metadataControl;
   private InputControls inputControls;
+  private DataControls csv_controls;
   private String active_image;
 
   public ControlWindow(Context ctx) {
@@ -111,7 +112,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     toplevel.add(build_accordion(), gbc);
 
     // Data Controls
-    final DataControls csv_controls = new DataControls(ds);
+    csv_controls = new DataControls(ds);
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 2;
@@ -147,11 +148,12 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
           @Override
           public void windowClosing(WindowEvent e) {
             // Present a save option to the user if the current state is dirty.
-            if (csv_controls.save(false, false)) {
-              ControlWindow.this.dispose();
+            if (csv_controls.saveWithDiscardOption(false, false)) {
+              dispose();
             }
           }
         });
+    Executer.addCommandListener(this);
   }
 
   private JComponent build_accordion() {
@@ -243,5 +245,19 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
   @Override
   public void tableChanged(TableModelEvent e) {
     setTitle();
+  }
+
+  @Override
+  public String commandExecuting(String command) {
+    if ("Quit".equals(command)) {
+      try {
+        if (null != csv_controls) {
+          csv_controls.save(false, false);
+        }
+      } catch (DataSaveException e) {
+        // ImageJ is shutting down at this point.
+      }
+    }
+    return command;
   }
 }
