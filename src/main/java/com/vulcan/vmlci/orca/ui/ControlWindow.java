@@ -40,8 +40,7 @@ import java.awt.event.WindowFocusListener;
 /**
  * The <code>ControlWindow</code> class is the main UI for the Aquatic Mammal Photogrammetry Tool.
  */
-public class ControlWindow extends JFrame
-    implements ActiveImageListener, CommandListener, TableModelListener {
+public class ControlWindow extends JFrame implements ActiveImageListener, TableModelListener {
   private final JPanel metadata = null;
   private final JPanel input = null;
   private final JPanel length_measurements = null;
@@ -51,7 +50,6 @@ public class ControlWindow extends JFrame
   private CueManager cueManager;
   private MetadataControl metadataControl;
   private InputControls inputControls;
-  private DataControls csv_controls;
   private String active_image;
 
   public ControlWindow(Context ctx) {
@@ -112,7 +110,7 @@ public class ControlWindow extends JFrame
     toplevel.add(build_accordion(), gbc);
 
     // Data Controls
-    csv_controls = new DataControls(ds);
+    final DataControls csv_controls = new DataControls(ds);
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 2;
@@ -153,7 +151,17 @@ public class ControlWindow extends JFrame
             }
           }
         });
-    Executer.addCommandListener(this);
+    Executer.addCommandListener(
+        command -> {
+          if ("Quit".equals(command)) {
+            try {
+              csv_controls.save(false, false);
+            } catch (DataSaveException e) {
+              // ImageJ is shutting down at this point.
+            }
+          }
+          return command;
+        });
   }
 
   private JComponent build_accordion() {
@@ -245,19 +253,5 @@ public class ControlWindow extends JFrame
   @Override
   public void tableChanged(TableModelEvent e) {
     setTitle();
-  }
-
-  @Override
-  public String commandExecuting(String command) {
-    if ("Quit".equals(command)) {
-      try {
-        if (null != csv_controls) {
-          csv_controls.save(false, false);
-        }
-      } catch (DataSaveException e) {
-        // ImageJ is shutting down at this point.
-      }
-    }
-    return command;
   }
 }
