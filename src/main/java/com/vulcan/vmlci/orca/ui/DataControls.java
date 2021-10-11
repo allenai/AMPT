@@ -119,7 +119,7 @@ public class DataControls extends JPanel {
     controls[LOAD].addActionListener(
         e -> {
           if (ds.dirty()) {
-            if (!DataControls.this.save(false, false)) {
+            if (!DataControls.this.saveWithDiscardOption(false, false)) {
               return;
             }
           }
@@ -154,14 +154,48 @@ public class DataControls extends JPanel {
   }
 
   private void provision_save_button() {
-    controls[SAVE].addActionListener(e -> save(true, false));
+    controls[SAVE].addActionListener(e -> saveWithDiscardOption(true, false));
   }
 
   private void provision_export_button() {
-    controls[EXPORT].addActionListener(e -> save(true, true));
+    controls[EXPORT].addActionListener(e -> saveWithDiscardOption(true, true));
   }
 
-  private boolean save(boolean ignore_dirty, boolean export) {
+  /**
+   * Presents a dialog to save results to a CSV file with a confirmation to discard changes.
+   *
+   * @param ignore_dirty Whether to ignore the dirty state, i.e. if true then the save dialog will
+   *     always be shown.
+   * @param export If true only saves columns marked for export in the CSV-Columns config.
+   * @return True if the save operation completed successfully, the user chose to discard changes,
+   *     or no save was required (no-op); false if an error was encountered during save or the user
+   *     chose not to discard changes.
+   */
+  public boolean saveWithDiscardOption(boolean ignore_dirty, boolean export) {
+    try {
+      if (!save(ignore_dirty, export)) {
+        YesNoCancelDialog discard =
+            new YesNoCancelDialog(
+                null, "Discard Changes", "Do you really want to discard changes?");
+        return discard.yesPressed();
+      }
+    } catch (DataSaveException e) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Presents a dialog to save results to a CSV file.
+   *
+   * @param ignore_dirty Whether to ignore the dirty state, i.e. if true then the save dialog will
+   *     always be shown.
+   * @param export If true only saves columns marked for export in the CSV-Columns config.
+   * @return True if the save operation completed successfully or no save was required (no-op);
+   *     false if a save option was presented but the user did not save changes.
+   * @throws DataSaveException If an error occurred during the save operation.
+   */
+  public boolean save(boolean ignore_dirty, boolean export) throws DataSaveException {
     if (ignore_dirty || ds.dirty()) {
       File csvFile = ds.getCsvFile();
       SaveDialog saveDialog;
@@ -176,17 +210,14 @@ public class DataControls extends JPanel {
       if (null != directory && null != filename) {
         try {
           ds.save_as_csv(new File(directory, filename), export);
+          return true;
         } catch (IOException e) {
           MessageDialog errDialog = new MessageDialog(null, "Error Saving", e.getMessage());
-          return false;
+          throw new DataSaveException("Error Saving", e);
         }
-      } else {
-        YesNoCancelDialog discard =
-            new YesNoCancelDialog(
-                null, "Discard Changes", "Do you really want to discard changes?");
-        return discard.yesPressed();
       }
+      return false;
     }
-    return true;
+    return true; // This is the no-op case.
   }
 }
