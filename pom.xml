@@ -94,7 +94,7 @@
     </build>
 
     <properties>
-        <main-class>com.vulcan.vmlci.orca.AMPT_Main</main-class>
+        <main-class>org.allenai.allenmli.orca.AMPT_Main</main-class>
         <package-name>com.vulcan.vmlci.orca</package-name>
         <license.licenseName>BSD-3-Clause</license.licenseName>
         <license.copyrightOwners>Vulcan Inc.</license.copyrightOwners>
