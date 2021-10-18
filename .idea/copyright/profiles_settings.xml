@@ -1,7 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="Vulcan Apache 2.0">
+  <settings default="Allen AI Apache 2.0">
     <module2copyright>
-      <element module="Project Files" copyright="Vulcan Apache 2.0" />
+      <element module="Project Files" copyright="Allen AI Apache 2.0" />
     </module2copyright>
   </settings>
 </component>
