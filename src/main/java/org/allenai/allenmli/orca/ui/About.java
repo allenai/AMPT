@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021 Vulcan Inc.
+ *  Copyright (c) 2021 The Allen Institute for Artificial Intelligence.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 public class About extends JDialog {
-  private static final String COPYRIGHT_2021_VULCAN_INC = "Copyright 2021 Vulcan Inc.";
+  private static final String COPYRIGHT_2021_ALLEN_AI = "Copyright 2021 The Allen Institute for Artificial Intelligence.";
   final Logger logger = new StderrLogService();
   private JPanel contentPane;
   private JButton buttonDismiss;
@@ -169,7 +169,7 @@ public class About extends JDialog {
   }
 
   private String getLicenseText() {
-    String license = About.COPYRIGHT_2021_VULCAN_INC;
+    String license = About.COPYRIGHT_2021_ALLEN_AI;
     ;
     ClassLoader classLoader = getClass().getClassLoader();
     final InputStream licenseInput = classLoader.getResourceAsStream("documentation/license.html");

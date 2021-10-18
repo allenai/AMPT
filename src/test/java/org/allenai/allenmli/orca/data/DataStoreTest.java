@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021 Vulcan Inc.
+ *  Copyright (c) 2021 The Allen Institute for Artificial Intelligence.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -301,8 +301,8 @@ public class DataStoreTest extends TestCase {
       e.printStackTrace();
       TestCase.fail();
     }
-//    } catch (com.vulcan.vmlci.orca.helpers.ConfigurationFileLoadException
-//        | com.vulcan.vmlci.orca.helpers.DataFileLoadException e) {
+//    } catch (org.allenai.allenmli.orca.helpers.ConfigurationFileLoadException
+//        | org.allenai.allenmli.orca.helpers.DataFileLoadException e) {
 //      e.printStackTrace();
 //      fail();
 //    }
