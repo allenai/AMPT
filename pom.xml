@@ -22,7 +22,7 @@
     <inceptionYear>2020</inceptionYear>
 
     <organization>
-        <name>Allen Institute for Artificial Intelligence</name>
+        <name>The Allen Institute for Artificial Intelligence</name>
         <url>https://allenai.org/</url>
     </organization>
 
@@ -58,7 +58,7 @@
         <contributor>
             <name>Paul Albee</name>
             <email>paula@allenai.org</email>
-            <organization>Allen Institute for Artificial Intelligence</organization>
+            <organization>The Allen Institute for Artificial Intelligence</organization>
             <organizationUrl>https://allenai.org/</organizationUrl>
             <roles>
                 <role>developer</role>
@@ -68,7 +68,7 @@
         <contributor>
             <name>Patrick Johnson</name>
             <email>patrickj@allenai.org</email>
-            <organization>Allen Institute for Artificial Intelligence</organization>
+            <organization>The Allen Institute for Artificial Intelligence</organization>
             <organizationUrl>https://allenai.org/</organizationUrl>
             <roles>
                 <role>developer</role>
@@ -114,7 +114,7 @@
         <main-class>org.allenai.allenmli.orca.AMPT_Main</main-class>
         <package-name>org.allenai.allenmli.orca</package-name>
         <license.licenseName>BSD-3-Clause</license.licenseName>
-        <license.copyrightOwners>Allen Institute for Artificial Intelligence</license.copyrightOwners>
+        <license.copyrightOwners>The Allen Institute for Artificial Intelligence</license.copyrightOwners>
     </properties>
 
     <repositories>
