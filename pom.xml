@@ -12,7 +12,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>vulcan.fiji</groupId>
+    <groupId>allenai.fiji</groupId>
     <artifactId>AMPT</artifactId>
     <version>0.3.0</version>
 
@@ -22,8 +22,8 @@
     <inceptionYear>2020</inceptionYear>
 
     <organization>
-        <name>Vulcan</name>
-        <url>https://vulcan.com/</url>
+        <name>The Allen Institute for Artificial Intelligence</name>
+        <url>https://allenai.org/</url>
     </organization>
 
     <licenses>
@@ -44,17 +44,34 @@
                 <role>developer</role>
             </roles>
         </developer>
+        <developer>
+            <id>APatrickJ</id>
+            <name>Patrick Johnson</name>
+            <url>https://github.com/APatrickJ</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
 
     <contributors>
         <contributor>
             <name>Paul Albee</name>
-            <email>palbee@vulcan.com</email>
-            <organization>Vulcan Inc.</organization>
-            <organizationUrl>https://vulcan.com/</organizationUrl>
+            <email>paula@allenai.org</email>
+            <organization>The Allen Institute for Artificial Intelligence</organization>
+            <organizationUrl>https://allenai.org/</organizationUrl>
             <roles>
                 <role>developer</role>
                 <role>lead</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Patrick Johnson</name>
+            <email>patrickj@allenai.org</email>
+            <organization>The Allen Institute for Artificial Intelligence</organization>
+            <organizationUrl>https://allenai.org/</organizationUrl>
+            <roles>
+                <role>developer</role>
             </roles>
         </contributor>
     </contributors>
@@ -94,10 +111,10 @@
     </build>
 
     <properties>
-        <main-class>com.vulcan.vmlci.orca.AMPT_Main</main-class>
-        <package-name>com.vulcan.vmlci.orca</package-name>
+        <main-class>org.allenai.allenmli.orca.AMPT_Main</main-class>
+        <package-name>org.allenai.allenmli.orca</package-name>
         <license.licenseName>BSD-3-Clause</license.licenseName>
-        <license.copyrightOwners>Vulcan Inc.</license.copyrightOwners>
+        <license.copyrightOwners>The Allen Institute for Artificial Intelligence</license.copyrightOwners>
     </properties>
 
     <repositories>
