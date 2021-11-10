@@ -7,7 +7,7 @@ date: 2021-04-22
 ---
 # Copyright
 
-Copyright 2021 Vulcan Inc.
+Copyright 2021 The Allen Institute for Artificial Intelligence.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
