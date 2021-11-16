@@ -204,7 +204,8 @@ public class About extends JDialog {
         logger.error(e);
       }
     } else {
-      logger.error("Resource bundle is corrupted: missing about.xsl and/or attribution.xml.");
+      logger.error(
+          "Resource bundle is corrupted: missing about.xsl and/or attribution.xml. Try reinstalling the plugin.");
     }
     return text;
   }
