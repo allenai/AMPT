@@ -18,6 +18,8 @@ package org.allenai.allenmli.orca.ui;
 
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -27,6 +29,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -36,23 +47,23 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
+import java.io.StringWriter;
 
 public class About extends JDialog {
-  private static final String COPYRIGHT_2021_ALLEN_AI = "Copyright 2021 The Allen Institute for Artificial Intelligence.";
+  private static final String COPYRIGHT_2021_ALLEN_AI =
+      "Copyright 2021 The Allen Institute for Artificial Intelligence.";
   final Logger logger = new StderrLogService();
   private JPanel contentPane;
   private JButton buttonDismiss;
-  private JTextPane licensePanel;
+  private JTextPane textPanel;
 
-  public About(){
+  public About() {
     this(null);
   }
-  public About(Frame owner){
+
+  public About(Frame owner) {
     super(owner);
     buildUI();
     setContentPane(contentPane);
@@ -117,13 +128,13 @@ public class About extends JDialog {
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel3.add(scrollPane1, gbc);
-    licensePanel = new JTextPane();
-    licensePanel.setContentType("text/html");
-    licensePanel.setEditable(false);
-    licensePanel.setEnabled(true);
-    licensePanel.setText(getLicenseText());
-    licensePanel.putClientProperty("html.disable", Boolean.FALSE);
-    scrollPane1.setViewportView(licensePanel);
+    textPanel = new JTextPane();
+    textPanel.setContentType("text/html");
+    textPanel.setEditable(false);
+    textPanel.setEnabled(true);
+    textPanel.setText(getText());
+    textPanel.putClientProperty("html.disable", Boolean.FALSE);
+    scrollPane1.setViewportView(textPanel);
     final JPanel spacer2 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
@@ -168,29 +179,42 @@ public class About extends JDialog {
         JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
   }
 
-  private String getLicenseText() {
-    String license = About.COPYRIGHT_2021_ALLEN_AI;
-    ;
+  private String getText() {
+    String text = About.COPYRIGHT_2021_ALLEN_AI;
     ClassLoader classLoader = getClass().getClassLoader();
-    final InputStream licenseInput = classLoader.getResourceAsStream("documentation/license.html");
-    if (null != licenseInput) {
-      try (final BufferedReader licenseReader =
-          new BufferedReader(new InputStreamReader(licenseInput))) {
-        license = licenseReader.lines().collect(Collectors.joining());
-        licenseInput.close();
-      } catch (IOException e) {
+    final InputStream aboutInput = classLoader.getResourceAsStream("documentation/about.xsl");
+    final InputStream attributionInput = classLoader.getResourceAsStream("attribution.xml");
+    if (null != aboutInput && null != attributionInput) {
+      final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+      final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      try {
+        final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        final Document document = documentBuilder.parse(attributionInput);
+
+        final StreamSource styleSource = new StreamSource(aboutInput);
+        final Transformer transformer = transformerFactory.newTransformer(styleSource);
+
+        final DOMSource source = new DOMSource(document);
+        final StringWriter writer = new StringWriter();
+        final StreamResult result = new StreamResult(writer);
+
+        transformer.transform(source, result);
+        text = writer.toString();
+      } catch (IOException | ParserConfigurationException | SAXException | TransformerException e) {
         logger.error(e);
       }
     } else {
-      logger.error("Could not find license.html in resource bundle.");
+      logger.error(
+          "Resource bundle is corrupted: missing about.xsl and/or attribution.xml. Try reinstalling the plugin.");
     }
-    return license;
+    return text;
   }
 
   private void onClose() {
     // add your code here
     dispose();
   }
+
   private class AboutWindowAdapter extends WindowAdapter {
     public void windowClosing(WindowEvent e) {
       onClose();
