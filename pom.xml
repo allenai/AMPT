@@ -149,10 +149,12 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.2.0</version>
                 <executions>
                     <execution>
+                        <id>copy-attribution-file</id>
                         <phase>process-classes</phase>
                         <goals>
                             <goal>copy-resources</goal>
