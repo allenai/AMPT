@@ -16,6 +16,7 @@
 
 package org.allenai.allenmli.orca.ui;
 
+import org.allenai.allenmli.orca.helpers.Utilities;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 import org.w3c.dom.Document;
@@ -29,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
+import javax.swing.event.HyperlinkEvent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,6 +52,8 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class About extends JDialog {
   private static final String COPYRIGHT_2021_ALLEN_AI =
@@ -177,11 +181,27 @@ public class About extends JDialog {
         },
         KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
         JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+    // Manage URL Clicks
+    textPanel.addHyperlinkListener(
+        e -> {
+          final HyperlinkEvent.EventType eventType = e.getEventType();
+          if (HyperlinkEvent.EventType.ACTIVATED.equals(eventType)) {
+            final URI documentationURI;
+            try {
+              documentationURI = e.getURL().toURI();
+            } catch (final URISyntaxException ex) {
+              logger.error(ex);
+              return;
+            }
+            Utilities.linkOpener(this, documentationURI);
+          }
+        });
   }
 
   private String getText() {
     String text = About.COPYRIGHT_2021_ALLEN_AI;
-    ClassLoader classLoader = getClass().getClassLoader();
+    final ClassLoader classLoader = getClass().getClassLoader();
     final InputStream aboutInput = classLoader.getResourceAsStream("documentation/about.xsl");
     final InputStream attributionInput = classLoader.getResourceAsStream("attribution.xml");
     if (null != aboutInput && null != attributionInput) {
@@ -200,7 +220,10 @@ public class About extends JDialog {
 
         transformer.transform(source, result);
         text = writer.toString();
-      } catch (IOException | ParserConfigurationException | SAXException | TransformerException e) {
+      } catch (final IOException
+          | ParserConfigurationException
+          | SAXException
+          | TransformerException e) {
         logger.error(e);
       }
     } else {
@@ -211,7 +234,6 @@ public class About extends JDialog {
   }
 
   private void onClose() {
-    // add your code here
     dispose();
   }
 
