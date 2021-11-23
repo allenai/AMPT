@@ -17,6 +17,7 @@
 package org.allenai.allenmli.orca.ui;
 
 import org.allenai.allenmli.orca.helpers.ConfigurationLoader;
+import org.allenai.allenmli.orca.helpers.Utilities;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 
@@ -141,20 +142,7 @@ public class HelpLauncher {
       return;
     }
     final URI documentationURI = indexPath.toUri();
-    if (Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-      try {
-        Desktop.getDesktop().browse(documentationURI);
-      } catch (final IOException e) {
-        logger.error(e);
-      }
-    } else {
-      JOptionPane.showMessageDialog(
-          owner,
-          "Browse to " + documentationURI,
-          "Documentation Can't Open",
-          JOptionPane.INFORMATION_MESSAGE);
-      logger.info("Access documentation at " + documentationURI);
-    }
+    Utilities.linkOpener(owner, documentationURI);
   }
 
   public static void main(String[] args) {
