@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-
     <parent>
         <groupId>org.scijava</groupId>
         <artifactId>pom-scijava</artifactId>
@@ -104,7 +103,8 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
+                        <id>build-documentation-archive</id>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
@@ -122,6 +122,7 @@
                 <executions>
                     <execution>
                         <id>enforce-files-exist-documentation</id>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
