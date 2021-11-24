@@ -28,7 +28,7 @@
     <licenses>
         <license>
             <name>Apache 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -88,7 +88,7 @@
     <mailingLists>
         <mailingList>
             <name>ImageJ Forum</name>
-            <archive>http://forum.imagej.net/</archive>
+            <archive>https://forum.imagej.net/</archive>
         </mailingList>
     </mailingLists>
 
