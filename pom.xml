@@ -118,13 +118,29 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <workingDirectory>${project.basedir}/doc_source</workingDirectory>
+                            <arguments>
+                                <argument>all</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cleanup-documentation-archive</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <workingDirectory>${project.basedir}/doc_source</workingDirectory>
+                            <arguments>
+                                <argument>full_clean</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <executable>make</executable>
-                    <workingDirectory>${project.basedir}/doc_source</workingDirectory>
-                    <argument>all</argument>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
