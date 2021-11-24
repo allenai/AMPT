@@ -73,6 +73,16 @@
                 <role>developer</role>
             </roles>
         </contributor>
+        <contributor>
+            <name>Jenna James</name>
+            <email>jennaj@allenai.org</email>
+            <organization>The Allen Institute for Artificial Intelligence</organization>
+            <organizationUrl>https://allenai.org/</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </contributor>
+
     </contributors>
 
     <mailingLists>
