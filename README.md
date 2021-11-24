@@ -10,7 +10,7 @@ Aquatic Mammal Photogrammetry Tool
 * [Fiji][fiji]
 * Maven
 
-# Installation
+# Compiling
 
 AMPT is built using Maven.
 
@@ -21,12 +21,15 @@ Maven, virtualenv, and make are installed run the following.
 
 ### MacOS X
 
+Compile:
 ```
 > export JAVA_HOME='/Applications/Fiji.app/java/macosx/adoptopenjdk-8.jdk/jre/Contents/Home'
 > mvn package -P uberjar 
-> cp -f target/AMPT-0.3.0-all.jar /Applications/Fiji.app/plugins/jars`
 ```
 
-
+Optional Local Install :
+```
+> cp -f target/AMPT-0.3.0-all.jar /Applications/Fiji.app/plugins/jars
+```
 
 [fiji]: <https://fiji.sc/>  "Fiji Home"
