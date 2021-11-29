@@ -1,0 +1,26 @@
+site_name: Aquatic Mammal Photogrammetry Tool
+site_dir: documentation
+theme:
+  name: material
+  features:
+    - toc.integrate
+markdown_extensions:
+  - attr_list
+  - pymdownx.highlight
+  - pymdownx.superfences
+use_directory_urls: false
+copyright: Copyright &copy; 2021 Allen Institute for Artificial Intelligence
+repo_url: https://github.com/AllenMLI/AMPT
+edit_uri: edit/main/doc_source/docs/
+nav:
+  - Home: 'index.md'
+  - 'quick_tour.md'
+  - 'image.md'
+  - 'metadata.md'
+  - 'input.md'
+  - 'length_and_profile.md'
+  - 'csv.md'
+  - 'csv_columns_config.md'
+  - 'cue_and_calc.md'
+  - 'copyright.md'
+  - 'license.md'

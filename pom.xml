@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-
     <parent>
         <groupId>org.scijava</groupId>
         <artifactId>pom-scijava</artifactId>
@@ -29,7 +28,7 @@
     <licenses>
         <license>
             <name>Apache 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -74,12 +73,22 @@
                 <role>developer</role>
             </roles>
         </contributor>
+        <contributor>
+            <name>Jenna James</name>
+            <email>jennaj@allenai.org</email>
+            <organization>The Allen Institute for Artificial Intelligence</organization>
+            <organizationUrl>https://allenai.org/</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </contributor>
+
     </contributors>
 
     <mailingLists>
         <mailingList>
             <name>ImageJ Forum</name>
-            <archive>http://forum.imagej.net/</archive>
+            <archive>https://forum.imagej.net/</archive>
         </mailingList>
     </mailingLists>
 
@@ -99,6 +108,40 @@
     </ciManagement>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>build-documentation-archive</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <workingDirectory>${project.basedir}/doc_source</workingDirectory>
+                            <arguments>
+                                <argument>all</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cleanup-documentation-archive</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <workingDirectory>${project.basedir}/doc_source</workingDirectory>
+                            <arguments>
+                                <argument>full_clean</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -122,6 +165,62 @@
                 <configuration>
                     <outputFile>${project.build.directory}/attribution.xml</outputFile>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-generated-files-present</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireFilesExist>
+                                    <files>
+                                        <file>${project.basedir}/src/main/resources/documentation.zip</file>
+                                    </files>
+                                    <message>Documentation was not present.</message>
+                                </requireFilesExist>
+                                <requireFilesExist>
+                                    <files>
+                                        <file>${basedir}/target/attribution.xml</file>
+                                    </files>
+                                    <message>Attribution file was not present.</message>
+                                </requireFilesExist>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-attribution-file</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/target</directory>
+                                    <includes>
+                                        <include>attribution.xml</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

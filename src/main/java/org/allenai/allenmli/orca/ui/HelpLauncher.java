@@ -17,28 +17,26 @@
 package org.allenai.allenmli.orca.ui;
 
 import org.allenai.allenmli.orca.helpers.ConfigurationLoader;
+import org.allenai.allenmli.orca.helpers.Utilities;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import java.awt.Desktop;
-import java.io.BufferedReader;
+import javax.swing.*;
+import java.awt.*;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class HelpLauncher {
   final Logger logger;
   final ClassLoader classLoader;
   private final Path documentationRoot;
-  private final ArrayList<String> documentationFiles;
 
   /** Construct a HelpLauncher. */
   public HelpLauncher() {
@@ -49,69 +47,84 @@ public class HelpLauncher {
    * Prepares the documentation for display.
    *
    * <p>This class copies the documentation from the resources into a subdirectory in the
-   * preferences directory. This allows the user to have a persistent bookmark to the documentation.
+   * preferences' directory. This allows the user to have a persistent bookmark to the documentation.
    *
    * @param owner the window and dialogs are associated with
    */
   public HelpLauncher(JFrame owner) {
     logger = new StderrLogService();
     classLoader = HelpLauncher.class.getClassLoader();
-    documentationFiles = new ArrayList<>();
 
     documentationRoot = ConfigurationLoader.getAbsoluteConfigurationPath("documentation");
+
     try {
-      Files.createDirectories(documentationRoot);
+      unpackZip();
     } catch (final IOException e) {
-      logger.error("Problem creating documentation directory", e);
+      logger.error(e);
       return;
     }
-    extractDocumentationManifest();
-    populateDocumentationDirectory();
     launchBrowser(owner);
   }
 
-  /** Loads the manifest file for the documentation files.s */
-  private void extractDocumentationManifest() {
-
-    final InputStream documentationManifest =
-        classLoader.getResourceAsStream("documentation/manifest.txt");
-    if (null != documentationManifest) {
-      try (final BufferedReader licenseReader =
-          new BufferedReader(new InputStreamReader(documentationManifest))) {
-        Arrays.stream(licenseReader.lines().toArray())
-            .forEach(line -> documentationFiles.add((String) line));
-        documentationManifest.close();
-      } catch (final IOException e) {
-        logger.error(e);
-      }
-    } else {
-      logger.error("documentation/manifest.txt missing");
-    }
-  }
-
   /**
-   * Copies the documentation into the documentation directory.
+   * Unpacks the documentation zip file.
    *
-   * <p>TODO: Currently this copies the documentation each time help is invoked, which should be
-   * changed.
+   * @throws IOException if there is any problem unpacking the documentation.
    */
-  private void populateDocumentationDirectory() {
-    for (final String filename : documentationFiles) {
-      final InputStream documentationFileStream =
-          classLoader.getResourceAsStream("documentation/" + filename);
-      if (null == documentationFileStream) {
-        logger.error("Missing 'documentation/" + filename + "' resource");
-        continue;
+  private void unpackZip() throws IOException {
+    final String outputPrefix = documentationRoot.toFile().getCanonicalFile().toString();
+    final InputStream zipStream = classLoader.getResourceAsStream("documentation.zip");
+    final ZipInputStream zipInputStream;
+    if (null != zipStream) {
+      zipInputStream = new ZipInputStream(zipStream);
+    } else {
+      throw new IOException("Cannot find documentation.zip");
+    }
+
+    ZipEntry zipEntry = zipInputStream.getNextEntry();
+    final byte[] buffer = new byte[1024];
+
+    while (null != zipEntry) {
+      final java.io.File destPath =
+          ConfigurationLoader.getAbsoluteConfigurationPath(zipEntry.getName())
+              .toFile()
+              .getCanonicalFile();
+
+      // Avoid badness
+      if (!destPath.toString().startsWith(outputPrefix)) {
+        logger.error("Attempted to create a file outside of " + outputPrefix);
+        throw new IOException("Illegal Directory Access");
       }
-      final Path destination = Paths.get(documentationRoot.toString(), filename);
-      try {
-        if (Files.exists(destination)) {
-          Files.delete(destination);
+
+      if (zipEntry.isDirectory()) {
+        if (!destPath.isDirectory() && !destPath.mkdirs()) {
+          throw new IOException("Failed to create directory " + destPath);
         }
-        Files.copy(documentationFileStream, destination);
-      } catch (final IOException e) {
-        logger.error(e);
+        //noinspection ResultOfMethodCallIgnored
+        destPath.setLastModified(zipEntry.getTime());
+      } else {
+        // ensure directory exists. (guard against badly formed zip file)
+        final java.io.File destinationDirectory = destPath.getParentFile();
+        if (!destinationDirectory.isDirectory() && !destinationDirectory.mkdirs()) {
+          throw new IOException("Failed to create directory " + destinationDirectory);
+        }
+
+        if (!destPath.exists() || destPath.lastModified() < zipEntry.getTime()) {
+          logger.info("Creating: " + destPath);
+          // write file content
+          final FileOutputStream targetFile = new FileOutputStream(destPath);
+          int len = zipInputStream.read(buffer);
+          while (0 < len) {
+            targetFile.write(buffer, 0, len);
+            len = zipInputStream.read(buffer);
+          }
+          targetFile.close();
+          //noinspection ResultOfMethodCallIgnored
+          destPath.setLastModified(zipEntry.getTime());
+        }
       }
+
+      zipEntry = zipInputStream.getNextEntry();
     }
   }
 
@@ -129,20 +142,7 @@ public class HelpLauncher {
       return;
     }
     final URI documentationURI = indexPath.toUri();
-    if (Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-      try {
-        Desktop.getDesktop().browse(documentationURI);
-      } catch (final IOException e) {
-        logger.error(e);
-      }
-    } else {
-      JOptionPane.showMessageDialog(
-          owner,
-          "Browse to " + documentationURI,
-          "Documentation Can't Open",
-          JOptionPane.INFORMATION_MESSAGE);
-      logger.info("Access documentation at " + documentationURI);
-    }
+    Utilities.linkOpener(owner, documentationURI);
   }
 
   public static void main(String[] args) {

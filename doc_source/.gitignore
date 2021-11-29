@@ -1,0 +1,12 @@
+# Ignore generated content
+site/
+documentation/
+documentation.zip
+
+# Ignore MacOS cruft
+.DS_Store
+
+# Ignore virtualenv stuff
+venv/
+
+

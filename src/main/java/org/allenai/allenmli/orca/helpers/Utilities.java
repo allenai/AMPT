@@ -17,11 +17,16 @@
 package org.allenai.allenmli.orca.helpers;
 
 import com.opencsv.CSVReader;
+import org.scijava.log.Logger;
+import org.scijava.log.StderrLogService;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,8 +89,30 @@ public enum Utilities {
     try {
       new ZipFile(file);
       return true;
-    } catch (ZipException e) {
+    } catch (final ZipException e) {
       return false;
+    }
+  }
+
+  /**
+   * @param parentComponent The component that wants the link to be followed.
+   * @param uri The URI to be opened.
+   */
+  public static void linkOpener(Component parentComponent, URI uri) {
+    final Logger logger = new StderrLogService();
+    if (Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+      try {
+        Desktop.getDesktop().browse(uri);
+      } catch (final IOException exception) {
+        logger.error(exception);
+      }
+    } else {
+      JOptionPane.showMessageDialog(
+          parentComponent,
+          "Browse to " + uri,
+          "Link Can't Be Opened",
+          JOptionPane.INFORMATION_MESSAGE);
+      logger.info("Access link at " + uri);
     }
   }
 }
