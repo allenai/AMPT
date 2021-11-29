@@ -28,6 +28,7 @@ import org.scijava.Context;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -38,6 +39,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -86,6 +88,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     metadataControl = new MetadataControl(ds, cueManager);
     inputControls = new InputControls(ds, cueManager);
     final GridBagConstraints c = new GridBagConstraints();
+    final Insets insets = new Insets(0, 10, 0, 10); // Add left and right spacing around containers.
     final JPanel toplevel = new JPanel();
     toplevel.setLayout(new GridBagLayout());
 
@@ -99,6 +102,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.NORTH;
     gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.insets = insets;
 
     // Branding
     final JPanel branding = new Branding();
@@ -112,6 +116,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     gbc.gridheight = 1;
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
+    gbc.insets = insets;
     toplevel.add(build_accordion(), gbc);
 
     // Data Controls
@@ -123,6 +128,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.SOUTH;
     gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.insets = insets;
     toplevel.add(csv_controls, gbc);
 
     application_frame = this;
@@ -173,6 +179,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
 
     final JPanel frame = new JPanel();
     final JScrollPane scrollPane = new JScrollPane(frame);
+    scrollPane.setBorder(BorderFactory.createEmptyBorder());
     GridBagConstraints gbc = new GridBagConstraints();
     frame.setLayout(new GridBagLayout());
 
