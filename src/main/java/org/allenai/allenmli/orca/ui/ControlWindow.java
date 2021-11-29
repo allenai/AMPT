@@ -133,7 +133,8 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
 
     application_frame = this;
     application_frame.setTitle("Test Window");
-    application_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    // A custom window listener is installed below to check for dirty state and dispose the window.
+    application_frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     application_frame.add(toplevel);
     application_frame.pack();
     application_frame.setVisible(true);
@@ -151,7 +152,6 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
           @Override
           public void windowLostFocus(WindowEvent e) {}
         });
-    this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     this.addWindowListener(
         new WindowAdapter() {
           @Override
