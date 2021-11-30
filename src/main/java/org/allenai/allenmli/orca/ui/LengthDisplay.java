@@ -64,6 +64,7 @@ public class LengthDisplay extends JPanel implements TableModelListener {
     JTable table = new JTable(myModel);
     table.setShowGrid(true);
     table.setGridColor(Color.BLACK);
+    table.setFillsViewportHeight(false);
     scrollPane1.setViewportView(table);
     renderCheckBox = new JCheckBox();
     renderCheckBox.setText("Render");
