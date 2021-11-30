@@ -199,7 +199,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     frame.add(demo2, gbc);
 
     gbc.anchor = GridBagConstraints.NORTH;
-    gbc.weighty = 0;
+    gbc.weighty = 1;
     gbc.gridx = 0;
     gbc.gridy = 2;
     final AccordionPanel measurements = new AccordionPanel("Length Measurements", true);
@@ -210,7 +210,7 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     frame.add(measurements, gbc);
 
     gbc.anchor = GridBagConstraints.NORTH;
-    gbc.weighty = 0;
+    gbc.weighty = 1;
     gbc.gridx = 0;
     gbc.gridy = 3;
     final AccordionPanel bodyProfiles = new AccordionPanel("Body Profiles", true);
