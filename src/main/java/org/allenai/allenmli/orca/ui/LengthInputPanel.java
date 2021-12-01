@@ -232,7 +232,6 @@ public class LengthInputPanel extends InputPanel implements ItemListener, RoiLis
     gbc.fill = GridBagConstraints.HORIZONTAL;
     add(new JPanel(), gbc);
 
-    final JPanel spacer11 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 9;
     gbc.gridy = 1;
