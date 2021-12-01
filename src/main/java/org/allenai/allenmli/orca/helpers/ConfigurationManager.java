@@ -356,7 +356,8 @@ public final class ConfigurationManager {
    */
   public static void exportConfigsFromPreferencesDirectory(File file) throws IOException {
     final String directoryName = "AMPT_configuration";
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(file))) {
+    final File outputFile = ensureExtension(file, "zip");
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(outputFile))) {
       zipOutputStream.putNextEntry(new ZipEntry(String.format("%s/", directoryName)));
       for (ConfigurationFile configFile : ConfigurationFile.values()) {
         zipOutputStream.putNextEntry(
@@ -377,5 +378,21 @@ public final class ConfigurationManager {
               ConfigurationLoader.getAbsoluteConfigurationPath(CSV_COLUMNS_CONFIG_FILENAME)));
       zipOutputStream.closeEntry();
     }
+  }
+
+  /**
+   * Ensures that the file has the appropriate extension. If it doesn't then add it.
+   *
+   * @param file The file to which for the provided extension.
+   * @param extension The extension to check for.
+   * @return A file object with the provided extension.
+   */
+  private static File ensureExtension(File file, String extension) {
+    String fileName = file.getName();
+    if (!FilenameUtils.isExtension(fileName, extension)) {
+      fileName += "." + extension;
+      return new File(file.getParentFile(), fileName);
+    }
+    return file;
   }
 }
