@@ -60,6 +60,8 @@ public class ConfigurationExportWorkflow {
     fileChooser.setAcceptAllFileFilterUsed(false);
     fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Zip File", "zip"));
     fileChooser.addChoosableFileFilter(acceptAll);
+    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    fileChooser.setSelectedFile(new File(".zip"));
     return fileChooser.showSaveDialog(owner);
   }
 

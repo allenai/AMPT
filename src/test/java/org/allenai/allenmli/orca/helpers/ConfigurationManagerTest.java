@@ -327,4 +327,33 @@ public class ConfigurationManagerTest extends TestCase {
     }
     tempZipFile.deleteOnExit();
   }
+
+  public void test_export_configs_from_preferences_directory_no_extension() throws Exception {
+    final File tempFile = Files.createTempFile("scratch", "").toFile();
+    ConfigurationManager.exportConfigsFromPreferencesDirectory(tempFile);
+    final File tempZipFile = new File(tempFile.getParentFile(), tempFile.getName() + ".zip");
+    try (final ZipFile zipFile = new ZipFile(tempZipFile)) {
+      final Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+      final Map<String, ZipEntry> fileNameToZipEntry = new HashMap<>();
+      while (zipEntries.hasMoreElements()) {
+        final ZipEntry zipEntry = zipEntries.nextElement();
+        fileNameToZipEntry.put(Paths.get(zipEntry.getName()).getFileName().toString(), zipEntry);
+      }
+      for (ConfigurationFile configFile : ConfigurationFile.values()) {
+        TestCase.assertTrue(
+            IOUtils.contentEquals(
+                new FileInputStream(
+                    new File(
+                        ConfigurationLoader.getConfigDirectory().toFile(),
+                        configFile.getFilename())),
+                zipFile.getInputStream(fileNameToZipEntry.get(configFile.getFilename()))));
+      }
+      TestCase.assertTrue(
+          IOUtils.contentEquals(
+              new FileInputStream(
+                  new File(ConfigurationLoader.getConfigDirectory().toFile(), "CSV-Columns.csv")),
+              zipFile.getInputStream(fileNameToZipEntry.get("CSV-Columns.csv"))));
+    }
+    tempZipFile.deleteOnExit();
+  }
 }
