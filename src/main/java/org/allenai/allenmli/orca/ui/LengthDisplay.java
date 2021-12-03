@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.function.Predicate;
 
@@ -96,6 +97,7 @@ public class LengthDisplay extends JPanel implements TableModelListener {
     gbc.fill = GridBagConstraints.BOTH;
 
     final JTable table = new JTable(myModel);
+    table.getTableHeader().setBorder(new MatteBorder(0,0,1,0, Color.BLACK));
     final Dimension viewportDimension = table.getPreferredScrollableViewportSize();
     int nRow = myModel.getRowCount();
     if (10 < nRow) {
