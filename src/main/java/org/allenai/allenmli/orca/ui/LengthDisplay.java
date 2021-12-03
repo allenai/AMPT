@@ -48,7 +48,7 @@ public class LengthDisplay extends JPanel implements TableModelListener {
   }
 
   private void build_ui(TableModel myModel) {
-    this.setLayout(new GridBagLayout());
+    setLayout(new GridBagLayout());
     GridBagConstraints gbc;
 
     // Render Checkbox
@@ -58,7 +58,7 @@ public class LengthDisplay extends JPanel implements TableModelListener {
     gbc.anchor = GridBagConstraints.NORTHWEST;
     renderCheckBox = new JCheckBox();
     renderCheckBox.setText("Render");
-    this.add(renderCheckBox, gbc);
+    add(renderCheckBox, gbc);
 
     // Select All
     gbc = new GridBagConstraints();
@@ -67,7 +67,7 @@ public class LengthDisplay extends JPanel implements TableModelListener {
     gbc.anchor = GridBagConstraints.WEST;
     selectAllButton = new JButton();
     selectAllButton.setText("Select All");
-    this.add(selectAllButton, gbc);
+    add(selectAllButton, gbc);
 
     // Clear All
     gbc = new GridBagConstraints();
@@ -76,7 +76,7 @@ public class LengthDisplay extends JPanel implements TableModelListener {
     gbc.anchor = GridBagConstraints.WEST;
     clearAllButton = new JButton();
     clearAllButton.setText("Clear All");
-    this.add(clearAllButton, gbc);
+    add(clearAllButton, gbc);
 
     // Top row spacer
     gbc = new GridBagConstraints();
@@ -84,9 +84,9 @@ public class LengthDisplay extends JPanel implements TableModelListener {
     gbc.gridy = 0;
     gbc.weightx = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(new JPanel(), gbc);
+    add(new JPanel(), gbc);
 
-    // Scrollpane with Table
+    // ScrollPane with Table
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 1;
@@ -95,10 +95,10 @@ public class LengthDisplay extends JPanel implements TableModelListener {
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
 
-    JTable table = new JTable(myModel);
-    Dimension viewportDimension = table.getPreferredScrollableViewportSize();
+    final JTable table = new JTable(myModel);
+    final Dimension viewportDimension = table.getPreferredScrollableViewportSize();
     int nRow = myModel.getRowCount();
-    if (nRow > 10) {
+    if (10 < nRow) {
       nRow = 10;
     }
     viewportDimension.height = table.getRowHeight() * nRow;
@@ -107,8 +107,8 @@ public class LengthDisplay extends JPanel implements TableModelListener {
     table.setPreferredScrollableViewportSize(viewportDimension);
     table.setFillsViewportHeight(true);
 
-    this.add(new JScrollPane(table), gbc);
-    this.revalidate();
+    add(new JScrollPane(table), gbc);
+    revalidate();
   }
 
   private void wire_ui() {
@@ -122,7 +122,7 @@ public class LengthDisplay extends JPanel implements TableModelListener {
   /**
    * Update which elements should be drawn.
    *
-   * @param e
+   * @param e The event encoding the change to the table.
    */
   @Override
   public void tableChanged(TableModelEvent e) {

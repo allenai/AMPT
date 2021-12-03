@@ -180,12 +180,14 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     final JPanel frame = new JPanel();
     final JScrollPane scrollPane = new JScrollPane(frame);
     scrollPane.setBorder(BorderFactory.createEmptyBorder());
-    GridBagConstraints gbc = new GridBagConstraints();
+    GridBagConstraints gbc = null;
+
     frame.setLayout(new GridBagLayout());
 
+    gbc = new GridBagConstraints();
     gbc.anchor = GridBagConstraints.NORTH;
-    gbc.weightx = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1;
     gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 0;
@@ -193,11 +195,16 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     frame.add(metadata, gbc);
 
     gbc = new GridBagConstraints();
-    gbc.fill = GridBagConstraints.BOTH;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.weightx = 1;
     gbc.weighty = 0;
     metadata.setContent_panel(metadataControl);
+
+    gbc = new GridBagConstraints();
     gbc.anchor = GridBagConstraints.NORTH;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1;
     gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 1;
@@ -205,8 +212,11 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     demo2.setContent_panel(inputControls.inputPanel);
     frame.add(demo2, gbc);
 
+    gbc = new GridBagConstraints();
     gbc.anchor = GridBagConstraints.NORTH;
-    gbc.weighty = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1;
+    gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 2;
     final AccordionPanel measurements = new AccordionPanel("Length Measurements", true);
@@ -216,8 +226,11 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     measurements.setContent_panel(lengthMeasurements);
     frame.add(measurements, gbc);
 
+    gbc = new GridBagConstraints();
     gbc.anchor = GridBagConstraints.NORTH;
-    gbc.weighty = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1;
+    gbc.weighty = 0;
     gbc.gridx = 0;
     gbc.gridy = 3;
     final AccordionPanel bodyProfiles = new AccordionPanel("Body Profiles", true);
@@ -227,12 +240,15 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
     bodyProfiles.setContent_panel(profileMeasurements);
     frame.add(bodyProfiles, gbc);
 
+    gbc = new GridBagConstraints();
     final JPanel spacer = new JPanel();
     gbc.gridx = 0;
     gbc.gridy = 4;
+    gbc.weightx = 1;
     gbc.weighty = 1;
-    gbc.fill = GridBagConstraints.VERTICAL;
+    gbc.fill = GridBagConstraints.BOTH;
     frame.add(spacer, gbc);
+    scrollPane.revalidate();
     return scrollPane;
   }
 
