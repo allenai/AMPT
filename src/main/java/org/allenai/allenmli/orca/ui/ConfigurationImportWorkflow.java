@@ -51,8 +51,8 @@ public class ConfigurationImportWorkflow {
     final MessageDialog doneDialog =
         new MessageDialog(
             owner,
-            "Please restart AMPT",
-            "New configuration successfully imported.\nAMPT must be restarted for the new configuration to take effect.");
+            "Please restart ImageJ",
+            "New configuration successfully imported.\nImageJ must be restarted for the new configuration to take effect.");
     doneDialog.escapePressed();
   }
 

@@ -57,8 +57,8 @@ public class ConfigurationRestoreWorkflow {
     final MessageDialog doneDialog =
         new MessageDialog(
             owner,
-            "Please restart AMPT",
-            "Default configuration successfully restored.\nAMPT must be restarted for the new configuration to take effect.");
+            "Please restart ImageJ",
+            "Default configuration successfully restored.\nImageJ must be restarted for the new configuration to take effect.");
     doneDialog.escapePressed();
   }
 }
