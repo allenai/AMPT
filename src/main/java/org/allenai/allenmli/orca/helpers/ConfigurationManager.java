@@ -60,8 +60,6 @@ public final class ConfigurationManager {
           + "A backup will be made of your existing configuration files.\n\n"
           + "Would you like to proceed?";
 
-  private static final String CSV_COLUMNS_CONFIG_FILENAME = "CSV-Columns.csv";
-
   private ConfigurationManager() {}
 
   /** Initializes all configuration files, copying over the default configs if necessary. */
@@ -172,21 +170,30 @@ public final class ConfigurationManager {
   static boolean isAtLeastVersion(String filename, long expectedFormatVersion)
       throws ConfigurationFileLoadException {
     long actualFormatVersion = 0; // The format version is zero if unspecified.
-    final Object result = ConfigurationLoader.getJsonFile(filename);
-    if (result instanceof Map) {
-      //noinspection unchecked
-      final Map<String, Object> map = (Map<String, Object>) result;
-      if (map.containsKey(FORMAT_VERSION_NAME)) {
-        final Object rawFormatVersion = map.get(FORMAT_VERSION_NAME);
-        if (!(rawFormatVersion instanceof Long)) {
-          throw new ConfigurationFileLoadException(
-              String.format("Invalid format version '%s': %s", filename, rawFormatVersion));
+    if (FilenameUtils.isExtension(filename, "json")) {
+      final Object result = ConfigurationLoader.getJsonFile(filename);
+      if (result instanceof Map) {
+        //noinspection unchecked
+        final Map<String, Object> map = (Map<String, Object>) result;
+        if (map.containsKey(FORMAT_VERSION_NAME)) {
+          final Object rawFormatVersion = map.get(FORMAT_VERSION_NAME);
+          if (!(rawFormatVersion instanceof Long)) {
+            throw new ConfigurationFileLoadException(
+                String.format("Invalid format version '%s': %s", filename, rawFormatVersion));
+          }
+          actualFormatVersion = (Long) rawFormatVersion;
         }
-        actualFormatVersion = (Long) rawFormatVersion;
       }
+    } else if (FilenameUtils.isExtension(filename, "csv")) {
+      // There is currently no way to encode a format version for CSV files, so it is always zero.
+      actualFormatVersion = 0;
+    } else {
+      throw new UnsupportedOperationException(
+          "Unsupported extension: " + FilenameUtils.getExtension(filename));
     }
     return expectedFormatVersion <= actualFormatVersion;
   }
+
   /**
    * Backs up and deletes the given configuration files.
    *
@@ -241,14 +248,6 @@ public final class ConfigurationManager {
       backupConfig(configFile.getFilename());
       ConfigurationLoader.copyDefaultConfigToPath(configFile.getFilename(), fullConfigPath);
     }
-
-    // The CSV columns configuration should also be restored from its default. This is somewhat of
-    // an outlier because it's not (yet) in JSON format and doesn't have an entry in the
-    // ConfigurationFile enumeration.
-    backupConfig(CSV_COLUMNS_CONFIG_FILENAME);
-    ConfigurationLoader.copyDefaultConfigToPath(
-        CSV_COLUMNS_CONFIG_FILENAME,
-        ConfigurationLoader.getAbsoluteConfigurationPath(CSV_COLUMNS_CONFIG_FILENAME));
   }
 
   /**
@@ -269,9 +268,10 @@ public final class ConfigurationManager {
           Arrays.stream(input.listFiles())
               .collect(Collectors.toMap(File::getName, Function.identity()));
       checkForMissingConfigFiles(fileNameToFile.keySet());
-      for (ConfigurationFile configFile : ConfigurationFile.values()) {
+      for (JsonConfigurationFile jsonConfigFile : JsonConfigurationFile.values()) {
         jsonConfigValidator.validateConfig(
-            fileNameToFile.get(configFile.getFilename()).toPath(), configFile.getSchemaFilename());
+            fileNameToFile.get(jsonConfigFile.getFilename()).toPath(),
+            jsonConfigFile.getSchemaFilename());
       }
       for (ConfigurationFile configFile : ConfigurationFile.values()) {
         backupConfig(configFile.getFilename());
@@ -286,10 +286,10 @@ public final class ConfigurationManager {
           fileNameToZipEntry.put(Paths.get(zipEntry.getName()).getFileName().toString(), zipEntry);
         }
         checkForMissingConfigFiles(fileNameToZipEntry.keySet());
-        for (ConfigurationFile configFile : ConfigurationFile.values()) {
+        for (JsonConfigurationFile jsonConfigFile : JsonConfigurationFile.values()) {
           jsonConfigValidator.validateConfig(
-              zipFile.getInputStream(fileNameToZipEntry.get(configFile.getFilename())),
-              configFile.getSchemaFilename());
+              zipFile.getInputStream(fileNameToZipEntry.get(jsonConfigFile.getFilename())),
+              jsonConfigFile.getSchemaFilename());
         }
         for (ConfigurationFile configFile : ConfigurationFile.values()) {
           backupConfig(configFile.getFilename());
@@ -367,16 +367,6 @@ public final class ConfigurationManager {
                 ConfigurationLoader.getAbsoluteConfigurationPath(configFile.getFilename())));
         zipOutputStream.closeEntry();
       }
-
-      // The CSV columns configuration should also be exported. This is somewhat of an outlier
-      // because it's not (yet) in JSON format and doesn't have an entry in the ConfigurationFile
-      // enumeration.
-      zipOutputStream.putNextEntry(
-          new ZipEntry(String.format("%s/%s", directoryName, CSV_COLUMNS_CONFIG_FILENAME)));
-      zipOutputStream.write(
-          Files.readAllBytes(
-              ConfigurationLoader.getAbsoluteConfigurationPath(CSV_COLUMNS_CONFIG_FILENAME)));
-      zipOutputStream.closeEntry();
     }
   }
 
