@@ -93,13 +93,11 @@ public class AccordionPanel extends JPanel {
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.weightx = 1;
-    gbc.weighty = 1;
-    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weighty = 0;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
     this.remove(this.content_panel);
-
     this.content_panel = content_panel;
     this.add(this.content_panel, gbc);
-//    content_panel.invalidate();
-    this.invalidate();
+    this.revalidate();
   }
 }

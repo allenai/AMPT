@@ -28,9 +28,8 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import javax.swing.border.MatteBorder;
+import java.awt.*;
 import java.util.function.Predicate;
 
 public class LengthDisplay extends JPanel implements TableModelListener {
@@ -42,7 +41,7 @@ public class LengthDisplay extends JPanel implements TableModelListener {
   private JCheckBox renderCheckBox;
 
   public LengthDisplay(
-          DataStore dataStore, Predicate<ColumnDescriptor> selection_filter, CueManager cueManager) {
+      DataStore dataStore, Predicate<ColumnDescriptor> selection_filter, CueManager cueManager) {
     measurementTableModel = new MeasurementTableModel(dataStore, selection_filter);
     this.cueManager = cueManager;
     build_ui(measurementTableModel);
@@ -50,9 +49,45 @@ public class LengthDisplay extends JPanel implements TableModelListener {
   }
 
   private void build_ui(TableModel myModel) {
-    this.setLayout(new GridBagLayout());
-    final JScrollPane scrollPane1 = new JScrollPane();
+    setLayout(new GridBagLayout());
     GridBagConstraints gbc;
+
+    // Render Checkbox
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.NORTHWEST;
+    renderCheckBox = new JCheckBox();
+    renderCheckBox.setText("Render");
+    add(renderCheckBox, gbc);
+
+    // Select All
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
+    selectAllButton = new JButton();
+    selectAllButton.setText("Select All");
+    add(selectAllButton, gbc);
+
+    // Clear All
+    gbc = new GridBagConstraints();
+    gbc.gridx = 2;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
+    clearAllButton = new JButton();
+    clearAllButton.setText("Clear All");
+    add(clearAllButton, gbc);
+
+    // Top row spacer
+    gbc = new GridBagConstraints();
+    gbc.gridx = 3;
+    gbc.gridy = 0;
+    gbc.weightx = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    add(new JPanel(), gbc);
+
+    // ScrollPane with Table
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 1;
@@ -60,38 +95,22 @@ public class LengthDisplay extends JPanel implements TableModelListener {
     gbc.weightx = 1.0;
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
-    this.add(scrollPane1, gbc);
-    JTable table = new JTable(myModel);
+
+    final JTable table = new JTable(myModel);
+    table.getTableHeader().setBorder(new MatteBorder(0,0,1,0, Color.BLACK));
+    final Dimension viewportDimension = table.getPreferredScrollableViewportSize();
+    int nRow = myModel.getRowCount();
+    if (10 < nRow) {
+      nRow = 10;
+    }
+    viewportDimension.height = table.getRowHeight() * nRow;
     table.setShowGrid(true);
     table.setGridColor(Color.BLACK);
-    scrollPane1.setViewportView(table);
-    renderCheckBox = new JCheckBox();
-    renderCheckBox.setText("Render");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.anchor = GridBagConstraints.WEST;
-    this.add(renderCheckBox, gbc);
-    selectAllButton = new JButton();
-    selectAllButton.setText("Select All");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 1;
-    gbc.gridy = 0;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(selectAllButton, gbc);
-    clearAllButton = new JButton();
-    clearAllButton.setText("Clear All");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 2;
-    gbc.gridy = 0;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(clearAllButton, gbc);
-    final JPanel spacer1 = new JPanel();
-    gbc = new GridBagConstraints();
-    gbc.gridx = 3;
-    gbc.gridy = 0;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    this.add(spacer1, gbc);
+    table.setPreferredScrollableViewportSize(viewportDimension);
+    table.setFillsViewportHeight(true);
+
+    add(new JScrollPane(table), gbc);
+    revalidate();
   }
 
   private void wire_ui() {
@@ -105,7 +124,7 @@ public class LengthDisplay extends JPanel implements TableModelListener {
   /**
    * Update which elements should be drawn.
    *
-   * @param e
+   * @param e The event encoding the change to the table.
    */
   @Override
   public void tableChanged(TableModelEvent e) {
