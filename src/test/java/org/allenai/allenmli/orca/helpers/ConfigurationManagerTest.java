@@ -123,6 +123,19 @@ public class ConfigurationManagerTest extends TestCase {
     assertTrue(ConfigurationManager.isAtLeastVersion("ReferenceConf.json", 0));
   }
 
+  public void test_original_csv_columns_format() throws Exception {
+    assertTrue(ConfigurationManager.isAtLeastVersion("CSV-Columns.csv", 0));
+  }
+
+  public void test_unsupported_format() throws Exception {
+    try {
+      // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
+      ConfigurationManager.isAtLeastVersion("test-unsupported.txt", 0);
+      TestCase.fail("Expected to fail");
+    } catch (UnsupportedOperationException e) {
+    }
+  }
+
   public void test_copy_new_configs_from_directory() throws Exception {
     final Path tempDirectory = Files.createTempDirectory("scratch");
     ConfigurationLoader.setConfigDirectory(tempDirectory);
@@ -293,10 +306,6 @@ public class ConfigurationManagerTest extends TestCase {
               new File(defaultConfigDirectory, configFile.getFilename()),
               new File(tempDirectory.toFile(), configFile.getFilename())));
     }
-    TestCase.assertTrue(
-        FileUtils.contentEquals(
-            new File(defaultConfigDirectory, "CSV-Columns.csv"),
-            new File(tempDirectory.toFile(), "CSV-Columns.csv")));
     FileUtils.deleteDirectory(tempDirectory.toFile());
   }
 
@@ -319,11 +328,6 @@ public class ConfigurationManagerTest extends TestCase {
                         configFile.getFilename())),
                 zipFile.getInputStream(fileNameToZipEntry.get(configFile.getFilename()))));
       }
-      TestCase.assertTrue(
-          IOUtils.contentEquals(
-              new FileInputStream(
-                  new File(ConfigurationLoader.getConfigDirectory().toFile(), "CSV-Columns.csv")),
-              zipFile.getInputStream(fileNameToZipEntry.get("CSV-Columns.csv"))));
     }
     tempZipFile.deleteOnExit();
   }
@@ -348,11 +352,6 @@ public class ConfigurationManagerTest extends TestCase {
                         configFile.getFilename())),
                 zipFile.getInputStream(fileNameToZipEntry.get(configFile.getFilename()))));
       }
-      TestCase.assertTrue(
-          IOUtils.contentEquals(
-              new FileInputStream(
-                  new File(ConfigurationLoader.getConfigDirectory().toFile(), "CSV-Columns.csv")),
-              zipFile.getInputStream(fileNameToZipEntry.get("CSV-Columns.csv"))));
     }
     tempZipFile.deleteOnExit();
   }

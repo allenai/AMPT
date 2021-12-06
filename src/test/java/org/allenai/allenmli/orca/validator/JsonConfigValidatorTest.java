@@ -16,9 +16,9 @@
 
 package org.allenai.allenmli.orca.validator;
 
-import org.allenai.allenmli.orca.helpers.ConfigurationFile;
 import org.allenai.allenmli.orca.helpers.ConfigurationLoader;
 import junit.framework.TestCase;
+import org.allenai.allenmli.orca.helpers.JsonConfigurationFile;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 
@@ -67,7 +67,7 @@ public class JsonConfigValidatorTest extends TestCase {
     try {
       // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
       jsonConfigValidator.validateConfig(
-          configFilePath, ConfigurationFile.CUE_CONFIG.getSchemaFilename());
+          configFilePath, JsonConfigurationFile.CUE_CONFIG.getSchemaFilename());
       TestCase.fail("Expected to fail");
     } catch (JsonValidationException e) {
       // This is potentially brittle because error messages can change and aren't subject to a spec,
@@ -90,7 +90,7 @@ public class JsonConfigValidatorTest extends TestCase {
     try (InputStream configInputStream = new FileInputStream(configFilePath.toFile())) {
       // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
       jsonConfigValidator.validateConfig(
-          configInputStream, ConfigurationFile.CUE_CONFIG.getSchemaFilename());
+          configInputStream, JsonConfigurationFile.CUE_CONFIG.getSchemaFilename());
       TestCase.fail("Expected to fail");
     } catch (JsonValidationException e) {
       // This is potentially brittle because error messages can change and aren't subject to a spec,
@@ -113,7 +113,7 @@ public class JsonConfigValidatorTest extends TestCase {
     try {
       // TODO: Once this test has been updated to JUnit >= 4 then assertThrows can be used instead.
       jsonConfigValidator.validateConfig(
-          configFilePath, ConfigurationFile.MEASUREMENT_CONFIG.getSchemaFilename());
+          configFilePath, JsonConfigurationFile.MEASUREMENT_CONFIG.getSchemaFilename());
       TestCase.fail("Expected to fail");
     } catch (JsonValidationException e) {
       // This is potentially brittle because error messages can change and aren't subject to a spec,

@@ -23,8 +23,8 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
-import org.allenai.allenmli.orca.helpers.ConfigurationFile;
 import org.allenai.allenmli.orca.helpers.ConfigurationLoader;
+import org.allenai.allenmli.orca.helpers.JsonConfigurationFile;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 
@@ -58,10 +58,10 @@ public class JsonConfigValidator {
    * @throws JsonValidationException If any validation errors occur.
    */
   public void validateAllConfigs() throws JsonValidationException {
-    for (final ConfigurationFile configFile : ConfigurationFile.values()) {
+    for (final JsonConfigurationFile jsonConfigFile : JsonConfigurationFile.values()) {
       final Path configPath =
-          ConfigurationLoader.getAbsoluteConfigurationPath(configFile.getFilename());
-      validateConfig(configPath, configFile.getSchemaFilename());
+          ConfigurationLoader.getAbsoluteConfigurationPath(jsonConfigFile.getFilename());
+      validateConfig(configPath, jsonConfigFile.getSchemaFilename());
     }
   }
 
