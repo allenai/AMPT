@@ -44,7 +44,17 @@ Quick Tour
 ## Components
 
 1. Image filename and CSV saved/unsaved indicator
-1. Hamburger menu where “About Tool” and “User Guide” are stored
+1. Hamburger menu
+
+    1. About: About the plugin (license, dependencies, etc.)
+    1. User Guide: The plugin user guide, opens in a new browser window
+    1. [Configuration Options](config_options.md)
+
+        1. Import Configuration
+        1. Export Configuration
+        1. Restore Default Configuration
+        1. Show Configuration Location
+
 1. Scroll Bar
 1. Medata section of AMPT panel
 
