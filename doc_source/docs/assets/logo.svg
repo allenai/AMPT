@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  -  Copyright (c) 2021 The Allen Institute for Artificial Intelligence.
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  -     http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
@@ -30,13 +46,13 @@
      showguides="true"
      inkscape:zoom="1.4445834"
      inkscape:cx="453.41792"
-     inkscape:cy="326.39168"
+     inkscape:cy="282.08825"
      inkscape:window-width="1867"
      inkscape:window-height="969"
      inkscape:window-x="3734"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer3"
      width="175mm" />
   <defs
      id="defs2">
@@ -187,8 +203,7 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Text"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <path
        id="path7370-7"
        style="display:inline;fill:none;stroke:none;stroke-width:0.354917"
@@ -200,7 +215,7 @@
        transform="translate(0.02474632,-0.57858824)"><textPath
          xlink:href="#path7370"
          id="textPath9329"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.9333px;font-family:'.Damascus PUA';-inkscape-font-specification:'.Damascus PUA'">Aquatic Mammal</textPath></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.9333px;font-family:sans-serif;-inkscape-font-specification:sans-serif">Aquatic Mammal</textPath></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15.875px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
