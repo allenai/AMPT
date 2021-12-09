@@ -15,12 +15,22 @@
 # limitations under the License.
 #
 
-FIJI_PLUGIN_DIR=/Applications/Fiji.app/plugins/jar
+FIJI_ROOT=${FIJI_HOME:=/Applications/Fiji.app}
+FIJI_PLUGIN_DIR=${FIJI_ROOT}/plugins/jar
 
-for AMPT in "${FIJI_PLUGIN_DIR}"/AMPT*.jar ; do
-  echo "Removing ${AMPT}"
+if [[ ! -d "${FIJI_ROOT}" ]]; then
+  echo "${FIJI_ROOT} does not exist, or is not a directory." >&2
+  echo "Please set FIJI_HOME to the root directory of your Fiji Install." >&2
+  else
+    mkdir -pv "${FIJI_PLUGIN_DIR}"
+fi
+
+OLD_AMPT_JARS=("${FIJI_PLUGIN_DIR}"/AMPT*.jar(N))
+for AMPT in $OLD_AMPT_JARS; do
+  echo "Removing ${AMPT}">&2
   rm -f "${AMPT}"
 done
 
-echo "Installing new jar(s)"
-cp target/AMPT-*.*.*-all.jar "${FIJI_PLUGIN_DIR}"
+NEW_BUILD="AMPT-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)-all.jar"
+echo "Installing: ${NEW_BUILD}" >&2
+cp -v "target/${NEW_BUILD}" "${FIJI_PLUGIN_DIR}" >&2

@@ -4,6 +4,8 @@ theme:
   name: material
   features:
     - toc.integrate
+  logo: assets/white_logo.svg
+  favicon: assets/favicon-32x32.png
 markdown_extensions:
   - attr_list
   - pymdownx.highlight
