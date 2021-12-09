@@ -15,3 +15,5 @@ The Aquatic Mammal Photogrammetry Tool (AMPT) is an ImageJ plugin developed by t
 * [Quick Tour](quick_tour.md)
 * [Copyright](copyright.md)
 * [License](license.md)
+
+This is the documentation for version {% include "generated/version.txt" %}.
