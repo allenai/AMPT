@@ -16,5 +16,5 @@ venv/bin/mkdocs:
 	virtualenv venv
 	./venv/bin/pip install -r requirements.txt
 
-gh-deploy: all
+gh-deploy: venv/bin/mkdocs
 	./venv/bin/mkdocs --verbose gh-deploy
