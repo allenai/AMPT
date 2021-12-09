@@ -15,3 +15,6 @@ full_clean: clean
 venv/bin/mkdocs:
 	virtualenv venv
 	./venv/bin/pip install -r requirements.txt
+
+gh-deploy: all
+	./venv/bin/mkdocs --verbose gh-deploy
