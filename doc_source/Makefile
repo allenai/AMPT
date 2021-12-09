@@ -1,5 +1,5 @@
-all: venv/bin/mkdocs
-	./venv/bin/mkdocs --verbose build
+all: venv/bin/mkdocs docs/generated/version.txt
+	./venv/bin/mkdocs build
 	zip -ro documentation.zip documentation
 	cp documentation.zip ../src/main/resources
 
@@ -7,14 +7,19 @@ clean:
 	rm -rf documentation
 	rm documentation.zip
 
-
 full_clean: clean
 	rm -rf venv
+	rm -rf docs/generated
 
-
-venv/bin/mkdocs:
+venv/bin/mkdocs: requirements.txt
 	virtualenv venv
 	./venv/bin/pip install -r requirements.txt
 
-gh-deploy: venv/bin/mkdocs
-	./venv/bin/mkdocs --verbose gh-deploy
+gh-deploy: venv/bin/mkdocs docs/generated/version.txt
+	./venv/bin/mkdocs gh-deploy
+
+docs/generated:
+	mkdir -p docs/generated
+
+docs/generated/version.txt: ../pom.xml docs/generated
+	mvn help:evaluate -f ../pom.xml -Dexpression=project.version -q -DforceStdout > docs/generated/version.txt

@@ -1,6 +1,7 @@
 # Ignore generated content
 site/
 documentation/
+docs/generated/
 documentation.zip
 
 # Ignore MacOS cruft
