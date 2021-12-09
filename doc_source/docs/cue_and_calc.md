@@ -145,7 +145,7 @@ For example, selecting the `HEAD` measurement will render the `Head Width` cue. 
   },
 ```
 
-### Reference Configuration
+## Reference Configuration
 
 The `ReferenceConf.json` file works in a similar way to `MeasurementConf.json`, except that it defines the calculation and parameters for a cue type. See [Cue Configuration](#cue-configuration) for more information on cues. The format and functionality of `ReferenceConf.json` matches that of `MeasurementConf.json` with the extension of several additional available functions.
 
