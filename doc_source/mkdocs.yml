@@ -13,7 +13,10 @@ markdown_extensions:
 use_directory_urls: false
 copyright: Copyright &copy; 2021 Allen Institute for Artificial Intelligence
 repo_url: https://github.com/AllenMLI/AMPT
+repo_name: AllenMLI/AMPT
 edit_uri: edit/main/doc_source/docs/
+plugins:
+  - macros
 nav:
   - Home: 'index.md'
   - 'quick_tour.md'
