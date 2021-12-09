@@ -349,8 +349,6 @@ HEAD_x_start,Starting X for breadth of the head (taken at 15% of the length of t
 HEAD_y_start,Starting y for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
 HEAD_x_end,Ending X for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
 HEAD_y_end,Ending y for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
-EP TOP_reviewed,Review of EP TOP length,boolean,boolean,False,False,False
-EP BOTTOM_reviewed,Review of EP BOTTOM length,boolean,boolean,False,False,False
 HEAD_reviewed,Review of HEAD length,boolean,boolean,False,False,False
 FW_reviewed,Review of FW length,boolean,boolean,False,False,False
 5%_reviewed,Review of 5% length,boolean,boolean,False,False,False
