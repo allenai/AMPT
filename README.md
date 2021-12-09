@@ -15,8 +15,8 @@ Please see the [documentation][docs] for more details on how to use the tool.
 
 ## Installing
 
-The easy approach to installing AMPT is to use the update site functionality built into Fiji/ImageJ. AMPT is available
-through the update manager in Fiji/ImageJ at https://sites.imagej.net/AMPT/ with the name `AMPT`.
+The easy approach to installing AMPT is to use the [update site functionality][update site] built into Fiji/ImageJ. AMPT is available
+through the update manager in Fiji/ImageJ at https://sites.imagej.net/AMPT/ with the name AMPT.
 
 ## Contributing
 If you would like to contribute to AMPT's development, please feel free to open a pull request for consideration.
@@ -47,7 +47,7 @@ The simplest approach is to invoke Maven from the directory containing `pom.xml`
 
 #### Environment
 
-ImageJ/Fiji requires Java 1.8, which is bundled with the Fiji install for MacOS X.
+ImageJ/Fiji requires Java 1.8, which is bundled with the Fiji install for Mac OS X.
 
 We need two environment variables, `FIJI_HOME` and `JAVA_HOME`
 
@@ -56,7 +56,6 @@ export FIJI_HOME=/Applications/Fiji.app
 export JAVA_HOME=`${FIJI_HOME}/Contents/MacOS/ImageJ-macosx --print-java-home`
 ```
 
-`
 Compile:
 
 ```zsh
@@ -79,3 +78,4 @@ The local deploy script moves the plugin jarfile
 [python]: <https://www.python.org/> "Python Homepage"
 
 [virtualenv]: <https://virtualenv.pypa.io/en/latest/> "Virtualenv Homepage"
+[update site]: https://imagej.net/update-sites/following "Fiji/ImageJ Update Site"
