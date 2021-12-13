@@ -30,6 +30,7 @@
             </head>
             <body>
                 <h1>Aquatic Mammal Photogrammetry Tool</h1>
+                <h2>Version: ${version}</h2>
                 <p>Copyright 2021 The Allen Institute for Artificial Intelligence.</p>
 
                 <p>Licensed under the Apache License, Version 2.0 (the "License");
