@@ -136,6 +136,7 @@
                             <executable>make</executable>
                             <workingDirectory>${project.basedir}/doc_source</workingDirectory>
                             <arguments>
+                                <argument>--ignore-errors</argument>
                                 <argument>full_clean</argument>
                             </arguments>
                         </configuration>
