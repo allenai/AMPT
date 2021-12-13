@@ -16,7 +16,10 @@
 
 package org.allenai.allenmli.orca.ui;
 
+import com.google.common.collect.ImmutableMap;
 import org.allenai.allenmli.orca.helpers.Utilities;
+import org.allenai.allenmli.orca.Version;
+import org.apache.commons.text.StringSubstitutor;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 import org.w3c.dom.Document;
@@ -230,6 +233,9 @@ public class About extends JDialog {
       logger.error(
           "Resource bundle is corrupted: missing about.xsl and/or attribution.xml. Try reinstalling the plugin.");
     }
+    final StringSubstitutor stringSubstitutor =
+        new StringSubstitutor(ImmutableMap.of("version", Version.VERSION));
+    text = stringSubstitutor.replace(text);
     return text;
   }
 

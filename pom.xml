@@ -136,6 +136,7 @@
                             <executable>make</executable>
                             <workingDirectory>${project.basedir}/doc_source</workingDirectory>
                             <arguments>
+                                <argument>--ignore-errors</argument>
                                 <argument>full_clean</argument>
                             </arguments>
                         </configuration>
@@ -219,6 +220,20 @@
                                 </resource>
                             </resources>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>templating-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>filtering-java-templates</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>filter-sources</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
