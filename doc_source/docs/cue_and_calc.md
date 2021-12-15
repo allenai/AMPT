@@ -82,9 +82,9 @@ The format of this configuration is as follows:
   "format_version": 1,
   "configuration": [
     {
-      "cue": "Head Width",
+      "cue": "Offset Width",
       "measurements": [
-        "HEAD"
+        "OFSET"
       ]
     },
     {
@@ -131,14 +131,14 @@ For example, selecting the `HEAD` measurement will render the `Head Width` cue. 
 
 ```
   {
-    "target": "Head Width",
+    "target": "Offset Width",
     "parameters": [
       "BHDF_x_start",
       "BHDF_y_start",
       "BHDF_x_end",
       "BHDF_y_end",
-      15,
-      15,
+      23,
+      23,
       10
     ],
     "function": "interval_reference_markers"
@@ -160,14 +160,14 @@ The format of this configuration file is as follows:
       "SNDF_y_start",
       "SNDF_x_end",
       "SNDF_y_end",
-      5,
+      10,
       100,
-      5
+      10
     ],
     "function": "interval_reference_markers"
   },
   {
-    "target": "Body Profile 225",
+    "target": "Body Profile 230",
     "parameters": [
       "DFFL_x_start",
       "DFFL_y_start",
@@ -177,22 +177,22 @@ The format of this configuration file is as follows:
       "SNDF_y_start",
       "SNDF_x_end",
       "SNDF_y_end",
-      5,
-      125,
-      5,
+      10,
+      130,
+      10,
       100
     ],
     "function": "interval_reference_markers_with_base_length"
   },
   {
-    "target": "Head Width",
+    "target": "Offset Width",
     "parameters": [
       "BHDF_x_start",
       "BHDF_y_start",
       "BHDF_x_end",
       "BHDF_y_end",
-      15,
-      15,
+      23,
+      23,
       10
     ],
     "function": "interval_reference_markers"
