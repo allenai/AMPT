@@ -121,13 +121,13 @@ public class DataStoreTest extends TestCase {
   public void testGetColumnName() {
     TestCase.assertEquals("Filename", ds.getColumnName(0));
     TestCase.assertEquals("", ds.getColumnName(1000));
-    TestCase.assertEquals("HEAD", ds.getColumnName(17));
+    TestCase.assertEquals("OFFSET", ds.getColumnName(17));
   }
 
   public void testFindColumn() {
     TestCase.assertEquals(0, ds.findColumn("Filename"));
     TestCase.assertEquals(-1, ds.findColumn("1000"));
-    TestCase.assertEquals(17, ds.findColumn("HEAD"));
+    TestCase.assertEquals(17, ds.findColumn("OFFSET"));
   }
 
   public void testIsCellEditable() {
