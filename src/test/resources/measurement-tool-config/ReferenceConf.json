@@ -21,9 +21,9 @@
       "SNDF_y_start",
       "SNDF_x_end",
       "SNDF_y_end",
-      5,
+      10,
       100,
-      5
+      10
     ],
     "function": "interval_reference_markers"
   },
@@ -34,9 +34,9 @@
       "LENGTH_y_start",
       "LENGTH_x_end",
       "LENGTH_y_end",
-      5,
+      10,
       100,
-      5
+      10
     ],
     "function": "interval_reference_markers"
   },
@@ -51,22 +51,22 @@
       "SNDF_y_start",
       "SNDF_x_end",
       "SNDF_y_end",
-      5,
-      125,
-      5,
+      10,
+      130,
+      10,
       100
     ],
     "function": "interval_reference_markers_with_base_length"
   },
   {
-    "target": "Head Width",
+    "target": "Offset Width",
     "parameters": [
       "BHDF_x_start",
       "BHDF_y_start",
       "BHDF_x_end",
       "BHDF_y_end",
-      15,
-      15,
+      23,
+      23,
       10
     ],
     "function": "interval_reference_markers"
