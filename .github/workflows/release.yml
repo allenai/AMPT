@@ -1,4 +1,4 @@
-name: 'Release to ImageJ update site'
+name: 'Release to ImageJ update site and deploy GitHub documentation'
 on:
   release:
     types: [published]
@@ -26,3 +26,6 @@ jobs:
       - name: 'Release to ImageJ update site'
         run: |
           ./Fiji.app/ImageJ-linux64 --headless --update upload-complete-site --force ${UPDATE_SITE}
+      - name: 'Deploy GitHub documentation'
+        working-directory: './doc_source'
+        run: 'make gh-deploy'
