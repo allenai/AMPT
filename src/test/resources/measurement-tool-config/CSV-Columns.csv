@@ -16,7 +16,7 @@ UNDERWATER,"Animal underwater, 0=No, 1=Yes",editable text,manual,True,True,True
 REF TOP,"distance between eye patches at the top, measured from refline to left.",fractional pixels,length,True,True,False
 REF BOTTOM,75% of the length of the refline,fractional pixels,length,True,True,False
 GIRTH,breadth at anterior insertion of the dorsal fin (same as 100% measure in profile),fractional pixels,length,True,True,False
-HEAD,breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),fractional pixels,length,True,True,False
+OFFSET,breadth of the animale (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),fractional pixels,length,True,True,False
 SNDF,tip of rostrum to anterior insertion of dorsal fin,fractional pixels,auto length,True,False,False
 BHDF,center of blowhole to anterior insertion of dorsal fin,fractional pixels,auto length,True,False,False
 DFFL,anterior insertion of dorsal fin to fluke notch,fractional pixels,auto length,True,False,False
@@ -77,14 +77,14 @@ FW_y_end,Ending y for Maximum breadth of fluke,pixels,auto point,False,False,Fal
 100%_y_start,Starting y for Width of animal at 100% of distance of SNDF measurement,pixels,auto point,False,False,False
 100%_x_end,Ending X for Width of animal at 100% of distance of SNDF measurement,pixels,auto point,False,False,False
 100%_y_end,Ending y for Width of animal at 100% of distance of SNDF measurement,pixels,auto point,False,False,False
-HEAD_x_start,Starting X for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
-HEAD_y_start,Starting y for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
-HEAD_x_end,Ending X for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
-HEAD_y_end,Ending y for breadth of the head (taken at 15% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
+OFFSET_x_start,Starting X for breadth of the body (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
+OFFSET_y_start,Starting y for breadth of the body (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
+OFFSET_x_end,Ending X for breadth of the body (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
+OFFSET_y_end,Ending y for breadth of the body (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
 REF TOP_reviewed,Review of REF TOP length,boolean,boolean,False,False,False
 REF BOTTOM_reviewed,Review of REF BOTTOM length,boolean,boolean,False,False,False
 GIRTH_reviewed,Review of GIRTH length,boolean,boolean,False,False,False
-HEAD_reviewed,Review of HEAD length,boolean,boolean,False,False,False
+OFFSET_reviewed,Review of OFFSET length,boolean,boolean,False,False,False
 FW_reviewed,Review of FW length,boolean,boolean,False,False,False
 BH_reviewed,Review of BH point,boolean,boolean,False,False,False
 SN_reviewed,Review of SN point,boolean,boolean,False,False,False

@@ -23,3 +23,7 @@ docs/generated:
 
 docs/generated/version.txt: ../pom.xml docs/generated
 	mvn help:evaluate -f ../pom.xml -Dexpression=project.version -q -DforceStdout > docs/generated/version.txt
+
+serve: venv/bin/mkdocs docs/generated/version.txt
+	./venv/bin/mkdocs serve
+

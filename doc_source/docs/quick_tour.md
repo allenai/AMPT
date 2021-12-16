@@ -54,8 +54,7 @@ Quick Tour
         1. Export Configuration
         1. Restore Default Configuration
         1. Show Configuration Location
-
-1. Scroll Bar
+        
 1. Medata section of AMPT panel
 
     1. Accordion (expanded state)
@@ -78,7 +77,6 @@ Quick Tour
     1. Render checkbox
     1. Select All button
     1. Clear All button
-    1. Body Profile selection scrollbar
 
 1. Load CSV
 1. View CSV
