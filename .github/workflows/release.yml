@@ -24,6 +24,7 @@ jobs:
       - name: 'Install ImageJ/Fiji'
         run: |
           curl --silent ${IJ_DOWNLOAD_URL} | tar --extract --gzip
+          ./Fiji.app/ImageJ-linux64 --headless --update update-force-pristine
           ./Fiji.app/ImageJ-linux64 --headless --update edit-update-site ${UPDATE_SITE} https://sites.imagej.net/${UPDATE_SITE}/ "webdav:${WIKI_USER}:${UPDATE_PASS}" .
       - name: 'Install in ImageJ/Fiji (with Maven)'
         run: |
