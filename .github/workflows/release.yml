@@ -15,7 +15,10 @@ jobs:
       - name: 'Checkout'
         uses: 'actions/checkout@v2'
       - name: 'Install packages'
-        run: 'sudo apt-get install -y openjdk-8-jdk virtualenv'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-8-jdk virtualenv
+          sudo apt-get clean
       - name: 'Set JAVA_HOME'
         run: |
           echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/" >> $GITHUB_ENV
