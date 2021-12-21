@@ -16,7 +16,7 @@ venv/bin/mkdocs: requirements.txt
 	./venv/bin/pip install -r requirements.txt
 
 gh-deploy: venv/bin/mkdocs docs/generated/version.txt
-	./venv/bin/mkdocs gh-deploy
+	./venv/bin/mkdocs gh-deploy --force
 
 docs/generated:
 	mkdir -p docs/generated
