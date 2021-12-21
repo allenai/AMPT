@@ -15,7 +15,10 @@ jobs:
       - name: 'Checkout'
         uses: 'actions/checkout@v2'
       - name: 'Install packages'
-        run: 'sudo apt-get install -y openjdk-8-jdk virtualenv'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-8-jdk virtualenv
+          sudo apt-get clean
       - name: 'Set JAVA_HOME'
         run: |
           echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/" >> $GITHUB_ENV
@@ -26,7 +29,7 @@ jobs:
           curl --silent ${IJ_DOWNLOAD_URL} | tar --extract --gzip
           ./Fiji.app/ImageJ-linux64 --headless --update update-force-pristine
           ./Fiji.app/ImageJ-linux64 --headless --update refresh-update-sites --updateall
-          ./Fiji.app/ImageJ-linux64 --headless --update update         
+          ./Fiji.app/ImageJ-linux64 --headless --update update
           ./Fiji.app/ImageJ-linux64 --headless --update edit-update-site ${UPDATE_SITE} https://sites.imagej.net/${UPDATE_SITE}/ "webdav:${WIKI_USER}:${UPDATE_PASS}" .
       - name: 'Install in ImageJ/Fiji (with Maven)'
         run: |
