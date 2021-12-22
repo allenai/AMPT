@@ -1,0 +1,21 @@
+name: 'Test Runner on macos-latest'
+on:
+  workflow_dispatch:  # Allow manual triggering.
+jobs:
+  build_tests:
+    runs-on: macos-latest
+    env:
+      IJ_DOWNLOAD_URL: 'https://downloads.imagej.net/fiji/latest/fiji-macos.tar.gz'
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v2'
+      - name: 'Prepare ImageJ'
+        run: |
+          curl --silent ${IJ_DOWNLOAD_URL} | tar --extract --gzip
+          sudo spctl --add --label "Fiji Deploy" ./Fiji.app
+          sudo spctl --enable --label "Fiji Deploy"
+      - name: 'Set JAVA_HOME'
+        run: |
+          echo "JAVA_HOME=`./Fiji.app/Contents/MacOS/ImageJ-macosx --print-java-home`" >> $GITHUB_ENV
+      - name: 'Run All Tests'
+        run: 'mvn -B test'
