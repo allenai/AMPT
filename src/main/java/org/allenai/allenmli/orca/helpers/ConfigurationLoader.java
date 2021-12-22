@@ -122,7 +122,8 @@ public final class ConfigurationLoader {
   public static void copyDefaultConfigToPath(String filename, Path configurationFile)
       throws ConfigurationFileLoadException {
     final URL resource =
-        ConfigurationLoader.class.getResource(Paths.get(getDefaultConfigDirectory(), filename).toString());
+        ConfigurationLoader.class.getResource(
+            String.format("%s/%s", getDefaultConfigDirectory(), filename));
     if (null == resource) {
       throw new ConfigurationFileLoadException(
           String.format("Unknown configuration file '%s'", filename), null);
