@@ -6,9 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IJ_DOWNLOAD_URL: 'https://downloads.imagej.net/fiji/latest/fiji-linux64.tar.gz'
-      WIKI_USER: 'ampt-dev'
-      UPDATE_PASS: '${{ secrets.IMAGEJ_UPDATE_SITE_PASS }}'
-      UPDATE_SITE: 'AMPT'
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@v2'
