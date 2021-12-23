@@ -11,7 +11,8 @@ jobs:
         uses: 'actions/checkout@v2'
       - name: 'Prepare ImageJ'
         run: |
-          curl --silent ${IJ_DOWNLOAD_URL} | tar --extract --gzip
+          curl -O ${IJ_DOWNLOAD_URL}
+          tar xfz fiji-macos.tar.gz
           sudo spctl --add --label "Fiji Deploy" ./Fiji.app
           sudo spctl --enable --label "Fiji Deploy"
       - name: 'Set JAVA_HOME'
