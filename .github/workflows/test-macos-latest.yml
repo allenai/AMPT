@@ -12,7 +12,7 @@ jobs:
       - name: 'Prepare ImageJ'
         run: |
           curl -O ${IJ_DOWNLOAD_URL}
-          tar xfz fiji-macos.tar.gz
+          tar xfz fiji-macosx.tar.gz
           sudo spctl --add --label "Fiji Deploy" ./Fiji.app
           sudo spctl --enable --label "Fiji Deploy"
       - name: 'Set JAVA_HOME'
