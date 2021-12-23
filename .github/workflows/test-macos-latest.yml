@@ -15,6 +15,9 @@ jobs:
           tar xfz fiji-macosx.tar.gz
           sudo spctl --add --label "Fiji Deploy" ./Fiji.app
           sudo spctl --enable --label "Fiji Deploy"
+      - name: 'Provision Test Environment'
+        run: |
+          sudo pip3 install --quiet virtualenv
       - name: 'Set JAVA_HOME'
         run: |
           echo "JAVA_HOME=`./Fiji.app/Contents/MacOS/ImageJ-macosx --print-java-home`" >> $GITHUB_ENV
