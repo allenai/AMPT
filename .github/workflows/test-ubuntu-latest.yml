@@ -9,13 +9,11 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@v2'
-      - name: 'Install packages'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-8-jdk virtualenv
-          sudo apt-get clean
-      - name: 'Set JAVA_HOME'
-        run: |
-          echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/" >> $GITHUB_ENV
+      - name: 'Jave Setup'
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          cache: 'maven'
       - name: 'Run All Tests'
         run: 'mvn -B test'

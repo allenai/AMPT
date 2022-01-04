@@ -5,13 +5,14 @@ jobs:
   build_tests:
     runs-on: macos-latest
     env:
-      IJ_DOWNLOAD_URL: 'https://downloads.imagej.net/fiji/latest/fiji-macos.tar.gz'
+      IJ_DOWNLOAD_URL: 'https://downloads.imagej.net/fiji/latest/fiji-macosx.tar.gz'
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@v2'
       - name: 'Prepare ImageJ'
         run: |
-          curl --silent ${IJ_DOWNLOAD_URL} | tar --extract --gzip
+          curl -O ${IJ_DOWNLOAD_URL}
+          tar xfz fiji-macosx.tar.gz
           sudo spctl --add --label "Fiji Deploy" ./Fiji.app
           sudo spctl --enable --label "Fiji Deploy"
       - name: 'Set JAVA_HOME'

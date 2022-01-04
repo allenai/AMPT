@@ -12,7 +12,7 @@ full_clean: clean
 	rm -rf docs/generated
 
 venv/bin/mkdocs: requirements.txt
-	virtualenv venv
+	python3 -m venv venv
 	./venv/bin/pip install -r requirements.txt
 
 gh-deploy: venv/bin/mkdocs docs/generated/version.txt
