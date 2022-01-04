@@ -9,8 +9,11 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@v2'
-      - name: 'Set JAVA_HOME'
-        run: |
-          echo "JAVA_HOME=${JAVA_HOME_8_X64}" >> $GITHUB_ENV
+      - name: 'Jave Setup'
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          cache: 'maven'
       - name: 'Run All Tests'
         run: 'mvn -B test'
