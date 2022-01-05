@@ -23,7 +23,6 @@ import org.scijava.log.StderrLogService;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
@@ -46,23 +45,13 @@ public enum Utilities {
    */
   public static ArrayList<HashMap<String, String>> loadCSVAsMap(String targetFile)
       throws CSVFileLoadException {
-    final CSVReader csv_reader;
-    final ArrayList<HashMap<String, String>> result = new ArrayList<>();
-    try {
-      csv_reader = new CSVReader(new FileReader(targetFile));
-    } catch (final FileNotFoundException e) {
-      throw new CSVFileLoadException("IO problem encountered loading '" + targetFile + "'", e);
-    }
     final String[] headers;
-    try {
-      headers = csv_reader.readNext();
-    } catch (final IOException e) {
-      throw new CSVFileLoadException("IO problem encountered loading '" + targetFile + "'", e);
-    }
-
     final List<String[]> values;
-    try {
-      values = csv_reader.readAll();
+    final ArrayList<HashMap<String, String>> result = new ArrayList<>();
+
+    try (final CSVReader csvReader = new CSVReader(new FileReader(targetFile))) {
+      headers = csvReader.readNext();
+      values = csvReader.readAll();
     } catch (final IOException e) {
       throw new CSVFileLoadException("IO problem encountered loading '" + targetFile + "'", e);
     }

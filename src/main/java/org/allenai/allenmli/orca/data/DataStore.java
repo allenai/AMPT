@@ -18,6 +18,7 @@ package org.allenai.allenmli.orca.data;
 
 import com.opencsv.CSVWriter;
 import org.allenai.allenmli.orca.helpers.CSVFileLoadException;
+import org.allenai.allenmli.orca.helpers.ConfigurationFile;
 import org.allenai.allenmli.orca.helpers.ConfigurationFileLoadException;
 import org.allenai.allenmli.orca.helpers.ConfigurationLoader;
 import org.allenai.allenmli.orca.helpers.DataFileLoadException;
@@ -173,7 +174,7 @@ public final class DataStore extends AbstractTableModel {
    */
   private void loadColumnDefs() throws ConfigurationFileLoadException {
     final ArrayList<HashMap<String, String>> column_config_file =
-        ConfigurationLoader.get_csv_file("CSV-Columns.csv");
+        ConfigurationLoader.get_csv_file(ConfigurationFile.CSV_COLUMNS_CONFIG.getFilename());
     columnMap = new String[column_config_file.size()];
     descriptors.clear();
     for (int i = 0; i < column_config_file.size(); i++) {
