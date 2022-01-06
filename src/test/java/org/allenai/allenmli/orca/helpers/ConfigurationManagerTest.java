@@ -22,11 +22,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.CopyOption;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -95,6 +99,31 @@ public class ConfigurationManagerTest extends TestCase {
     final Path fullConfigPath = ConfigurationLoader.getAbsoluteConfigurationPath(configFilename);
     ConfigurationManager.backupConfig(configFilename);
     TestCase.assertFalse(Files.exists(fullConfigPath));
+  }
+
+  public void test_backup_config_retries() throws Exception {
+    try (MockedStatic<Files> mocked = Mockito.mockStatic(Files.class)) {
+      mocked.when(() -> Files.exists(Mockito.any(Path.class))).thenReturn(true);
+      mocked
+          .when(
+              () ->
+                  Files.move(
+                      Mockito.any(Path.class),
+                      Mockito.any(Path.class),
+                      Mockito.any(CopyOption.class)))
+          .thenThrow(new FileSystemException("error"))
+          // The second argument to Files.move is the target, which is also the return value.
+          .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[1]);
+
+      ConfigurationManager.backupConfig("MeasurementConf.json");
+
+      mocked.verify(() -> Files.exists(Mockito.any(Path.class)), Mockito.times(1));
+      mocked.verify(
+          () ->
+              Files.move(
+                  Mockito.any(Path.class), Mockito.any(Path.class), Mockito.any(CopyOption.class)),
+          Mockito.times(2));
+    }
   }
 
   public void test_original_cue_config_format() throws Exception {
