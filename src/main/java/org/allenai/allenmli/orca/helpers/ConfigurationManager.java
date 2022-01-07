@@ -16,6 +16,11 @@
 
 package org.allenai.allenmli.orca.helpers;
 
+import com.github.rholder.retry.RetryException;
+import com.github.rholder.retry.Retryer;
+import com.github.rholder.retry.RetryerBuilder;
+import com.github.rholder.retry.StopStrategies;
+import com.github.rholder.retry.WaitStrategies;
 import com.google.common.collect.Sets;
 import org.allenai.allenmli.orca.validator.JsonConfigValidator;
 import org.allenai.allenmli.orca.validator.JsonValidationException;
@@ -41,6 +46,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -230,7 +237,29 @@ public final class ConfigurationManager {
             + ".bak";
     final Path backupConfigurationFile =
         ConfigurationLoader.getAbsoluteConfigurationPath(backupFilename);
-    Files.move(configurationFile, backupConfigurationFile, StandardCopyOption.REPLACE_EXISTING);
+
+    final Retryer<Path> retryer =
+        RetryerBuilder.<Path>newBuilder()
+            .retryIfExceptionOfType(IOException.class)
+            .withWaitStrategy(WaitStrategies.exponentialWait(10, 200, TimeUnit.MILLISECONDS))
+            .withStopStrategy(StopStrategies.stopAfterAttempt(5))
+            .build();
+
+    try {
+      // Retry the file move several times in case another process temporarily has the file open.
+      // Needed for Windows because the OS doesn't allow a file to be deleted / moved if it's open.
+      retryer.call(
+          () ->
+              Files.move(
+                  configurationFile, backupConfigurationFile, StandardCopyOption.REPLACE_EXISTING));
+    } catch (ExecutionException | RetryException e) {
+      logger.error(
+          String.format(
+              "Error occurred attempting to move %s to %s",
+              configurationFile, backupConfigurationFile),
+          e);
+      throw new IOException(e.getCause());
+    }
   }
 
   /**
