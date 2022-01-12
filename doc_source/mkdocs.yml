@@ -20,6 +20,7 @@ plugins:
 nav:
   - Home: 'index.md'
   - 'quick_tour.md'
+  - 'installation.md'
   - 'image.md'
   - 'metadata.md'
   - 'input.md'
