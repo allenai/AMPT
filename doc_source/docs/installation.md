@@ -32,7 +32,7 @@ Start the ImageJ Updater (_Help_ > _Update..._)
 
 Click on the _Manage update sites_ button to bring up the site management dialoag.
 
-Add AMPT as a new update site.
+If AMPT is not already in the list of update sites, add AMPT as a new update site.
 
 Name:
 
