@@ -146,7 +146,9 @@ public class ControlWindow extends JFrame implements ActiveImageListener, TableM
         new WindowFocusListener() {
           @Override
           public void windowGainedFocus(WindowEvent e) {
-            ((JFrame) e.getSource()).setMenuBar(ij.Menus.getMenuBar());
+              if(ij.IJ.isMacOSX()) {
+                ((JFrame) e.getSource()).setMenuBar(ij.Menus.getMenuBar());
+              }
           }
 
           @Override
