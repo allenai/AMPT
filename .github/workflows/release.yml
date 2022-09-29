@@ -7,7 +7,7 @@ jobs:
   build_release:
     runs-on: 'ubuntu-latest'
     env:
-      IJ_DOWNLOAD_URL: 'https://downloads.imagej.net/fiji/latest/fiji-linux64.tar.gz'
+      IJ_DOWNLOAD_URL: 'https://downloads.imagej.net/fiji/latest/fiji-linux64.zip'
       WIKI_USER: 'ampt-dev'
       UPDATE_PASS: '${{ secrets.IMAGEJ_UPDATE_SITE_PASS }}'
       UPDATE_SITE: 'AMPT'
