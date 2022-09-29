@@ -19,4 +19,5 @@ package org.allenai.allenmli.orca;
 public final class Version {
   // Use volatile to prevent the compiler from replacing this field lookup with a constant.
   public static volatile String VERSION = "${project.version}";
+  public static volatile String COPYRIGHT = "2021, 2022";
 }
