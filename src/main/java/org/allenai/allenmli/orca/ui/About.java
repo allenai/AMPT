@@ -59,8 +59,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class About extends JDialog {
-  private static final String COPYRIGHT_2021_ALLEN_AI =
-      "Copyright 2021 The Allen Institute for Artificial Intelligence.";
+  private static final String COPYRIGHT_ALLEN_AI =
+      "Copyright 2021, 2022 The Allen Institute for Artificial Intelligence.";
   final Logger logger = new StderrLogService();
   private JPanel contentPane;
   private JButton buttonDismiss;
@@ -203,7 +203,7 @@ public class About extends JDialog {
   }
 
   private String getText() {
-    String text = About.COPYRIGHT_2021_ALLEN_AI;
+    String text = About.COPYRIGHT_ALLEN_AI;
     final ClassLoader classLoader = getClass().getClassLoader();
     final InputStream aboutInput = classLoader.getResourceAsStream("documentation/about.xsl");
     final InputStream attributionInput = classLoader.getResourceAsStream("attribution.xml");
@@ -234,7 +234,9 @@ public class About extends JDialog {
           "Resource bundle is corrupted: missing about.xsl and/or attribution.xml. Try reinstalling the plugin.");
     }
     final StringSubstitutor stringSubstitutor =
-        new StringSubstitutor(ImmutableMap.of("version", Version.VERSION));
+        new StringSubstitutor(ImmutableMap.of(
+                "version", Version.VERSION,
+                "copyright", Version.COPYRIGHT));
     text = stringSubstitutor.replace(text);
     return text;
   }

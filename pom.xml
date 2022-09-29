@@ -13,7 +13,7 @@
 
     <groupId>allenai.fiji</groupId>
     <artifactId>AMPT</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 
     <name>Aquatic Mammal Photogrammetry Tool</name>
     <description>ImageJ plugin to perform photogrammetry on aquatic mammals.</description>
@@ -245,6 +245,7 @@
         <package-name>org.allenai.allenmli.orca</package-name>
         <license.licenseName>BSD-3-Clause</license.licenseName>
         <license.copyrightOwners>The Allen Institute for Artificial Intelligence</license.copyrightOwners>
+        <license.copyrightYear>2021, 2022</license.copyrightYear>
     </properties>
 
     <repositories>
