@@ -22,7 +22,8 @@ jobs:
         run: 'mvn -B package'
       - name: 'Install ImageJ/Fiji'
         run: |
-          curl --silent ${IJ_DOWNLOAD_URL} | tar --extract --gzip
+          curl --silent -o fiji.zip ${IJ_DOWNLOAD_URL}
+          unzip fiji.zip
           ./Fiji.app/ImageJ-linux64 --headless --update update-force-pristine
           ./Fiji.app/ImageJ-linux64 --headless --update refresh-update-sites --updateall
           ./Fiji.app/ImageJ-linux64 --headless --update update
