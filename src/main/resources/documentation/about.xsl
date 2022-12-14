@@ -33,6 +33,7 @@
                 <h2>Version: ${version}</h2>
                 <p>Copyright ${copyright} The Allen Institute for Artificial Intelligence.</p>
 
+                <p>As of December 15, 2023 AMPT is no longer supported. If you are interested in taking over the development and support of AMPT, please contact us at ampt-dev&lt;AT&gt;allenai.org.</p>
                 <p>Licensed under the Apache License, Version 2.0 (the "License");
                     you may not use this file except in compliance with the License.
                     You may obtain a copy of the License at
