@@ -12,8 +12,8 @@ markdown_extensions:
   - pymdownx.superfences
 use_directory_urls: false
 copyright: Copyright &copy; 2021 Allen Institute for Artificial Intelligence
-repo_url: https://github.com/AllenMLI/AMPT
-repo_name: AllenMLI/AMPT
+repo_url: https://github.com/allenai/AMPT
+repo_name: allenai/AMPT
 edit_uri: edit/main/doc_source/docs/
 plugins:
   - macros
