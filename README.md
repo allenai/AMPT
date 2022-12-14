@@ -61,7 +61,7 @@ export JAVA_HOME=`${FIJI_HOME}/Contents/MacOS/ImageJ-macosx --print-java-home`
 Compile:
 
 ```zsh
-mvn package -P uberjar 
+mvn package
 ```
 
 Optional Local Install :
