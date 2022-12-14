@@ -13,7 +13,7 @@
 
     <groupId>allenai.fiji</groupId>
     <artifactId>AMPT</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 
     <name>Aquatic Mammal Photogrammetry Tool</name>
     <description>ImageJ plugin to perform photogrammetry on aquatic mammals.</description>
