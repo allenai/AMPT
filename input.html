@@ -1,0 +1,589 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="assets/favicon-32x32.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
+    
+    
+      
+        <title>Input Panel - Aquatic Mammal Photogrammetry Tool</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.a57b2b03.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL(".",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#input-panel" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Aquatic Mammal Photogrammetry Tool" class="md-header__button md-logo" aria-label="Aquatic Mammal Photogrammetry Tool" data-md-component="logo">
+      
+  <img src="assets/white_logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Aquatic Mammal Photogrammetry Tool
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Input Panel
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/allenai/AMPT/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    allenai/AMPT
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Aquatic Mammal Photogrammetry Tool" class="md-nav__button md-logo" aria-label="Aquatic Mammal Photogrammetry Tool" data-md-component="logo">
+      
+  <img src="assets/white_logo.svg" alt="logo">
+
+    </a>
+    Aquatic Mammal Photogrammetry Tool
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/allenai/AMPT/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    allenai/AMPT
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="quick_tour.html" class="md-nav__link">
+        Quick Tour
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="installation.html" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="image.html" class="md-nav__link">
+        Open Image
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="metadata.html" class="md-nav__link">
+        Metadata
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Input Panel
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="input.html" class="md-nav__link md-nav__link--active">
+        Input Panel
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#input-panel" class="md-nav__link">
+    Input Panel
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    Comments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-points" class="md-nav__link">
+    Reference Points
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference Points">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reference-points-details" class="md-nav__link">
+    Reference Points Details
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defining-landmarks" class="md-nav__link">
+    Defining landmarks
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lengths" class="md-nav__link">
+    Lengths
+  </a>
+  
+    <nav class="md-nav" aria-label="Lengths">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#length-details" class="md-nav__link">
+    Length Details
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defining-lengths" class="md-nav__link">
+    Defining lengths
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="length_and_profile.html" class="md-nav__link">
+        Length Measurements & Body Profiles Panels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="csv.html" class="md-nav__link">
+        CSV Manipulation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="csv_columns_config.html" class="md-nav__link">
+        CSV Column Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cue_and_calc.html" class="md-nav__link">
+        Cue and Calculation Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="config_options.html" class="md-nav__link">
+        Configuration Options
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="copyright.html" class="md-nav__link">
+        Copyright
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="license.html" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/allenai/AMPT/edit/main/doc_source/docs/input.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  <h1>Input Panel</h1>
+                
+                <h2 id="input-panel">Input Panel</h2>
+<p>The input panel is composed of three tabs: <em>Comments</em>, <em>Reference Points</em>, and <em>Lengths</em>. The inputs will automatically load the data the currently active image. Please note that the save button for a measurement or commment must be pressed to actually store the measurement.</p>
+<h2 id="comments">Comments</h2>
+<p><img alt="Input Comments" src="img/input_comments_panel.png" /></p>
+<p>During measurement the user may enter freeform comments in the <em>Comments</em> tab. The <em>Save Comments</em> button will be active whenever there are unsaved comments.</p>
+<h2 id="reference-points">Reference Points</h2>
+<p><img alt="Input Comments" src="img/input_ref_points_panel.png" /></p>
+<p>The <em>Reference Points</em> tab is used to place measurement landmarks on the image. These landmarks are used to provide cueing for length measurements, and also to automatically perform some measurements of the animal. Please see <a href="csv_columns_config.html#measurement-type">Measurement Type</a> for information on how to specify an automatically computed length. Rendering the landmarks is controlled by the Cues checkbox. When the Reference Points tab is selected, the ImageJ point selector is automatically activated.</p>
+<h3 id="reference-points-details">Reference Points Details</h3>
+<p><img alt="Input Comments" src="img/input_ref_points_panel_detail.png" /></p>
+<p>There are a number of controls in the <em>Reference Points</em> tab. </p>
+<p>The top control control is the Cues checkbox, which enables the drawing of the defined landmarks in the image. Details on configuring what landmarks are drawn and when they are drawn is described in the section on <a href="cue_and_calc.html">Cue and Calculation Configuration</a></p>
+<p>The next control is a dropdown list containing the landmarks that the user would like to draw. Selecting from the list will load and draw and existing point for the landmark, and display the currently saved position in the middle two text boxes aligned with the <em>Saved</em> label. If a value has been saved it will also be shown in the top two text boxes aligned with the current label.</p>
+<p>The buttons control how values are saved and updated as well as the value shown in the <em>Status</em> text field. The <em>Save</em> button causes the values in the <em>Current</em> fields to be written to the CSV data and then loaded into the <em>Saved</em> text fields. The status of the landmark will be set to <em>Unreviewed</em> and then shown in the <em>Status</em>. The <em>Clear</em> button clear the selection in the image and clears the values in <em>Current</em>, it does not alter the saved values or the status. The <em>Revert</em> button copies the saved value into <em>Current</em> and updated the selection in the image, it does not alter the status. The <em>Approve</em> button updates the status for the landmark to <em>Accepted</em> and then causes that to be loaded into the <em>Status</em> field.</p>
+<h3 id="defining-landmarks">Defining landmarks</h3>
+<p>In order for a landmark to appear in this list the landmark be defined as two entries of the form "<em>landmark_name</em>_x" and "<em>landmark_name</em>_y" both with type <code>point</code> in the <a href="csv_columns_config.html#default-csv-columnscsv">CSV-Columns.csv</a> file. An additional entry of the form "<em>landmark_name</em>_reviewed" with type <code>boolean</code> is also required.</p>
+<h2 id="lengths">Lengths</h2>
+<p><img alt="Input Comments" src="img/input_length_panel.png" />
+The <em>Lengths</em> tab is similiar to the <em>Reference Points</em>, but is used for taking manual length measurements. Rendering the length guidelines is controlled by the Cues checkbox. When the <em>Lengths</em> tab is selected, the ImageJ line selector is automatically activated.</p>
+<h3 id="length-details">Length Details</h3>
+<p><img alt="Input Comments" src="img/input_length_panel_detail.png" /></p>
+<p>The controls and cues in the <em>Lengths</em> tab behave like the controls in the <a href="#reference-points-details"><em>Reference Points</em></a> tab.</p>
+<h3 id="defining-lengths">Defining lengths</h3>
+<p>In order for a length to appear in this list the length be defined as four entries of the form "<em>landmark_name</em>_x_start",  "<em>landmark_name</em>_y_start", "<em>landmark_name</em>_x_end", and "<em>landmark_name</em>_y_end" all with type <code>auto point</code> in the <a href="csv_columns_config.html#default-csv-columnscsv">CSV-Columns.csv</a> file. An additional entry of the form "<em>landmark_name</em>_reviewed" with type <code>boolean</code> is also required.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="metadata.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Metadata" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Metadata
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="length_and_profile.html" class="md-footer__link md-footer__link--next" aria-label="Next: Length Measurements &amp; Body Profiles Panels" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Length Measurements & Body Profiles Panels
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 Allen Institute for Artificial Intelligence
+          </div>
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": ".", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.b1047164.min.js"></script>
+      
+    
+  </body>
+</html>

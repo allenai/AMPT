@@ -1,0 +1,808 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="assets/favicon-32x32.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
+    
+    
+      
+        <title>Cue and Calculation Configuration - Aquatic Mammal Photogrammetry Tool</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.a57b2b03.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL(".",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#calculation-configuration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Aquatic Mammal Photogrammetry Tool" class="md-header__button md-logo" aria-label="Aquatic Mammal Photogrammetry Tool" data-md-component="logo">
+      
+  <img src="assets/white_logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Aquatic Mammal Photogrammetry Tool
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Cue and Calculation Configuration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/allenai/AMPT/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    allenai/AMPT
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Aquatic Mammal Photogrammetry Tool" class="md-nav__button md-logo" aria-label="Aquatic Mammal Photogrammetry Tool" data-md-component="logo">
+      
+  <img src="assets/white_logo.svg" alt="logo">
+
+    </a>
+    Aquatic Mammal Photogrammetry Tool
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/allenai/AMPT/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    allenai/AMPT
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="quick_tour.html" class="md-nav__link">
+        Quick Tour
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="installation.html" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="image.html" class="md-nav__link">
+        Open Image
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="metadata.html" class="md-nav__link">
+        Metadata
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="input.html" class="md-nav__link">
+        Input Panel
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="length_and_profile.html" class="md-nav__link">
+        Length Measurements & Body Profiles Panels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="csv.html" class="md-nav__link">
+        CSV Manipulation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="csv_columns_config.html" class="md-nav__link">
+        CSV Column Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Cue and Calculation Configuration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="cue_and_calc.html" class="md-nav__link md-nav__link--active">
+        Cue and Calculation Configuration
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#calculation-configuration" class="md-nav__link">
+    Calculation Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Calculation Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measurement-configuration" class="md-nav__link">
+    Measurement Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#available-functions" class="md-nav__link">
+    Available Functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cue-configuration" class="md-nav__link">
+    Cue Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-configuration" class="md-nav__link">
+    Reference Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-functions" class="md-nav__link">
+    Additional Functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format-version" class="md-nav__link">
+    Format Version
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="config_options.html" class="md-nav__link">
+        Configuration Options
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="copyright.html" class="md-nav__link">
+        Copyright
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="license.html" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/allenai/AMPT/edit/main/doc_source/docs/cue_and_calc.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  <h1>Cue and Calculation Configuration</h1>
+                
+                <h2 id="calculation-configuration">Calculation Configuration</h2>
+<h3 id="measurement-configuration">Measurement Configuration</h3>
+<p>The <code>MeasurementConfg.json</code> configuration file defines the calculation and parameters for a measurement.</p>
+<p>The format of this configuration is as follows:</p>
+<div class="highlight"><pre><span></span><code>[
+  {
+    &quot;target&quot;: &quot;SNDF&quot;,
+    &quot;parameters&quot;: [
+      &quot;SNDF_x_start&quot;,
+      &quot;SNDF_y_start&quot;,
+      &quot;SNDF_x_end&quot;,
+      &quot;SNDF_y_end&quot;
+    ],
+    &quot;function&quot;: &quot;length&quot;
+  },
+  {
+    &quot;target&quot;: &quot;SNDF_x_start&quot;,
+    &quot;parameters&quot;: [
+      &quot;SN_x&quot;
+    ],
+    &quot;function&quot;: &quot;copy&quot;
+  },
+  {
+    &quot;target&quot;: &quot;SNDF_y_start&quot;,
+    &quot;parameters&quot;: [
+      &quot;SN_y&quot;
+    ],
+    &quot;function&quot;: &quot;copy&quot;
+  },
+  {
+    &quot;target&quot;: &quot;SNDF_x_end&quot;,
+    &quot;parameters&quot;: [
+      &quot;DF_x&quot;
+    ],
+    &quot;function&quot;: &quot;copy&quot;
+  },
+  {
+    &quot;target&quot;: &quot;SNDF_y_end&quot;,
+    &quot;parameters&quot;: [
+      &quot;DF_y&quot;
+    ],
+    &quot;function&quot;: &quot;copy&quot;
+  }
+]
+</code></pre></div>
+<p>The calculation for each target is performed using a list of parameters and exactly one calculation function. For example, <code>SNDF</code> is calculated using the function <code>length</code> with parameters <code>SNDF_x_start</code>, <code>SNDF_y_start</code>, <code>SNDF_x_end</code>, <code>SNDF_y_end</code>. The function name must always correspond to a function in <code>MeasurementManager</code> (or a super class) with the correct number and type of parameters. In this case, the <code>length</code> function computes the length from <code>(x_start, y_start)</code> to <code>(x_end, y_end)</code>. See below for a list of available functions.</p>
+<p>Measurements may be defined in terms of other calculated measurements or direct input from the user. For example, <code>SNDF</code> is calculated in part from <code>SNDF_x_start</code>, which in turn is copied from <code>SN_x</code>, a point set by the user. All measurement targets must correspond to a column name defined in the <a href="csv_columns_config.html">Column Configuration</a>.</p>
+<h3 id="available-functions">Available Functions</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Parameters</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>length</code></td>
+<td><code>x_start</code>, <code>y_start</code>, <code>x_end</code>, <code>y_end</code></td>
+<td>Computes the length from <code>(x_start, y_start)</code> to <code>(x_end, y_end)</code>.</td>
+</tr>
+<tr>
+<td><code>copy</code></td>
+<td><code>source</code></td>
+<td>Returns <code>source</code>.</td>
+</tr>
+<tr>
+<td><code>ratio</code></td>
+<td><code>antecedent</code>, <code>consequent</code></td>
+<td>Computes the ratio of <code>antecedent:consequent</code>.</td>
+</tr>
+<tr>
+<td><code>parametric_point</code></td>
+<td><code>start</code>, <code>end</code>, <code>distance</code></td>
+<td>Compute the distance along a 1D parametric function.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cue-configuration">Cue Configuration</h2>
+<p>The <code>CueConfig.json</code> configuration file maps the measurement being performed to associated cue types. It defines which cues are drawn when a measurement is selected, if the user has enabled cue rendering in the AMPT UI.</p>
+<p>The format of this configuration is as follows:</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;format_version&quot;: 1,
+  &quot;configuration&quot;: [
+    {
+      &quot;cue&quot;: &quot;Offset Width&quot;,
+      &quot;measurements&quot;: [
+        &quot;OFSET&quot;
+      ]
+    },
+    {
+      &quot;cue&quot;: &quot;BH&quot;,
+      &quot;measurements&quot;: [
+        &quot;BH&quot;,
+        &quot;SN&quot;,
+        &quot;DF&quot;,
+        &quot;FL&quot;
+      ]
+    },
+    {
+      &quot;cue&quot;: &quot;SN&quot;,
+      &quot;measurements&quot;: [
+        &quot;BH&quot;,
+        &quot;SN&quot;,
+        &quot;DF&quot;,
+        &quot;FL&quot;
+      ]
+    },
+    {
+      &quot;cue&quot;: &quot;DF&quot;,
+      &quot;measurements&quot;: [
+        &quot;BH&quot;,
+        &quot;SN&quot;,
+        &quot;DF&quot;,
+        &quot;FL&quot;
+      ]
+    },
+    {
+      &quot;cue&quot;: &quot;FL&quot;,
+      &quot;measurements&quot;: [
+        &quot;BH&quot;,
+        &quot;SN&quot;,
+        &quot;DF&quot;,
+        &quot;FL&quot;,
+        &quot;FW&quot;
+      ]
+    }
+  ]
+</code></pre></div>
+<p>For example, selecting the <code>HEAD</code> measurement will render the <code>Head Width</code> cue. This refers to a corresponding measurement in <code>ReferenceConf.json</code> that will be displayed:</p>
+<div class="highlight"><pre><span></span><code>  {
+    &quot;target&quot;: &quot;Offset Width&quot;,
+    &quot;parameters&quot;: [
+      &quot;BHDF_x_start&quot;,
+      &quot;BHDF_y_start&quot;,
+      &quot;BHDF_x_end&quot;,
+      &quot;BHDF_y_end&quot;,
+      23,
+      23,
+      10
+    ],
+    &quot;function&quot;: &quot;interval_reference_markers&quot;
+  },
+</code></pre></div>
+<h2 id="reference-configuration">Reference Configuration</h2>
+<p>The <code>ReferenceConf.json</code> file works in a similar way to <code>MeasurementConf.json</code>, except that it defines the calculation and parameters for a cue type. See <a href="#cue-configuration">Cue Configuration</a> for more information on cues. The format and functionality of <code>ReferenceConf.json</code> matches that of <code>MeasurementConf.json</code> with the extension of several additional available functions.</p>
+<p>The format of this configuration file is as follows:</p>
+<div class="highlight"><pre><span></span><code>[
+  {
+    &quot;target&quot;: &quot;Body Profile&quot;,
+    &quot;parameters&quot;: [
+      &quot;SNDF_x_start&quot;,
+      &quot;SNDF_y_start&quot;,
+      &quot;SNDF_x_end&quot;,
+      &quot;SNDF_y_end&quot;,
+      10,
+      100,
+      10
+    ],
+    &quot;function&quot;: &quot;interval_reference_markers&quot;
+  },
+  {
+    &quot;target&quot;: &quot;Body Profile 230&quot;,
+    &quot;parameters&quot;: [
+      &quot;DFFL_x_start&quot;,
+      &quot;DFFL_y_start&quot;,
+      &quot;DFFL_x_end&quot;,
+      &quot;DFFL_y_end&quot;,
+      &quot;SNDF_x_start&quot;,
+      &quot;SNDF_y_start&quot;,
+      &quot;SNDF_x_end&quot;,
+      &quot;SNDF_y_end&quot;,
+      10,
+      130,
+      10,
+      100
+    ],
+    &quot;function&quot;: &quot;interval_reference_markers_with_base_length&quot;
+  },
+  {
+    &quot;target&quot;: &quot;Offset Width&quot;,
+    &quot;parameters&quot;: [
+      &quot;BHDF_x_start&quot;,
+      &quot;BHDF_y_start&quot;,
+      &quot;BHDF_x_end&quot;,
+      &quot;BHDF_y_end&quot;,
+      23,
+      23,
+      10
+    ],
+    &quot;function&quot;: &quot;interval_reference_markers&quot;
+  },
+  {
+    &quot;target&quot;: &quot;BH&quot;,
+    &quot;parameters&quot;: [
+      &quot;\&quot;BH\&quot;&quot;,
+      &quot;BH_x&quot;,
+      &quot;BH_y&quot;
+    ],
+    &quot;function&quot;: &quot;render_landmark&quot;
+  }
+]
+</code></pre></div>
+<h3 id="additional-functions">Additional Functions</h3>
+<p>All of the above functions are available plus the following.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Parameters</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>interval_reference_markers</code></td>
+<td><code>axis_x_start</code>, <code>axis_y_start</code>, <code>axis_x_end</code>, <code>axis_y_end</code>, <code>start_percentage</code>, <code>end_percentage</code>, <code>step_size</code></td>
+<td>Draws a reference line with percentage markers along the line.</td>
+</tr>
+<tr>
+<td><code>interval_reference_markers_with_base_length</code></td>
+<td><code>axis_x_start</code>, <code>axis_y_start</code>, <code>axis_x_end</code>, <code>axis_y_end</code>, <code>ref_x_start</code>, <code>ref_y_start</code>, <code>ref_x_end</code>, <code>ref_y_end</code>, <code>start_percentage</code>, <code>end_percentage</code>, <code>step_size</code>, <code>label_offset</code></td>
+<td>Draws a reference line with percentage markers along the line. The marker spacing may be derived from the length of a different line.</td>
+</tr>
+<tr>
+<td><code>draw_ref_along_line</code></td>
+<td><code>ref_line_x_start</code>, <code>ref_line_y_start</code>, <code>ref_line_x_end</code>, <code>ref_line_y_end</code></td>
+<td>Draws a line from <code>(ref_line_x_start, ref_line_y_start)</code> to <code>(ref_line_x_end, ref_line_y_end)</code> and a marker at offset percentage along the line. The marker gets a label of the form <code>"%d%%".format(offset)</code>.</td>
+</tr>
+<tr>
+<td><code>compute_offset_reference_markers</code></td>
+<td><code>axis_x_start</code>, <code>axis_y_start</code>, <code>axis_x_end</code>, <code>axis_y_end</code>, <code>ref_line_x_start</code>, <code>ref_line_y_start</code>, <code>ref_line_x_end</code>, <code>ref_line_y_end</code>, <code>offset</code></td>
+<td>Computes a set of offset reference markers along an axis. The axis is defined by the line segment from <code>(axis_x_start, axis_y_start)</code> to <code>(axis_x_end, axis_y_end)</code>. Two line segments orthogonal to the axis line segment intersect the points <code>(ref_line_x_start, ref_line_y_start)</code> and <code>(ref_line_x_end, ref_line_y_end)</code>. A third line segment orthogonal to the axis intersects the point that is offset percentage along the line segment defined from <code>(ref_line_x_start, ref_line_y_start)</code> to <code>(ref_line_x_end, ref_line_y_end)</code>. The lengths of the reference lines are 5% of the length of the axis.</td>
+</tr>
+<tr>
+<td><code>compute_offset_reference</code></td>
+<td><code>axis_x_start</code>, <code>axis_y_start</code>, <code>axis_x_end</code>, <code>axis_y_end</code>, <code>ref_line_x_start</code>, <code>ref_line_y_start</code>, <code>ref_line_x_end</code>, <code>ref_line_y_end</code>, <code>offset</code></td>
+<td>Computes the projection of a point, <code>ref_point</code>, onto an axis. The axis is defined by the line segment from <code>(axis_x_start, axis_y_start)</code> to <code>(axis_x_end, axis_y_end)</code>. The point <code>ref_point</code> is at offset percentage distance along the reference line segment defined from <code>(ref_line_x_start, ref_line_y_start)</code> to <code>(ref_line_x_end, ref_line_y_end)</code>.</td>
+</tr>
+<tr>
+<td><code>render_landmark</code></td>
+<td><code>label</code>, <code>x</code>, <code>y</code></td>
+<td>Displays the landmark label and the <code>(x, y)</code> coordinate.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="format-version">Format Version</h2>
+<p>The format version applies to all JSON configuration files in AMPT. It may be incremented in the event of a backward-incompatible change. The <code>format_version</code> is used as a signal to AMPT about whether the configuration file needs to be updated before it can be parsed by the current release of the tool.</p>
+<p>A higher numbered format version must always indicate a more recent version. If not explicitly set, the format version is implicitly zero.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="csv_columns_config.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: CSV Column Configuration" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              CSV Column Configuration
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="config_options.html" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration Options" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Configuration Options
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 Allen Institute for Artificial Intelligence
+          </div>
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": ".", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.b1047164.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,901 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="assets/favicon-32x32.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
+    
+    
+      
+        <title>CSV Column Configuration - Aquatic Mammal Photogrammetry Tool</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.a57b2b03.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL(".",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#column-configuration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Aquatic Mammal Photogrammetry Tool" class="md-header__button md-logo" aria-label="Aquatic Mammal Photogrammetry Tool" data-md-component="logo">
+      
+  <img src="assets/white_logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Aquatic Mammal Photogrammetry Tool
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CSV Column Configuration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/allenai/AMPT/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    allenai/AMPT
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Aquatic Mammal Photogrammetry Tool" class="md-nav__button md-logo" aria-label="Aquatic Mammal Photogrammetry Tool" data-md-component="logo">
+      
+  <img src="assets/white_logo.svg" alt="logo">
+
+    </a>
+    Aquatic Mammal Photogrammetry Tool
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/allenai/AMPT/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    allenai/AMPT
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="quick_tour.html" class="md-nav__link">
+        Quick Tour
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="installation.html" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="image.html" class="md-nav__link">
+        Open Image
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="metadata.html" class="md-nav__link">
+        Metadata
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="input.html" class="md-nav__link">
+        Input Panel
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="length_and_profile.html" class="md-nav__link">
+        Length Measurements & Body Profiles Panels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="csv.html" class="md-nav__link">
+        CSV Manipulation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          CSV Column Configuration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="csv_columns_config.html" class="md-nav__link md-nav__link--active">
+        CSV Column Configuration
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#column-configuration" class="md-nav__link">
+    Column Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#headers" class="md-nav__link">
+    Headers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#units" class="md-nav__link">
+    Units
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measurement-type" class="md-nav__link">
+    Measurement Type
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-rows" class="md-nav__link">
+    Required Rows
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-csv-columnscsv" class="md-nav__link">
+    Default CSV-Columns.csv
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cue_and_calc.html" class="md-nav__link">
+        Cue and Calculation Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="config_options.html" class="md-nav__link">
+        Configuration Options
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="copyright.html" class="md-nav__link">
+        Copyright
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="license.html" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/allenai/AMPT/edit/main/doc_source/docs/csv_columns_config.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  <h1>CSV Column Configuration</h1>
+                
+                <h2 id="column-configuration">Column Configuration</h2>
+<p>This is an example of the <code>CVS-Columns.csv</code> configuration file. The file has a mandatory header row.</p>
+<h2 id="headers">Headers</h2>
+<table>
+<thead>
+<tr>
+<th>Header Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>column_name</code></td>
+<td>The name of the column, must be unique. May contain embedded spaces.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>A human-readable description of the column's content. Not currently used by AMPT.</td>
+</tr>
+<tr>
+<td><code>units</code></td>
+<td>The measurement units. See <a href="#units">units</a> table below.</td>
+</tr>
+<tr>
+<td><code>measurement_type</code></td>
+<td>The type of measurement. See <a href="#measurement-type">measurement type</a> table below.</td>
+</tr>
+<tr>
+<td><code>export</code></td>
+<td>True if the column is exported for analysis outside of AMPT.</td>
+</tr>
+<tr>
+<td><code>editable</code></td>
+<td>True if the column can be edited directly in the tool.</td>
+</tr>
+<tr>
+<td><code>is_metadata</code></td>
+<td>True if the column is image metadata.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="units">Units</h2>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>Boolean flag, <code>True</code> or <code>False</code>.</td>
+</tr>
+<tr>
+<td>editable text</td>
+<td>Free text.</td>
+</tr>
+<tr>
+<td>fractional degrees</td>
+<td>Stored as text.</td>
+</tr>
+<tr>
+<td>fractional pixels</td>
+<td>Double precision floating point.</td>
+</tr>
+<tr>
+<td>meters</td>
+<td>Double precision floating point.</td>
+</tr>
+<tr>
+<td>millimeters</td>
+<td>Double precision floating point.</td>
+</tr>
+<tr>
+<td>pixels</td>
+<td>Double precision floating point.</td>
+</tr>
+<tr>
+<td>text</td>
+<td>Free text.</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>Free text.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="measurement-type">Measurement Type</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>auto length</td>
+<td>Derived from some other measurement or copied from another length or auto length.</td>
+</tr>
+<tr>
+<td>auto point</td>
+<td>Derived from another measurement, or copied from another point or auto point.</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>Binary flag value.</td>
+</tr>
+<tr>
+<td>free text</td>
+<td>Any sort of textual input.</td>
+</tr>
+<tr>
+<td>length</td>
+<td>Length measured by the user.</td>
+</tr>
+<tr>
+<td>manual</td>
+<td>Entered manually.</td>
+</tr>
+<tr>
+<td>point</td>
+<td>Point set by user.</td>
+</tr>
+<tr>
+<td>selection</td>
+<td>May be free text, or drawn from collection of existing values.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="required-rows">Required Rows</h2>
+<p>In order for AMPT to work correctly, there are a few mandatory rows in the configuration file. The mandatory rows are data sources and sinks fo different parts of the tool. The mandatory rows along with their usage are listed below, the names are case sensitive:</p>
+<table>
+<thead>
+<tr>
+<th>Required Row</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filename</td>
+<td>This is the key for the measurements, must be unique for session. Linked to the "<a href="metadata.html">Filename</a>" field.</td>
+</tr>
+<tr>
+<td>WhaleID</td>
+<td>This is the identifier for the animal being measured. Linked to the "<a href="metadata.html">Animal ID</a>" field.</td>
+</tr>
+<tr>
+<td>Position</td>
+<td>This indicates where the animal is in the image. Linked to the "<a href="metadata.html">Position</a>" field.</td>
+</tr>
+<tr>
+<td>UNDERWATER</td>
+<td>This indicates the depth of the animal 0 = On surface, 1 = Underwater, 2 =  Deep underwater. Linked to the "<a href="metadata.html">Underwater</a>" field.</td>
+</tr>
+<tr>
+<td>MEAS&nbsp;COMMENTS</td>
+<td>This field holds free text comments from the user. Linked to the "<a href="input.html#comments">Comments</a>" input panel.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="default-csv-columnscsv">Default <code>CSV-Columns.csv</code></h2>
+<div class="highlight"><pre><span></span><code>column_name,description,units,measurement_type,export,editable,is_metadata
+Filename,Name of the file used for the measurement,text,manual,True,False,True
+TimePhoto,Time stamp of the photo,timestamp,manual,True,False,True
+WhaleID,The &lt;POD&gt;&lt;NUMBER&gt; designator for the animal,editable text,selection,True,True,True
+Position,The &lt;NUMBER&gt;LR or &lt;NUMBER&gt;TB index for the animal being measured,editable text,manual,True,True,True
+Type,&quot;Type of animal, SR =&gt; Southern Resident Killer Whale&quot;,editable text,manual,True,True,True
+Alt,Altitude from GPS,meters,manual,True,False,True
+Laser,Altitude from laser altimeter,meters,manual,True,False,True
+Lat,&quot;Latitude, decimal notation&quot;,fractional degrees,manual,True,False,True
+Lon,&quot;Longitude, decimal notation&quot;,fractional degrees,manual,True,False,True
+CameraMake,Brand of camera,text,manual,True,False,True
+CameraModel,Model of camera,text,manual,True,False,True
+FocalLength,Camera focal length,millimeters,manual,True,False,True
+Comment,EXIF Field,text,manual,True,False,True
+MEAS COMMENTS,Free text from scientist,editable text,free text,True,True,True
+UNDERWATER,&quot;Animal underwater, 0=No, 1=Yes&quot;,editable text,manual,True,True,True
+GIRTH,breadth at anterior insertion of the dorsal fin (same as 100% measure in profile),fractional pixels,auto length,True,True,False
+OFFSET,breadth of the animal (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),fractional pixels,length,True,True,False
+SNDF,tip of rostrum to anterior insertion of dorsal fin,fractional pixels,auto length,True,False,False
+BHDF,center of blowhole to anterior insertion of dorsal fin,fractional pixels,auto length,True,False,False
+DFFL,anterior insertion of dorsal fin to fluke notch,fractional pixels,auto length,True,False,False
+LENGTH,tip of rostrum to fluke notch,fractional pixels,auto length,True,False,False
+FW,Maximum breadth of fluke,fractional pixels,length,True,True,False
+10%,Width of animal at 10% of distance of SNDF measurement,fractional pixels,length,True,True,False
+20%,Width of animal at 20% of distance of SNDF measurement,fractional pixels,length,True,True,False
+30%,Width of animal at 30% of distance of SNDF measurement,fractional pixels,length,True,True,False
+40%,Width of animal at 40% of distance of SNDF measurement,fractional pixels,length,True,True,False
+50%,Width of animal at 50% of distance of SNDF measurement,fractional pixels,length,True,True,False
+60%,Width of animal at 60% of distance of SNDF measurement,fractional pixels,length,True,True,False
+70%,Width of animal at 70% of distance of SNDF measurement,fractional pixels,length,True,True,False
+80%,Width of animal at 80% of distance of SNDF measurement,fractional pixels,length,True,True,False
+90%,Width of animal at 90% of distance of SNDF measurement,fractional pixels,length,True,True,False
+100%,Width of animal at 100% of distance of SNDF measurement,fractional pixels,length,True,False,False
+110%,Width of animal at 110% of distance of SNDF measurement,fractional pixels,length,True,True,False
+120%,Width of animal at 120% of distance of SNDF measurement,fractional pixels,length,True,True,False
+130%,Width of animal at 130% of distance of SNDF measurement,fractional pixels,length,True,True,False
+140%,Width of animal at 140% of distance of SNDF measurement,fractional pixels,length,True,True,False
+150%,Width of animal at 150% of distance of SNDF measurement,fractional pixels,length,True,True,False
+160%,Width of animal at 160% of distance of SNDF measurement,fractional pixels,length,True,True,False
+170%,Width of animal at 170% of distance of SNDF measurement,fractional pixels,length,True,True,False
+180%,Width of animal at 180% of distance of SNDF measurement,fractional pixels,length,True,True,False
+190%,Width of animal at 190% of distance of SNDF measurement,fractional pixels,length,True,True,False
+200%,Width of animal at 200% of distance of SNDF measurement,fractional pixels,length,True,True,False
+210%,Width of animal at 210% of distance of SNDF measurement,fractional pixels,length,True,True,False
+220%,Width of animal at 220% of distance of SNDF measurement,fractional pixels,length,True,True,False
+BH_x,Blowhole x position in image coordinates,pixels,point,False,False,False
+BH_y,Blowhole y position in image coordinates,pixels,point,False,False,False
+SN_x,Rostrum x position in image coordinates,pixels,point,False,False,False
+SN_y,Rostrum y position in image coordinates,pixels,point,False,False,False
+DF_x,Anterior insertion point of dorsal fin x position in image coordinates,pixels,point,False,False,False
+DF_y,Anterior insertion point of dorsal fin y position in image coordinates,pixels,point,False,False,False
+FL_x,Fluke notch x position in image coordinates,pixels,point,False,False,False
+FL_y,Fluke notch y position in image coordinates,pixels,point,False,False,False
+GIRTH_x_start,Starting X for breadth at anterior insertion of the dorsal fin (same as 100% measure in profile),pixels,auto point,False,False,False
+GIRTH_y_start,Starting y for breadth at anterior insertion of the dorsal fin (same as 100% measure in profile),pixels,auto point,False,False,False
+GIRTH_x_end,Ending X for breadth at anterior insertion of the dorsal fin (same as 100% measure in profile),pixels,auto point,False,False,False
+GIRTH_y_end,Ending y for breadth at anterior insertion of the dorsal fin (same as 100% measure in profile),pixels,auto point,False,False,False
+SNDF_x_start,Starting X for tip of rostrum to anterior insertion of dorsal fin,pixels,auto point,False,False,False
+SNDF_y_start,Starting y for tip of rostrum to anterior insertion of dorsal fin,pixels,auto point,False,False,False
+SNDF_x_end,Ending X for tip of rostrum to anterior insertion of dorsal fin,pixels,auto point,False,False,False
+SNDF_y_end,Ending y for tip of rostrum to anterior insertion of dorsal fin,pixels,auto point,False,False,False
+BHDF_x_start,Starting X for center of blowhole to anterior insertion of dorsal fin,pixels,auto point,False,False,False
+BHDF_y_start,Starting y for center of blowhole to anterior insertion of dorsal fin,pixels,auto point,False,False,False
+BHDF_x_end,Ending X for center of blowhole to anterior insertion of dorsal fin,pixels,auto point,False,False,False
+BHDF_y_end,Ending y for center of blowhole to anterior insertion of dorsal fin,pixels,auto point,False,False,False
+DFFL_x_start,Starting X for anterior insertion of dorsal fin to fluke notch,pixels,auto point,False,False,False
+DFFL_y_start,Starting y for anterior insertion of dorsal fin to fluke notch,pixels,auto point,False,False,False
+DFFL_x_end,Ending X for anterior insertion of dorsal fin to fluke notch,pixels,auto point,False,False,False
+DFFL_y_end,Ending y for anterior insertion of dorsal fin to fluke notch,pixels,auto point,False,False,False
+LENGTH_x_start,Starting X for tip of rostrum to fluke notch,pixels,auto point,False,False,False
+LENGTH_y_start,Starting y for tip of rostrum to fluke notch,pixels,auto point,False,False,False
+LENGTH_x_end,Ending X for tip of rostrum to fluke notch,pixels,auto point,False,False,False
+LENGTH_y_end,Ending y for tip of rostrum to fluke notch,pixels,auto point,False,False,False
+FW_x_start,Starting X for Maximum breadth of fluke,pixels,auto point,False,False,False
+FW_y_start,Starting y for Maximum breadth of fluke,pixels,auto point,False,False,False
+FW_x_end,Ending X for Maximum breadth of fluke,pixels,auto point,False,False,False
+FW_y_end,Ending y for Maximum breadth of fluke,pixels,auto point,False,False,False
+10%_x_start,Starting X for Width of animal at 10% of distance of SNDF measurement,pixels,auto point,False,False,False
+10%_y_start,Starting y for Width of animal at 10% of distance of SNDF measurement,pixels,auto point,False,False,False
+10%_x_end,Ending X for Width of animal at 10% of distance of SNDF measurement,pixels,auto point,False,False,False
+10%_y_end,Ending y for Width of animal at 10% of distance of SNDF measurement,pixels,auto point,False,False,False
+20%_x_start,Starting X for Width of animal at 20% of distance of SNDF measurement,pixels,auto point,False,False,False
+20%_y_start,Starting y for Width of animal at 20% of distance of SNDF measurement,pixels,auto point,False,False,False
+20%_x_end,Ending X for Width of animal at 20% of distance of SNDF measurement,pixels,auto point,False,False,False
+20%_y_end,Ending y for Width of animal at 20% of distance of SNDF measurement,pixels,auto point,False,False,False
+30%_x_start,Starting X for Width of animal at 30% of distance of SNDF measurement,pixels,auto point,False,False,False
+30%_y_start,Starting y for Width of animal at 30% of distance of SNDF measurement,pixels,auto point,False,False,False
+30%_x_end,Ending X for Width of animal at 30% of distance of SNDF measurement,pixels,auto point,False,False,False
+30%_y_end,Ending y for Width of animal at 30% of distance of SNDF measurement,pixels,auto point,False,False,False
+40%_x_start,Starting X for Width of animal at 40% of distance of SNDF measurement,pixels,auto point,False,False,False
+40%_y_start,Starting y for Width of animal at 40% of distance of SNDF measurement,pixels,auto point,False,False,False
+40%_x_end,Ending X for Width of animal at 40% of distance of SNDF measurement,pixels,auto point,False,False,False
+40%_y_end,Ending y for Width of animal at 40% of distance of SNDF measurement,pixels,auto point,False,False,False
+50%_x_start,Starting X for Width of animal at 50% of distance of SNDF measurement,pixels,auto point,False,False,False
+50%_y_start,Starting y for Width of animal at 50% of distance of SNDF measurement,pixels,auto point,False,False,False
+50%_x_end,Ending X for Width of animal at 50% of distance of SNDF measurement,pixels,auto point,False,False,False
+50%_y_end,Ending y for Width of animal at 50% of distance of SNDF measurement,pixels,auto point,False,False,False
+60%_x_start,Starting X for Width of animal at 60% of distance of SNDF measurement,pixels,auto point,False,False,False
+60%_y_start,Starting y for Width of animal at 60% of distance of SNDF measurement,pixels,auto point,False,False,False
+60%_x_end,Ending X for Width of animal at 60% of distance of SNDF measurement,pixels,auto point,False,False,False
+60%_y_end,Ending y for Width of animal at 60% of distance of SNDF measurement,pixels,auto point,False,False,False
+70%_x_start,Starting X for Width of animal at 70% of distance of SNDF measurement,pixels,auto point,False,False,False
+70%_y_start,Starting y for Width of animal at 70% of distance of SNDF measurement,pixels,auto point,False,False,False
+70%_x_end,Ending X for Width of animal at 70% of distance of SNDF measurement,pixels,auto point,False,False,False
+70%_y_end,Ending y for Width of animal at 70% of distance of SNDF measurement,pixels,auto point,False,False,False
+80%_x_start,Starting X for Width of animal at 80% of distance of SNDF measurement,pixels,auto point,False,False,False
+80%_y_start,Starting y for Width of animal at 80% of distance of SNDF measurement,pixels,auto point,False,False,False
+80%_x_end,Ending X for Width of animal at 80% of distance of SNDF measurement,pixels,auto point,False,False,False
+80%_y_end,Ending y for Width of animal at 80% of distance of SNDF measurement,pixels,auto point,False,False,False
+90%_x_start,Starting X for Width of animal at 90% of distance of SNDF measurement,pixels,auto point,False,False,False
+90%_y_start,Starting y for Width of animal at 90% of distance of SNDF measurement,pixels,auto point,False,False,False
+90%_x_end,Ending X for Width of animal at 90% of distance of SNDF measurement,pixels,auto point,False,False,False
+90%_y_end,Ending y for Width of animal at 90% of distance of SNDF measurement,pixels,auto point,False,False,False
+100%_x_start,Starting X for Width of animal at 100% of distance of SNDF measurement,pixels,auto point,False,False,False
+100%_y_start,Starting y for Width of animal at 100% of distance of SNDF measurement,pixels,auto point,False,False,False
+100%_x_end,Ending X for Width of animal at 100% of distance of SNDF measurement,pixels,auto point,False,False,False
+100%_y_end,Ending y for Width of animal at 100% of distance of SNDF measurement,pixels,auto point,False,False,False
+110%_x_start,Starting X for Width of animal at 110% of distance of SNDF measurement,pixels,auto point,False,False,False
+110%_y_start,Starting y for Width of animal at 110% of distance of SNDF measurement,pixels,auto point,False,False,False
+110%_x_end,Ending X for Width of animal at 110% of distance of SNDF measurement,pixels,auto point,False,False,False
+110%_y_end,Ending y for Width of animal at 110% of distance of SNDF measurement,pixels,auto point,False,False,False
+120%_x_start,Starting X for Width of animal at 120% of distance of SNDF measurement,pixels,auto point,False,False,False
+120%_y_start,Starting y for Width of animal at 120% of distance of SNDF measurement,pixels,auto point,False,False,False
+120%_x_end,Ending X for Width of animal at 120% of distance of SNDF measurement,pixels,auto point,False,False,False
+120%_y_end,Ending y for Width of animal at 120% of distance of SNDF measurement,pixels,auto point,False,False,False
+130%_x_start,Starting X for Width of animal at 130% of distance of SNDF measurement,pixels,auto point,False,False,False
+130%_y_start,Starting y for Width of animal at 130% of distance of SNDF measurement,pixels,auto point,False,False,False
+130%_x_end,Ending X for Width of animal at 130% of distance of SNDF measurement,pixels,auto point,False,False,False
+130%_y_end,Ending y for Width of animal at 130% of distance of SNDF measurement,pixels,auto point,False,False,False
+140%_x_start,Starting X for Width of animal at 140% of distance of SNDF measurement,pixels,auto point,False,False,False
+140%_y_start,Starting y for Width of animal at 140% of distance of SNDF measurement,pixels,auto point,False,False,False
+140%_x_end,Ending X for Width of animal at 140% of distance of SNDF measurement,pixels,auto point,False,False,False
+140%_y_end,Ending y for Width of animal at 140% of distance of SNDF measurement,pixels,auto point,False,False,False
+150%_x_start,Starting X for Width of animal at 150% of distance of SNDF measurement,pixels,auto point,False,False,False
+150%_y_start,Starting y for Width of animal at 150% of distance of SNDF measurement,pixels,auto point,False,False,False
+150%_x_end,Ending X for Width of animal at 150% of distance of SNDF measurement,pixels,auto point,False,False,False
+150%_y_end,Ending y for Width of animal at 150% of distance of SNDF measurement,pixels,auto point,False,False,False
+160%_x_start,Starting X for Width of animal at 160% of distance of SNDF measurement,pixels,auto point,False,False,False
+160%_y_start,Starting y for Width of animal at 160% of distance of SNDF measurement,pixels,auto point,False,False,False
+160%_x_end,Ending X for Width of animal at 160% of distance of SNDF measurement,pixels,auto point,False,False,False
+160%_y_end,Ending y for Width of animal at 160% of distance of SNDF measurement,pixels,auto point,False,False,False
+170%_x_start,Starting X for Width of animal at 170% of distance of SNDF measurement,pixels,auto point,False,False,False
+170%_y_start,Starting y for Width of animal at 170% of distance of SNDF measurement,pixels,auto point,False,False,False
+170%_x_end,Ending X for Width of animal at 170% of distance of SNDF measurement,pixels,auto point,False,False,False
+170%_y_end,Ending y for Width of animal at 170% of distance of SNDF measurement,pixels,auto point,False,False,False
+180%_x_start,Starting X for Width of animal at 180% of distance of SNDF measurement,pixels,auto point,False,False,False
+180%_y_start,Starting y for Width of animal at 180% of distance of SNDF measurement,pixels,auto point,False,False,False
+180%_x_end,Ending X for Width of animal at 180% of distance of SNDF measurement,pixels,auto point,False,False,False
+180%_y_end,Ending y for Width of animal at 180% of distance of SNDF measurement,pixels,auto point,False,False,False
+190%_x_start,Starting X for Width of animal at 190% of distance of SNDF measurement,pixels,auto point,False,False,False
+190%_y_start,Starting y for Width of animal at 190% of distance of SNDF measurement,pixels,auto point,False,False,False
+190%_x_end,Ending X for Width of animal at 190% of distance of SNDF measurement,pixels,auto point,False,False,False
+190%_y_end,Ending y for Width of animal at 190% of distance of SNDF measurement,pixels,auto point,False,False,False
+200%_x_start,Starting X for Width of animal at 200% of distance of SNDF measurement,pixels,auto point,False,False,False
+200%_y_start,Starting y for Width of animal at 200% of distance of SNDF measurement,pixels,auto point,False,False,False
+200%_x_end,Ending X for Width of animal at 200% of distance of SNDF measurement,pixels,auto point,False,False,False
+200%_y_end,Ending y for Width of animal at 200% of distance of SNDF measurement,pixels,auto point,False,False,False
+210%_x_start,Starting X for Width of animal at 210% of distance of SNDF measurement,pixels,auto point,False,False,False
+210%_y_start,Starting y for Width of animal at 210% of distance of SNDF measurement,pixels,auto point,False,False,False
+210%_x_end,Ending X for Width of animal at 210% of distance of SNDF measurement,pixels,auto point,False,False,False
+210%_y_end,Ending y for Width of animal at 210% of distance of SNDF measurement,pixels,auto point,False,False,False
+220%_x_start,Starting X for Width of animal at 220% of distance of SNDF measurement,pixels,auto point,False,False,False
+220%_y_start,Starting y for Width of animal at 220% of distance of SNDF measurement,pixels,auto point,False,False,False
+220%_x_end,Ending X for Width of animal at 220% of distance of SNDF measurement,pixels,auto point,False,False,False
+220%_y_end,Ending y for Width of animal at 220% of distance of SNDF measurement,pixels,auto point,False,False,False
+OFFSET_x_start,Starting X for breadth of the animal (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
+OFFSET_y_start,Starting y for breadth of the animal (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
+OFFSET_x_end,Ending X for breadth of the animal (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
+OFFSET_y_end,Ending y for breadth of the animal (taken at 23% of the length of the blowhole to dorsal fin (BHDF)),pixels,auto point,False,False,False
+OFFSET_reviewed,Review of OFFSET length,boolean,boolean,False,False,False
+FW_reviewed,Review of FW length,boolean,boolean,False,False,False
+10%_reviewed,Review of 10% length,boolean,boolean,False,False,False
+20%_reviewed,Review of 20% length,boolean,boolean,False,False,False
+30%_reviewed,Review of 30% length,boolean,boolean,False,False,False
+40%_reviewed,Review of 40% length,boolean,boolean,False,False,False
+50%_reviewed,Review of 50% length,boolean,boolean,False,False,False
+60%_reviewed,Review of 60% length,boolean,boolean,False,False,False
+70%_reviewed,Review of 70% length,boolean,boolean,False,False,False
+80%_reviewed,Review of 80% length,boolean,boolean,False,False,False
+90%_reviewed,Review of 90% length,boolean,boolean,False,False,False
+100%_reviewed,Review of 100% length,boolean,boolean,False,False,False
+110%_reviewed,Review of 110% length,boolean,boolean,False,False,False
+120%_reviewed,Review of 120% length,boolean,boolean,False,False,False
+130%_reviewed,Review of 130% length,boolean,boolean,False,False,False
+140%_reviewed,Review of 140% length,boolean,boolean,False,False,False
+150%_reviewed,Review of 150% length,boolean,boolean,False,False,False
+160%_reviewed,Review of 160% length,boolean,boolean,False,False,False
+170%_reviewed,Review of 170% length,boolean,boolean,False,False,False
+180%_reviewed,Review of 180% length,boolean,boolean,False,False,False
+190%_reviewed,Review of 190% length,boolean,boolean,False,False,False
+200%_reviewed,Review of 200% length,boolean,boolean,False,False,False
+210%_reviewed,Review of 210% length,boolean,boolean,False,False,False
+220%_reviewed,Review of 220% length,boolean,boolean,False,False,False
+BH_reviewed,Review of BH point,boolean,boolean,False,False,False
+SN_reviewed,Review of SN point,boolean,boolean,False,False,False
+DF_reviewed,Review of DF point,boolean,boolean,False,False,False
+FL_reviewed,Review of FL point,boolean,boolean,False,False,False
+</code></pre></div>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="csv.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: CSV Manipulation" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              CSV Manipulation
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="cue_and_calc.html" class="md-footer__link md-footer__link--next" aria-label="Next: Cue and Calculation Configuration" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Cue and Calculation Configuration
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 Allen Institute for Artificial Intelligence
+          </div>
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": ".", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.b1047164.min.js"></script>
+      
+    
+  </body>
+</html>
