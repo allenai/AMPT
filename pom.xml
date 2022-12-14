@@ -13,11 +13,11 @@
 
     <groupId>allenai.fiji</groupId>
     <artifactId>AMPT</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 
     <name>Aquatic Mammal Photogrammetry Tool</name>
     <description>ImageJ plugin to perform photogrammetry on aquatic mammals.</description>
-    <url>https://github.com/AllenMLI/AMPT</url>
+    <url>https://github.com/allenai/AMPT</url>
     <inceptionYear>2020</inceptionYear>
 
     <organization>
@@ -93,15 +93,15 @@
     </mailingLists>
 
     <scm>
-        <connection>scm:git:git@github.com:AllenMLI/AMPT</connection>
-        <developerConnection>scm:git:git@github.com:AllenMLI/AMPT</developerConnection>
+        <connection>scm:git:git@github.com:allenai/AMPT</connection>
+        <developerConnection>scm:git:git@github.com:allenai/AMPT</developerConnection>
         <tag>HEAD</tag>
-        <url>https://github.com/AllenMLI/AMPT</url>
+        <url>https://github.com/allenai/AMPT</url>
     </scm>
 
     <issueManagement>
         <system>GitHub Issues</system>
-        <url>https://github.com/AllenMLI/AMPT/issues</url>
+        <url>https://github.com/allenai/AMPT/issues</url>
     </issueManagement>
     <ciManagement>
         <system>None</system>
