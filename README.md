@@ -3,7 +3,7 @@
 The Aquatic Mammal Photogrammetry Tool (AMPT) is an ImageJ plug-in that simplifies the process of measuring aquatic
 mammals from aerial imagery. The tool may be configured to support different guided measurements.
 
-_**As of December 15, 2023 AMPT is no longer supported. If you are interested in taking over the development and support of AMPT, please contact us at ampt-dev&lt;AT&gt;allenai.org.**_
+_**As of December 15, 2022 AMPT is no longer supported. If you are interested in taking over the development and support of AMPT, please contact us at ampt-dev&lt;AT&gt;allenai.org.**_
 
 ## Features
 
