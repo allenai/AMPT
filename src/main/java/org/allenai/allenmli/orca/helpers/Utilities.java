@@ -17,6 +17,8 @@
 package org.allenai.allenmli.orca.helpers;
 
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+import com.opencsv.exceptions.CsvException;
 import org.scijava.log.Logger;
 import org.scijava.log.StderrLogService;
 
@@ -54,6 +56,12 @@ public enum Utilities {
       values = csvReader.readAll();
     } catch (final IOException e) {
       throw new CSVFileLoadException("IO problem encountered loading '" + targetFile + "'", e);
+    }
+    catch (final CsvValidationException e) {
+      throw new CSVFileLoadException("Validation error while loading '" + targetFile + "'", e);
+    }
+    catch (final CsvException e) {
+      throw new CSVFileLoadException("Error while loading '" + targetFile + "'", e);
     }
 
     final int n_cols = headers.length;
