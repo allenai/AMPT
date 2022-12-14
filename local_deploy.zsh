@@ -31,6 +31,6 @@ for AMPT in $OLD_AMPT_JARS; do
   rm -f "${AMPT}"
 done
 
-NEW_BUILD="AMPT-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)-all.jar"
+NEW_BUILD="AMPT-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar"
 echo "Installing: ${NEW_BUILD}" >&2
 cp -v "target/${NEW_BUILD}" "${FIJI_PLUGIN_DIR}" >&2
